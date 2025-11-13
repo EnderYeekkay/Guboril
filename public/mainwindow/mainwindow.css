@@ -1,0 +1,27 @@
+@font-face {
+    font-family: "Roboto";
+    src: url('../fonts/roboto.ttf');
+}
+body {
+    color:whitesmoke;
+    font-family: 'Roboto';
+    background-color: #3A3B41;
+    border: 1px solid #393A3F;
+    border-radius: 15px;
+    /* border #393A3F */
+}
+header {
+    left: 0;
+    right: 0;
+    top: 0;
+    position: absolute;
+    display: flex;
+}
+#maintext {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+#logo {
+    
+}
