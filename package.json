@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "npx electron main.js"
+  },
+  "dependencies": {
+    "electron": "^39.1.2"
+  }
+}
