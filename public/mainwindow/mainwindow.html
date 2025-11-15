@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="mainwindow.css">
+    <link rel="stylesheet" href="../../node_modules/jquery-ui-dist/jquery-ui.css">
     <script src="mainwindow.js"></script>
-    <script src="../../weblibs/jquery.js"></script>
+    <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../../node_modules/jquery-ui-dist/jquery-ui.min.js"></script>
 </head>
 <body>
     <header>
@@ -21,5 +23,14 @@
             </div>
         </div>
     </header>
+    <div id="content">
+        <div class="all_row" id="service_status_block">
+            <div class="">Service is</div>
+            <div class="" id="service_status">Running</div>
+        </div>
+        <div class="all_row" id="service_status_block">
+            <select name="strategy" id="strategy"></select>
+        </div>
+    </div>
 </body>
 </html>

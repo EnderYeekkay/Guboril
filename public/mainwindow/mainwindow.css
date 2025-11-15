@@ -11,6 +11,7 @@ body {
     font-family: 'Roboto';
     background-color: #2C2D32;
     border-radius: 15px;
+    margin: 0;
     /* border #393A3F */
 }
 header {
@@ -20,7 +21,7 @@ header {
     left: 0;
     right: 0;
     top: 0;
-    position: absolute;
+    position: relative;
     display: flex;
     background-color: #393A3F;
 }
@@ -48,7 +49,6 @@ header {
     align-items: center;
     font-size: 32px;
     height: 100%;
-    margin-right: 10px;
 }
 
 .header_btn_ico {
@@ -71,4 +71,27 @@ header {
 }
 #close:hover {
     background-color: red;
+}
+
+#content {
+    position: relative;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid red;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+    align-items: center;
+}
+.blue_button {
+    background-color: #5865F2;
+}
+.blue_button :hover{
+    background-color: #4654C0;
+}
+
+.all_row {
+    grid-column: 1 / -1;
 }
