@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title></title>
     <link rel="stylesheet" href="../../node_modules/jquery-ui-dist/jquery-ui.css">
     <link rel="stylesheet" href="../../node_modules/choices.js/public/assets/styles/choices.min.css">
     <link rel="stylesheet" href="mainwindow.css">
@@ -27,20 +27,61 @@
     </header>
     <div id="content">
         <div id="left_column">
+            <!-- <div id="container_auto_update" class="container notify_container">
+                <img id="close_auto_update" class="header_btn_ico notify_close" src="../images/close.png" alt="">
+                <div id="subcontainer_auto_update">
+                    <div id="text_auto_update">ДОСТУПНА НОВАЯ ВЕРСИЯ</div>
+                    <div id="text_new_version">${latestVersion}</div>
+                </div>
+            <div class="btn btn_primary" id="btn_auto_update">Обновить</div>
+            </div> -->
             <div class="container" id="status_block">
                 <div class="">Сервис</div>
                 <div id="service_status">Отключен</div>
                 <button class="btn btn_success to_stop" id="btn_service">
                     <img src="../images/power.png" class="btn_img18" alt="">
-                    <div id="btn_service_text">Включить</div>
+                    <div id="btn_service_text" class="btn_text"></div>
                 </button>
                 <label for="strategy" id="strategy_label">Выбор стратегии</label>
                 <select name="strategy" id="strategy"></select>
             </div>
+            <div class="container" id="core_block">
+                <div id="core_block_top">
+                    <div id="core_block_text">ЯДРО</div>
+                    <div id="core_block_version_container">
+                        <div id="core_block_version_text">Версия</div>
+                        <div id="core_block_version_number"></div>
+                    </div>
+                </div>
+                <div id="core_block_bottom">
+                    <div id="core_block_controller">
+                        <div class="btn btn_primary to_stop" id="btn_update_core_static">
+                            <div class="btn_text">Обновить</div>
+                        </div>
+                        <div class="btn btn_danger to_stop" id="btn_delete_core">
+                            <div class="btn_text">Удалить</div>
+                        </div>
+                    </div>
+                    <div class="btn btn_link" id="btn_open_folder">
+                        <img src="../images/open_folder.png" alt="" class="btn_img16">
+                        <div class="btn_text">Открыть папку</div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div id="right_column">
+            <h3 class="subcategory">НАСТРОЙКИ</h3>
             <div class="container">
-                asdfasdads
+                <div class="base_setting_text">GameFilter</div>
+                <input type="checkbox" id="cb_game_filter" class="toggle to_stop">
+            </div>
+            <div class="container">
+                <div class="base_setting_text">Проверять обновления при запуске</div>
+                <input type="checkbox" id="cb_auto_update" class="toggle">
+            </div>
+            <div class="container">
+                <div class="base_setting_text">Автозапуск</div>
+                <input type="checkbox" id="cb_auto_start" class="toggle" disabled>
             </div>
         </div>
         

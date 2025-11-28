@@ -3,8 +3,16 @@ const { spawn, ChildProcess } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const { app } = require('electron/main')
+const { shell } = require('electron');
 const { EventEmitter } = require('events')
+const axios = require('axios');
 const l = console.log
+
+const destDir = path.join(app.getPath('userData'), 'core');
+const originalBat = path.join(destDir, 'service.bat');
+const coreDir = path.join(app.getPath('userData'), 'core');
+const settingsPath = path.join(app.getPath('userData'), 'settings.json')
+
 module.exports = class Zapret extends EventEmitter{
 
     /**
@@ -27,8 +35,6 @@ module.exports = class Zapret extends EventEmitter{
      */
     constructor() {
         super()
-        const destDir = path.join(app.getPath('userData'), 'core');
-        const originalBat = path.join(destDir, 'service.bat');
         this._patchedBat = path.join(destDir, 'service_patched.bat');
 
         // читаем оригинал
@@ -65,9 +71,25 @@ module.exports = class Zapret extends EventEmitter{
         this.child = this.spawnChild()
         
     }
-   
+    /**
+    * 
+    * @returns { Settings }
+    */
+    static getSettings() {
+        return JSON.parse(fs.readFileSync(settingsPath))
+    }
+
+    /**
+    * 
+    * @param { Settings } data 
+    */
+    static setSettings(data) {
+        let old_settings = Zapret.getSettings()
+        let new_settings = {...old_settings, ...data}
+        fs.writeFileSync(settingsPath, JSON.stringify(new_settings))
+    }
+
     static isInstalled() {
-        const coreDir = path.join(app.getPath('userData'), 'core');
         const serviceBat = path.join(coreDir, 'service.bat');
 
         try {
@@ -124,6 +146,10 @@ module.exports = class Zapret extends EventEmitter{
         this.child.stdin.write(`${value.toString()}\n`)
     }
 
+    /**
+     * 
+     * @returns {Promise<object>}
+     */
     async getData() {
         this.isBusy = true
         this.spawnChild()
@@ -137,14 +163,36 @@ module.exports = class Zapret extends EventEmitter{
         }
 
         this.on('out', handler)
-
         await EventEmitter.once(this, 'complete')
         this.off('out', handler)
+
         let data = this.output.match(/\{[^{}]*\}/g)[0]
         if (!data) throw new ZapretError('Empty data')
         this.isBusy = false
         return JSON.parse(data)
     }
+
+    async switchGameFilter() {
+        this.isBusy = true
+        this.spawnChild()
+        l('\x1b[1;35mswitchGameFilter()\x1b[0m')
+        this.write(6)
+        const handler = (chunk) => {
+            if (this.output.includes('Restart')) {
+                l(this.output)
+                this.killChild()
+                this.emit('complete')
+            }
+        }
+
+        this.on('out', handler)
+        await EventEmitter.once(this, 'complete')
+        this.off('out', handler)
+
+        this.isBusy = false
+        return true
+    }
+
     async getLatestVersion() {
         const repo = 'Flowseal/zapret-discord-youtube';
         l('\x1b[1;35mgetLatestVersion()\x1b[0m')
@@ -156,6 +204,10 @@ module.exports = class Zapret extends EventEmitter{
         if (!latestUrl) throw new Error('RAR-файл не найден в релизах.');
 
         return { tag: latestTag, url: latestUrl };
+    }
+
+    openCoreFolder() {
+        shell.showItemInFolder(originalBat);
     }
 
     async checkStatus() {
@@ -247,6 +299,24 @@ module.exports = class Zapret extends EventEmitter{
         return res[0];
     }
 
+    /**
+     * Удалить ядро из статической памяти
+     * @returns {string | boolean}
+     */
+    uninstallCore() {
+        try {
+            fs.rmSync(destDir, {
+                recursive: true,
+                force: true,
+                maxRetries: 10,
+                retryDelay: 300
+            })
+        } catch (e) {
+            return e
+        }
+        Zapret.setSettings({zapretVersion: '0'})
+        return true
+    }
 }
 
 class ZapretError extends Error {
