@@ -2,12 +2,53 @@ const { ipcMain, webFrameMain } = require('electron');
 const { app, BrowserWindow, webFrame} = require('electron/main')
 const path = require('node:path')
 const fs = require('fs');
-const { spawn } = require('child_process')
-const l = console.log
 const updateZapret = require('./modules/updateZapret');
-const { ChildProcess } = require('node:child_process');
+/////////////////////////////
+// Убрать мусор из консоли //
+/////////////////////////////
+process.stderr.write = (function(write) {
+  return function(string, encoding, fd) {
+    if (string.includes('Request Autofill')) return
+    write.apply(process.stderr, arguments)
+  }
+})(process.stderr.write)
+
+//////////////////////////////////
+// Сохранение логов main в файл //
+//////////////////////////////////
+
+const logDir = path.join(app.getPath('userData'), 'logs')
+if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true })
+const mainLogFile = path.join(logDir, 'main.log')
+
+// функция-обёртка для console
+function wrapConsoleMethod(methodName, filePath) {
+  const orig = console[methodName].bind(console)
+  console[methodName] = (...args) => {
+    try {
+      fs.appendFileSync(filePath, `[${methodName}] ${args.join(' ')}\n`)
+    } catch (e) {
+      // если не получилось писать в файл — игнорируем
+    }
+    orig(...args) // вызываем оригинальный console.log/error/warn
+  }
+}
+
+wrapConsoleMethod('log', mainLogFile)
+wrapConsoleMethod('error', mainLogFile)
+wrapConsoleMethod('warn', mainLogFile)
+const l = console.log
 const Zapret = require('./modules/Zapret');
 
+/**
+    @typedef {{
+        gameFilter: boolean,
+        autoLoad: boolean,
+        autoUpdate: boolean,
+        zapretVersion: string,
+        selectedStrategyNum: number
+    }} Settings
+*/
 const settingsPath = path.join(app.getPath('userData'), 'settings.json')
 let settings = {}
 if (!fs.existsSync(settingsPath)) {
@@ -22,23 +63,55 @@ if (!fs.existsSync(settingsPath)) {
 }
 settings = JSON.parse(fs.readFileSync(settingsPath))
 
+/**
+ * 
+ * @returns { Settings }
+ */
+function getSettings() {
+  return JSON.parse(fs.readFileSync(settingsPath))
+}
+/**
+ * 
+ * @param { Settings } data 
+ */
+function setSettings(data) {
+    let old_settings = getSettings()
+    let new_settings = {...old_settings, ...data}
+    fs.writeFileSync(settingsPath, JSON.stringify(new_settings))
+}
+
+
 app.whenReady().then(async () => {
   if (!Zapret.isInstalled()) await updateZapret()
   const zapret = new Zapret()
+  const latestVersion = await zapret.getLatestVersion()
   ipcMain.handle('zapret:checkStatus', () => zapret.checkStatus())
   ipcMain.handle('zapret:getAllStrategies', () => zapret.getAllStrategies())
-  ipcMain.handle('zapret:getSettings', () => JSON.parse(fs.readFileSync(settingsPath)))
-  ipcMain.handle('zapret:remove', () => zapret.remove())
-  ipcMain.handle('zapret:install', (event, strategy) => zapret.install(strategy))
-  ipcMain.on('zapret:setSettings', (event, data) => {
-    let old_settings = JSON.parse(fs.readFileSync(settingsPath))
-    let new_settings = {...old_settings, ...data}
-    fs.writeFileSync(settingsPath, JSON.stringify(new_settings))
-  })
   ipcMain.handle('zapret:getData', () => zapret.getData())
-  // await zapretTest(zapret, 40)
 
+  ipcMain.handle('zapret:getLatestVersion', () => latestVersion)
+  ipcMain.handle('zapret:fetchLatestVersion', async () => {
+    let lv = '0'
+    if (getSettings().autoUpdate) lv = await zapret.getLatestVersion()
+    return latestVersion = lv
+  })
+
+  ipcMain.handle('zapret:getSettings', () => getSettings())
+  ipcMain.on('zapret:setSettings', (_, data) => setSettings(data))
+
+  ipcMain.handle('zapret:install', (_, strategy) => zapret.install(strategy))
+  ipcMain.handle('zapret:remove', () => zapret.remove())
+  ipcMain.handle('zapret:switchGameFilter', () => zapret.switchGameFilter())
+
+  ipcMain.handle('zapret:uninstallCore', () => zapret.uninstallCore())
+  ipcMain.handle('zapret:updateZapret', () => updateZapret())
+  ipcMain.on('zapret:openCoreFolder', () => zapret.openCoreFolder())
+
+  // await zapretTest(zapret, 40)
   console.log(app.getPath('userData'))
+  if (zapret.getS) {
+
+  }
   const win = new BrowserWindow({
     width: 800,
     height: 600,
@@ -47,6 +120,7 @@ app.whenReady().then(async () => {
     movable: true,
     resizable: false,
     title: 'Губорыл',
+    
     icon: path.join(__dirname, 'public', 'icon.ico'),
     webPreferences: {
         sandbox: false,
@@ -54,6 +128,7 @@ app.whenReady().then(async () => {
         preload: path.join(__dirname, 'preload.js')
     }
   })
+
   win.hide()
   setTimeout(() => win.show(), 5000) // Start at any cost!!!!1
   ipcMain.once('uwu', () => win.show())
@@ -85,12 +160,13 @@ async function zapretTest(zapret, iterations = 20) {
   let startTime = Date.now()
   for (let i = 0; i < iterations; i++) {
     l(`======================= {Iteration: ${i+1}} =======================`)
-    let n = getRandomInt(5)
+    let n = getRandomInt(6)
     if (n == 0) await zapret.getAllStrategies()
     if (n == 1) await zapret.checkStatus()
     if (n == 2) await zapret.getData()
     if (n == 3) await zapret.install(7)
     if (n == 4) await zapret.remove()
+    if (n == 5) await zapret.switchGameFilter()
   }
   l(`======================= {Test Passed (${Math.round((Date.now() - startTime)/1000)}s)} =======================`)
 }

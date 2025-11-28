@@ -1,11 +1,11 @@
 {
-  "name": "ZapretGUI",
-  "version": "0.1.0",
+  "name": "guboril",
+  "version": "1.0.0",
   "main": "main.js",
   "description": "GUI for Zapret Flowseal",
   "scripts": {
     "start": "npx electron main.js",
-    "build": "electron-packager . ZapretGUI --platform=win32 --arch=x64 --overwrite --out=dist --icon=public/icon.ico"
+    "build": "electron-packager . ZapretGUI --platform=win32 --arch=x64 --overwrite --out=dist --icon=public/icon.ico --win32metadata.requested-execution-level=requireAdministrator"
   },
   "dependencies": {
     "axios": "^1.13.2",

@@ -174,6 +174,7 @@ header {
     padding: 8px;
     text-decoration: none;
     transition: .1s ease-out;
+    cursor: pointer;
 }
 .btn_img16 {
     width: 16px;
@@ -318,7 +319,7 @@ header {
 #btn_service {
     margin-top: 10px;
 }
-#btn_service_text {
+.btn_text {
     position: relative;
     justify-self: center;
     margin: 0 5px;
@@ -338,7 +339,6 @@ header {
     margin-top: 5px;
     display: flex;
     /* flex-direction: column; */
-    /* border: var(--cm_border) 1px solid !important; */
     overflow: visible !important;
     width: 200px;
     box-sizing: border-box;
@@ -361,12 +361,11 @@ header {
     justify-content: center;
     min-height: auto;
 }
-.choices__list {
-    border: var(--cm_border) 1px solid;
+.choices.is-disabled .choices__inner, .choices.is-disabled .choices__input {
+    background-color: var(--btn_link_disabled_border) !important;
 }
 .choices__list--dropdown {
     width: inherit;
-    /* width: 193px !important; */
     max-height: 300px;
     border-color: var(--cm_active) !important;
     border-radius: 10px;
@@ -377,8 +376,10 @@ header {
     width: initial !important;
     position: relative;
     border-radius: 5px;
+    background: none;
 }
 .choices__item--selectable {
+    background: none;
 }
 
 .choices__list--dropdown .choices__item--selectable.is-highlighted, .choices__list[aria-expanded] .choices__item--selectable.is-highlighted  {
@@ -436,4 +437,184 @@ header {
         background-color: #b9bbbe; /* светлее при “прыжке” */
         opacity: 1;
     }
+}
+
+
+
+/* --------------------------------------------------- */
+/*                      TOGGLE                         */
+/* --------------------------------------------------- */
+
+/* ---BASE (UNCHECKED) */
+.toggle {
+    appearance: none;
+    position: relative;
+    width: 40px;
+    height: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 0;
+
+    background-color: var(--cm_active);
+    transition: background-color .2s ease-in-out;
+}
+
+.toggle::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: inherit;
+    background-color: whitesmoke;
+    left: 0;
+    top: 0;
+    transition: .2s ease-in-out;
+}
+
+/* --- CHECKED --- */
+.toggle:checked {
+    background-color: var(--btn_primary);
+}
+
+.toggle:checked::after {
+    left: 20px;
+}
+
+/* --- DISABLED --- */
+.toggle:disabled {
+    cursor: not-allowed;
+    /* transition: none !important; отключаем анимацию */
+    background-color: var(--cm_inactive);
+}
+
+.toggle:disabled::after {
+    /* transition: none !important; */
+    background-color: #63656f;
+}
+
+/* --- DISABLED + CHECKED  (ОТДЕЛЬНО!) --- */
+.toggle:disabled:checked {
+    background-color: var(--btn_primary_disabled); /* фон */
+}
+
+.toggle:disabled:checked::after {
+    left: 20px;              /* бегунок остаётся справа */
+    background-color: var(--cm_inactive); 
+    /* или другой цвет, если хочешь ещё явнее отличить */
+}
+
+#right_column > .container {
+    height: 12px;
+    font-weight: bold;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+#right_column .toggle {
+    position: absolute;
+    right: 40px;
+    transform: translateX(-50%);
+}
+
+.subcategory {
+    margin: 10px 0;
+    margin-left: 30px;
+
+}
+.notify_container {
+    position: fixed;
+    width: 360px;
+    right: 10px;
+    bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+}
+.notify_encounter {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+}
+.notify_close {
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.notify_title {
+    font-weight: bold;
+}
+#subcontainer_auto_update {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+}
+#text_new_version {
+    font-weight: 100;
+}
+#btn_auto_update {
+    margin-top: 15px;
+}
+#core_block {
+    position: relative;
+}
+#core_block_top, #core_block_bottom {
+    position: relative;
+    left: 0;
+    right: 0;
+}
+#core_block_top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+
+    top: 0;
+    bottom: 50%;
+    margin-bottom: 20px;
+}
+
+#core_block_bottom {
+    top: 50%;
+    bottom: 0;
+}
+
+#core_block_text {
+    font-weight: bold;
+}
+
+#core_block_version_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#core_block_version_text {
+    padding-right: 2.5px;
+    font-weight: 100;
+}
+
+#core_block_version_number {
+    padding-left: 2.5px;
+    font-weight: 300;
+}
+
+#core_block_bottom {
+    display: flex;
+    flex-direction: column;
+    align-items:normal;
+}
+
+#core_block_controller {
+    display: flex;
+    justify-content:space-between;
+    margin-bottom: 10px;
+}
+#core_block_controller > * {
+    width: calc(42% - 5px);
 }

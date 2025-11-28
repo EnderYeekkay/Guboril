@@ -1,6 +1,21 @@
+/** @typedef {import("choices.js").default} Choices */
+/**
+    @typedef {{
+        gameFilter: boolean,
+        autoLoad: boolean,
+        autoUpdate: boolean,
+        zapretVersion: string,
+        selectedStrategyNum: number
+    }} Settings
+*/
+/**
+    @typedef {{
+        gf: "enabled" | "disabled",
+        v: string
+    }} zapretData
+*/
 
 const l = console.log
-// const Choices = require('../../node_modules/choices.js/public/assets/scripts/choices.js');
 const dc_loader = /* html */`
     <div class="dc_loader">
         <span></span>
@@ -8,21 +23,112 @@ const dc_loader = /* html */`
         <span></span>
     </div>
 `
+
 document.addEventListener('DOMContentLoaded', async () => {
+    const NotifyType = {
+        Error: 0,
+        Warn: 1,
+        Message: 2
+    }
+
+    const NotifyPosition = {
+        Center: 0,
+        RightBottom: 1
+    }
+    let notifyCount = 0
+    /**
+     * 
+     * @param {{
+     *  title: string,
+     *  content: string,
+     *  type: number,
+     *  position: number,
+     * }} options 
+     */
+    function sendNotify(options = {
+        title: '',
+        content: '',
+        type: NotifyType.Message,
+        position: NotifyPosition.RightBottom
+    }) {
+        if (!options.title) options.title = ''
+        notifyCount++
+        const img = $(/* html */`<img class="header_btn_ico notify_close" src="../images/close.png" alt="">`)
+        const notifyEncounter = $(/* html */`<div class="notify_encounter">(${notifyCount})</div>`)
+        const el = $(/* html */`
+            <div class="container notify_container">
+                <div class="notify_title">${options.title}</div>
+                <div class="notify_content">${options.content}</div>
+            </div>
+        `)
+        $('#content').append(el)
+        $(el).prepend(notifyEncounter)
+        $(el).prepend(img)
+
+        if (options.type == NotifyType.Error) $(el).children('.notify_title').css('color', 'red')
+        img.on('click', function() {
+            $(this).parent().remove()
+            if (notifyCount > 0) notifyCount--;
+            updateNotifyEncounter()
+        })
+        updateNotifyEncounter()
+        return el
+    }
+    function updateNotifyEncounter() {
+        let encs = $('.notify_encounter')
+        l(notifyCount)
+        encs.map(function () {
+            let enc = $(this)
+            enc.text(`(${notifyCount})`)
+            if (notifyCount == 1) {
+                enc.attr('hidden', 'hidden')
+            } else {
+                enc.removeAttr('hidden')
+            }
+        })
+    }
+    window.addEventListener('error', (event) => {
+        sendNotify({
+            title: 'Error',
+            content: event.message,
+            type: NotifyType.Error,
+            position: NotifyPosition.RightBottom
+        })
+    })
+
+    window.addEventListener('unhandledrejection', (event) => {
+        sendNotify({
+            title: 'Promise Error',
+            content: event.reason?.message || String(event.reason),
+            type: NotifyType.Error,
+            position: NotifyPosition.RightBottom
+        })
+    })
     /**
      * @type {string[]}
      */
     const strategies = await zapret.getAllStrategies()
     l(strategies)
+
     /**
      * @type {[boolean, string | null]}
      */
     let [status, currentStrategy] = await zapret.checkStatus()
+    
+    /**
+     * @type {Settings}
+     */
+    const settings = await zapret.getSettings()
+    /**
+     * @type {zapretData}
+     */
+    let zapretData = await zapret.getData()
+    $('#cb_game_filter').prop('checked', zapretData.gf == 'enabled' ? true : false)
 
     //////////////////////////////////////////////////////////////////////////
     // Вычисление номера текущей стратегии и установка значений после старта//
     //////////////////////////////////////////////////////////////////////////
-    let selectedStrategyNum = (await zapret.getSettings()).selectedStrategyNum || 6
+    let selectedStrategyNum = (settings).selectedStrategyNum || 6
 
     strategies.find((strategy, idx) => {
         l(`${idx + 1}. ${strategy}`, strategy.includes(currentStrategy))
@@ -49,15 +155,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Вычисление номера текущей стратегии//
     //     (ПРИ ИЗМЕНЕНИИ SELECT MENU)    //
     ////////////////////////////////////////
-    $('#strategy').on('change', function() {
-        selectedStrategyNum = $(this).val() - 1
-        zapret.setSettings({selectedStrategyNum: selectedStrategyNum})
+    $('#strategy').on('change', async function() {
+        let btn = $('#btn_service')
         l('Номер выбранной стратегии:', selectedStrategyNum)
+        selectedStrategyNum = $(this).val() - 1
+
+        disableToStop(btn.children())
+        btn.append(dc_loader)
+        await zapret.install(selectedStrategyNum + 1)
+
+        zapret.setSettings({selectedStrategyNum: selectedStrategyNum})
+        rollbackToStop(btn.children())
+        btn.children('.dc_loader').remove()
     })
 
     //////////////////////
     // Настройки header //
     //////////////////////
+    $('#core_block_version_number').text(zapretData.v)
+    $('head > title').text(`Губорыл v${mw.version}`)
     $('#maintext').html(`Губорыл v${mw.version}`)
     $('#close').on('click', () => {
         mw.closeWindow()
@@ -69,14 +185,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     ////////////////////////////
     // Логика вкл/выкл сервиса//
     ////////////////////////////
-    $('.btn').on('click', async function () {
+    $('#btn_service').on('click', async function () {
         let btn = $(this)
         if (btn.hasClass('btn_success') && btn.hasClass('btn_danger')) throw new Error('Btn can\'t have classes btn_success and btn_danger at one time!')
 
-        btn.children().map((idx, child) => $(child).css('opacity', 0))
-        btn.attr('disabled', 'disabled')
+        disableToStop(btn.children())
         btn.append(dc_loader)
-        disableToStop()
 
         ////////////////
         // Отключение //
@@ -92,7 +206,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             btn
             .removeClass('btn_danger')
             .addClass('btn_success')
-            .removeAttr('disabled')
             btn.children('.dc_loader').remove()
 
             $('#service_status').text('Остановлен')
@@ -124,9 +237,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         ////////////////////////////////////
         // Возвращение исходных состояний //
         ////////////////////////////////////
-        btn.children().map((idx, child) => $(child).css('opacity', ''))
-        rollbackToStop()
+        rollbackToStop(btn.children())
     })
+
+    //////////////////////////////////
+    // Генерация strategySelectMenu //
+    //////////////////////////////////
     let strategySelectMenu = $('#strategy')
     let strategySelectMenuContent = ''
 
@@ -135,6 +251,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     strategySelectMenu.html(strategySelectMenuContent)
+
+    /**
+     * @type {Choices}
+     */
     const choices = new Choices(strategySelectMenu[0], {
         searchEnabled: true,
         itemSelectText: '',
@@ -142,11 +262,110 @@ document.addEventListener('DOMContentLoaded', async () => {
         searchPlaceholderValue: "Введите название",
     })
     $(choices.containerOuter.element).addClass('to_stop')
-    function disableToStop() {
-        $('.to_stop').each((idx, el) => $(el).attr('disabled', 'disabled'))
+    function disableToStop(children) {
+        $('.to_stop').attr('disabled', 'disabled')
+        if (children) children.css('opacity', 0)
+        choices.disable()
     }
-    function rollbackToStop() {
-        $('.to_stop').each((idx, el) => $(el).removeAttr('disabled'))
+    function rollbackToStop(children) {
+        $('.to_stop').each((_, el) => $(el).removeAttr('disabled'))
+        if (children) children.css('opacity', '')
+        choices.enable()
     }
+
+    ////////////////
+    // GameFilter //
+    ////////////////
+    $('#cb_game_filter').on('change', async function() {
+        const el = $(this)
+        disableToStop()
+        await zapret.switchGameFilter()
+        rollbackToStop()
+        
+    })
+
+    ////////////////
+    // AutoUpdate //
+    ////////////////
+    const latestVersion = (await zapret.getLatestVersion()).tag
+
+    // Изменение настроек автообновления
+    $('#cb_auto_update').on('change', function() { zapret.setSettings({autoUpdate: $(this).is(':checked')})})
+    if (zapretData.v != latestVersion && settings.autoUpdate) {
+        sendNotify({
+            title: /* html */`
+                <div id="subcontainer_auto_update">
+                    <div id="text_auto_update">ДОСТУПНА НОВАЯ ВЕРСИЯ</div>
+                    <div id="text_new_version">${latestVersion}</div>
+                </div>
+            `,
+            content: /* html */`
+                <div class="btn btn_primary to_stop" id="btn_auto_update">Обновить</div>
+            `
+        })
+        // Обновление ядра
+        $('#btn_auto_update').on('click', async function() {
+            let btn = $(this)
+
+            disableToStop(btn.children())
+            btn.append(dc_loader)
+
+            await zapret.updateZapret()
+
+            rollbackToStop(btn.children())
+            btn.children('.dc_loader').remove()
+        })
+    }
+
+    ///////////////////
+    // Update Button //
+    ///////////////////
+    $('#btn_update_core_static').on('click', async function() {
+        const btn = $(this)
+        disableToStop(btn.children())
+        btn.append(dc_loader)
+        l('Обновление ядра запущено...')
+        /**
+         * @type {0 | 1}
+         */
+        let res
+        res = await zapret.updateZapret()
+        let zapretVersion = (await zapret.getSettings()).zapretVersion
+        if (res == 0) {
+            l(`Установлена версия: `, zapretVersion)
+        } else {
+            l(`Уже установлена самая новая версия ядра (v${zapretVersion})`)
+            sendNotify({title: 'Поздравляем <3', content: `Уже установлена самая новая версия ядра (v${zapretVersion})`})
+        }
+        btn.children('.dc_loader').remove()
+        rollbackToStop(btn.children())
+    })
+
+    ///////////////////////////
+    // Uninstall Core Button //
+    ///////////////////////////
+    $('#btn_delete_core').on('click', async function() {
+        const btn = $(this)
+        const children = btn.children()
+
+        l('Удаления ядра запущено...')
+        disableToStop(children)
+        btn.append(dc_loader)
+
+        let res = await zapret.uninstallCore()
+        if (res) sendNotify({title: 'Ядро успешно удалено!', content: ''})
+        btn.children('.dc_loader').remove()
+        rollbackToStop(children)
+    })
+
+    //////////////////////
+    // Open Core Folder //
+    //////////////////////
+    $('#btn_open_folder').on('click', () => {
+        l('Открытие папки ядра')
+        zapret.openCoreFolder()
+    })
+    
     mw.uwu()
 })
+
