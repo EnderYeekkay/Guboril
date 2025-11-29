@@ -86,11 +86,16 @@ app.whenReady().then(async () => {
   // if (warpFix.checkWarp()) warpFix.addToExcludedHostsList()
   const warpPath = "C:\\Program Files\\Cloudflare\\Cloudflare WARP\\warp-cli.exe"
   if (fs.existsSync(warpPath)) {
-    l(`${warpPath} tunnel host add`)
-    execSync(`"${warpPath}" tunnel host add "api.github.com"`)
-    execSync('sc stop "CloudflareWARP"')
-    setTimeout(() => exec('sc start "CloudflareWARP"'), 2000)
+    if (`"${warpPath}" tunnel host add "api.github.com"`) {
+      l('WarpFix is already installed')
+    } else {
+      execSync(`"${warpPath}" tunnel host add "api.github.com"`)
+      execSync('sc stop "CloudflareWARP"')
+      setTimeout(() => exec('sc start "CloudflareWARP"'), 2000)
+      l('WarpFix has been installed.')
+    }
   }
+  
   if (!Zapret.isInstalled()) await updateZapret()
   const zapret = new Zapret()
   const latestVersion = await zapret.getLatestVersion()
