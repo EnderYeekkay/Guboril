@@ -482,6 +482,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         l('Открытие папки ядра')
         zapret.openCoreFolder()
     })
+
+    ///////////////////////
+    // Auto Start Button //
+    ///////////////////////
     $('#cb_auto_start').prop('checked', await scheduler_api.checkTask())
     $('#cb_auto_start').on('change', async function () {
         const btn = $(this)
@@ -492,6 +496,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         
     }) 
+
+    ////////////////////////
+    // Open GitHub button //
+    ////////////////////////
+    $('#btn_open_github').on('click', () => mw.open_github())
+    ///////////////
+    // Save Logs //
+    ///////////////
+    $('#btn_save_logs').on('click', () => mw.save_logs())
     l('Uwu!')
     mw.uwu()
 })
