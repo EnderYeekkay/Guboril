@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { ipcMain, webFrameMain, Tray, Menu } = require('electron');
+const { ipcMain, webFrameMain, Tray, Menu, shell } = require('electron');
 const { app, BrowserWindow, webFrame} = require('electron/main')
 const path = require('node:path')
 const fs = require('fs');
@@ -7,6 +7,7 @@ const updateZapret = require('./modules/updateZapret');
 const { execSync, exec } = require('child_process')
 const { version } = require(path.join(__dirname, 'package.json'))
 const { createTask, deleteTask, checkTask } = require('./modules/scheduler.ts')
+const {saveLogsArchive} = require('./modules/saveLogs.ts')
 
 // Парсинг аргументов
 console.log('ARGV: ' + process.argv)
@@ -152,6 +153,8 @@ app.whenReady().then(async () => {
   ipcMain.handle('scheduler:createTask', () => createTask())
   ipcMain.handle('scheduler:deleteTask', () => deleteTask())
   ipcMain.handle('scheduler:checkTask', () => checkTask())
+
+  ipcMain.on('open_github', () => shell.openExternal('https://github.com/EnderYeekkay/Guboril'))
   // await zapretTest(zapret, 40)
   console.log(app.getPath('userData'))
 
@@ -174,6 +177,7 @@ app.whenReady().then(async () => {
         preload: path.join(__dirname, 'preload.js')
     }
   })
+  ipcMain.on('save_logs', () => saveLogsArchive(win))
   win.hide()
   ipcMain.once('uwu', () => {
     l('Uwu!')

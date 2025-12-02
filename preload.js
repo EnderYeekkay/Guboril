@@ -1,11 +1,13 @@
 const path = require('path');
 const { version } = require(path.join(__dirname, 'package.json'))
-const {contextBridge, ipcRenderer} = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('mw', {
   version: version,
   closeWindow: () => ipcRenderer.send('close-window'),
   minimize: () => ipcRenderer.send('minimize'),
-  uwu: () => ipcRenderer.send('uwu')
+  uwu: () => ipcRenderer.send('uwu'),
+  open_github: () => ipcRenderer.send('open_github'),
+  save_logs: () => ipcRenderer.send('save_logs'),
 })
 
 contextBridge.exposeInMainWorld('zapret', {
@@ -23,18 +25,18 @@ contextBridge.exposeInMainWorld('zapret', {
 
   getSettings: () => ipcRenderer.invoke('zapret:getSettings'),
   setSettings: (settings) => ipcRenderer.send('zapret:setSettings', settings),
-  openCoreFolder: () => ipcRenderer.send('zapret:openCoreFolder')
+  openCoreFolder: () => ipcRenderer.send('zapret:openCoreFolder'),
   
 })
 
 contextBridge.exposeInMainWorld('logger', {
   log: (...args) => ipcRenderer.send('renderer-log', 'log', ...args),
   warn: (...args) => ipcRenderer.send('renderer-log', 'warn', ...args),
-  error: (...args) => ipcRenderer.send('renderer-log', 'error', ...args)
+  error: (...args) => ipcRenderer.send('renderer-log', 'error', ...args),
 })
 
 contextBridge.exposeInMainWorld('scheduler_api', {
   createTask: () => ipcRenderer.invoke('scheduler:createTask'),
   deleteTask: () => ipcRenderer.invoke('scheduler:deleteTask'),
-  checkTask: () => ipcRenderer.invoke('scheduler:checkTask')
+  checkTask: () => ipcRenderer.invoke('scheduler:checkTask'),
 })
