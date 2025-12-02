@@ -16,6 +16,7 @@
     "node-unrar-js": "^2.0.2"
   },
   "devDependencies": {
+    "@types/jquery": "^3.5.33",
     "electron": "^39.1.2",
     "electron-packager": "^17.1.2"
   }

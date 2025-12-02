@@ -9,7 +9,7 @@ function initMainLogger({ keep = 5 } = {}) {
   if (!fs.existsSync(mainLogDir)) fs.mkdirSync(mainLogDir, { recursive: true })
 
   const mainLogFile = path.join(mainLogDir, `main-${Date.now()}.log`)
-
+  
   // Чистим старые файлы
   try {
     const files = fs.readdirSync(mainLogDir)

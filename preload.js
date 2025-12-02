@@ -32,3 +32,9 @@ contextBridge.exposeInMainWorld('logger', {
   warn: (...args) => ipcRenderer.send('renderer-log', 'warn', ...args),
   error: (...args) => ipcRenderer.send('renderer-log', 'error', ...args)
 })
+
+contextBridge.exposeInMainWorld('scheduler_api', {
+  createTask: () => ipcRenderer.invoke('scheduler:createTask'),
+  deleteTask: () => ipcRenderer.invoke('scheduler:deleteTask'),
+  checkTask: () => ipcRenderer.invoke('scheduler:checkTask')
+})
