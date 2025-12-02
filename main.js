@@ -1,23 +1,22 @@
 require('dotenv').config()
-const { ipcMain, webFrameMain } = require('electron');
+const { ipcMain, webFrameMain, Tray, Menu } = require('electron');
 const { app, BrowserWindow, webFrame} = require('electron/main')
 const path = require('node:path')
 const fs = require('fs');
 const updateZapret = require('./modules/updateZapret');
-const {execSync, exec} = require('child_process')
+const { execSync, exec } = require('child_process')
 const { version } = require(path.join(__dirname, 'package.json'))
+const { createTask, deleteTask, checkTask } = require('./modules/scheduler.ts')
 
 // Парсинг аргументов
 console.log('ARGV: ' + process.argv)
-let debug = process.argv.includes('--inspect') || process.argv.includes('-i')
+const debug = process.argv.includes('--inspect') || process.argv.includes('-i')
 if (process.argv.includes('--version') || process.argv.includes('-v')) {
   console.log(`Version: v${version}`)
   app.quit()
 }
-if (process.argv.includes('--tray') || process.argv.includes('-t'))
-{
+const run_only_tray = process.argv.includes('--tray') || process.argv.includes('-t')
 
-}
 if (process.platform !== 'win32') {
   throw new Error(`Это приложение работает только на Windows. Обнаружено: ${process.platform}`);
 }
@@ -45,10 +44,10 @@ const Zapret = require('./modules/Zapret');
 /**
     @typedef {{
         gameFilter: boolean,
-        autoLoad: boolean,
         autoUpdate: boolean,
         zapretVersion: string,
-        selectedStrategyNum: number
+        selectedStrategyNum: number,
+        GH_TOKEN: null | string
     }} Settings
 */
 const settingsPath = path.join(app.getPath('userData'), 'settings.json')
@@ -56,7 +55,6 @@ let settings = {}
 if (!fs.existsSync(settingsPath)) {
   let defaultSettings = {
     gameFilter: false,
-    autoLoad: false,
     autoUpdate: false,
     zapretVersion: '0',
     selectedStrategyNum: 0,
@@ -83,8 +81,12 @@ function setSettings(data) {
     fs.writeFileSync(settingsPath, JSON.stringify(new_settings))
 }
 
-
+app.disableHardwareAcceleration()
 app.whenReady().then(async () => {
+
+  ////////////////
+  // LoadingWin //
+  ////////////////
   const loadingWin = new BrowserWindow({
     width: 300,
     height: 350,
@@ -99,7 +101,10 @@ app.whenReady().then(async () => {
   if (debug == 1) {
     loadingWin.webContents.openDevTools({ mode: 'detach' }); // отдельное окно
   }
-  // if (warpFix.checkWarp()) warpFix.addToExcludedHostsList()
+
+  /////////////
+  // WarpFix //
+  /////////////
   const warpPath = "C:\\Program Files\\Cloudflare\\Cloudflare WARP\\warp-cli.exe"
   if (fs.existsSync(warpPath)) {
     if (`"${warpPath}" tunnel host add "api.github.com"`) {
@@ -112,6 +117,9 @@ app.whenReady().then(async () => {
     }
   }
   
+  //////////////
+  // Core API //
+  //////////////
   if (!Zapret.isInstalled()) await updateZapret()
   let zapret = new Zapret()
   const latestVersion = await zapret.getLatestVersion()
@@ -141,11 +149,15 @@ app.whenReady().then(async () => {
   })
   ipcMain.on('zapret:openCoreFolder', () => zapret.openCoreFolder())
 
+  ipcMain.handle('scheduler:createTask', () => createTask())
+  ipcMain.handle('scheduler:deleteTask', () => deleteTask())
+  ipcMain.handle('scheduler:checkTask', () => checkTask())
   // await zapretTest(zapret, 40)
   console.log(app.getPath('userData'))
-  if (zapret.getS) {
 
-  }
+  ////////////////
+  // Mainwindow //
+  ////////////////
   const win = new BrowserWindow({
     width: 800,
     height: 600,
@@ -162,25 +174,43 @@ app.whenReady().then(async () => {
         preload: path.join(__dirname, 'preload.js')
     }
   })
-
   win.hide()
-  setTimeout(() => win.show(), 5000) // Start at any cost!!!!1
   ipcMain.once('uwu', () => {
-    loadingWin.close()
-    win.show()
+    l('Uwu!')
+    if (!run_only_tray) {
+      // setTimeout(() => win.show(), 5000) // Start at any cost!!!!1
+      loadingWin.close()
+      win.show()
+    }
   })
   win.loadFile('./public/mainwindow/mainwindow.html')
   if (debug == 1) {
     win.webContents.openDevTools({ mode: 'detach' }); // отдельное окно
   }
+
   app.on('activate', () => {
     
   })
   ipcMain.on('close-window', () => {
-    app.quit()
+    win.hide()
   })
   ipcMain.on('minimize', () => {
     win.minimize()
+  })
+
+  const tray = new Tray(path.join(__dirname, 'public', 'icon.ico'))
+  tray.on('double-click', (event, bounds) => {
+    win.show()
+  })
+  const menu = Menu.buildFromTemplate([
+    { label: 'Открыть', click: () => win.show() },
+    { type: 'separator' },
+    { label: 'Выход', click: () => app.quit() }
+  ])
+
+  tray.setContextMenu(menu)
+  tray.on('click', (event, bounds) => {
+    tray.popUpContextMenu(menu)
   })
 })
 

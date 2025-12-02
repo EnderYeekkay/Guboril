@@ -348,22 +348,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     ////////////////
     // AutoUpdate //
     ////////////////
-    const latestVersion = (await zapret.getLatestVersion()).tag
-
     // Изменение настроек автообновления
     $('#cb_auto_update').on('change', function() { zapret.setSettings({autoUpdate: $(this).is(':checked')})})
-    if (zapretData.v != latestVersion && settings.autoUpdate) {
-        sendNotify({
-            title: /* html */`
-                <div id="subcontainer_auto_update">
-                    <div id="text_auto_update">ДОСТУПНА НОВАЯ ВЕРСИЯ</div>
-                    <div id="text_new_version">${latestVersion}</div>
-                </div>
-            `,
-            content: /* html */`
-                <div class="btn btn_primary to_stop" id="btn_auto_update">Обновить</div>
-            `
-        })
+
+    if (settings.autoUpdate) {
+        const latestVersion = (await zapret.getLatestVersion()).tag
+        if (zapretData.v != latestVersion) {
+            sendNotify({
+                title: /* html */`
+                    <div id="subcontainer_auto_update">
+                        <div id="text_auto_update">ДОСТУПНА НОВАЯ ВЕРСИЯ</div>
+                        <div id="text_new_version">${latestVersion}</div>
+                    </div>
+                `,
+                content: /* html */`
+                    <div class="btn btn_primary to_stop" id="btn_auto_update">Обновить</div>
+                `
+            })
+        }
+
         // Обновление ядра
         $('#btn_auto_update').on('click', async function() {
             let btn = $(this)
@@ -377,6 +380,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             btn.children('.dc_loader').remove()
         })
     }
+    $('#cb_auto_update').prop('checked', settings.autoUpdate)
 
     ///////////////////
     // Update Button //
@@ -394,6 +398,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         let zapretVersion = (await zapret.getSettings()).zapretVersion
         if (res == 0) {
             l(`Установлена версия: `, zapretVersion)
+            sendNotify({title: 'Обновление завершено', content: `Установлена новая версия ядра (v${zapretVersion})`})
         } else {
             l(`Уже установлена самая новая версия ядра (v${zapretVersion})`)
             sendNotify({title: 'Поздравляем <3', content: `Уже установлена самая новая версия ядра (v${zapretVersion})`})
@@ -435,7 +440,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     $('#btn_delete_core').on('click', async function() {
         const btn = $(this)
         const children = btn.children()
-
         disableToStop(children)
         btn.append(dc_loader)
 
@@ -462,7 +466,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         btn.append(dc_loader)
 
         l('Установка ядра запущена...')
-        let res = await zapret.updateZapret()
+        const res = await zapret.updateZapret()
 
         rollbackToStop(children)
         changeCoreVersionStyles('installed')
@@ -478,6 +482,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         l('Открытие папки ядра')
         zapret.openCoreFolder()
     })
+    $('#cb_auto_start').prop('checked', await scheduler_api.checkTask())
+    $('#cb_auto_start').on('change', async function () {
+        const btn = $(this)
+        if (btn.is(':checked')) {
+            await scheduler_api.createTask()
+        } else {
+            await scheduler_api.deleteTask()
+        }
+        
+    }) 
+    l('Uwu!')
     mw.uwu()
 })
 
