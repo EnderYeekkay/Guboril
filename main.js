@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { ipcMain, webFrameMain, Tray, Menu, shell } = require('electron');
+const { ipcMain, webFrameMain, Tray, Menu, shell, Notification } = require('electron');
 const { app, BrowserWindow, webFrame} = require('electron/main')
 const path = require('node:path')
 const fs = require('fs');
@@ -82,9 +82,7 @@ function setSettings(data) {
     fs.writeFileSync(settingsPath, JSON.stringify(new_settings))
 }
 
-app.disableHardwareAcceleration()
 app.whenReady().then(async () => {
-
   ////////////////
   // LoadingWin //
   ////////////////
@@ -97,8 +95,12 @@ app.whenReady().then(async () => {
     resizable: false,
     alwaysOnTop: true,
     skipTaskbar: true,
+    webPreferences: {
+      devTools: false
+    }
   })
   loadingWin.loadFile('./public/loadingWin/loadingWin.html')
+  if (run_only_tray) loadingWin.hide()
   if (debug == 1) {
     loadingWin.webContents.openDevTools({ mode: 'detach' }); // отдельное окно
   }
@@ -174,7 +176,8 @@ app.whenReady().then(async () => {
     webPreferences: {
         sandbox: false,
         contextIsolation: true,
-        preload: path.join(__dirname, 'preload.js')
+        preload: path.join(__dirname, 'preload.js'),
+        devTools: false,
     }
   })
   ipcMain.on('save_logs', () => saveLogsArchive(win))
@@ -202,8 +205,10 @@ app.whenReady().then(async () => {
     win.minimize()
   })
 
+  if (run_only_tray) loadingWin.close()
   const tray = new Tray(path.join(__dirname, 'public', 'icon.ico'))
   tray.on('double-click', (event, bounds) => {
+    l('double-click on tray')
     win.show()
   })
   const menu = Menu.buildFromTemplate([
