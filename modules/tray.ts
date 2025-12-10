@@ -1,14 +1,16 @@
 import { ipcMain, nativeImage, BrowserWindow, Tray, Menu, app } from 'electron'
 import type { MenuItemConstructorOptions } from 'electron/main'
 import path from 'path'
+const pr = path.resolve
 import Zapret from './Zapret.js'
 import { sendServiceOffNotify, sendServiceOnNotify } from './myNotifcations.ts'
-export async function initializeTray(win: BrowserWindow, zapret: Zapret) {
+export async function initializeTray(win: BrowserWindow, zapret: Zapret, publicPath: string) {
     const icon_resize_option = { width: 16, height: 16 }
-    const guboril_img = nativeImage.createFromPath('./public/icon.ico').resize(icon_resize_option)
-    const maximize_img = nativeImage.createFromPath('./public/images/maximize.png').resize(icon_resize_option)
-    const exit_img = nativeImage.createFromPath('./public/images/exit.png').resize(icon_resize_option)
-    const launch_img = nativeImage.createFromPath('./public/images/power.png').resize(icon_resize_option)
+    const image_path = path.resolve(publicPath, 'images')
+    const guboril_img = nativeImage.createFromPath(pr(publicPath, 'icon.ico')).resize(icon_resize_option)
+    const maximize_img = nativeImage.createFromPath(pr(image_path,'maximize.png')).resize(icon_resize_option)
+    const exit_img = nativeImage.createFromPath(pr(image_path,'exit.png')).resize(icon_resize_option)
+    const launch_img = nativeImage.createFromPath(pr(image_path,'power.png')).resize(icon_resize_option)
     let zapretStatus: boolean = (await zapret.checkStatus())[0]
     const power_off_text = 'Остановить ядро'
     const power_on_text = 'Запустить ядро'
