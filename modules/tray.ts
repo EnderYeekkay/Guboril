@@ -15,7 +15,7 @@ export async function initializeTray(win: BrowserWindow, zapret: Zapret) {
 
     const tray = new Tray(guboril_img)
     tray.on('double-click', (event, bounds) => {
-        l('double-click on tray')
+        console.log('double-click on tray')
         win.show()
     })
 
@@ -32,16 +32,18 @@ export async function initializeTray(win: BrowserWindow, zapret: Zapret) {
                 await zapret.remove()
                 zapretStatus = false
                 power_btn_menuItem.label = power_on_text
-                sendServiceOffNotify()
+                if(!win.isVisible()) sendServiceOffNotify()
             } else {
                 let selectedStrategyNum = Zapret.getSettings().selectedStrategyNum + 1
                 await zapret.install(selectedStrategyNum)
                 zapretStatus = true
                 power_btn_menuItem.label = power_off_text
-                sendServiceOnNotify(selectedStrategyNum)
+                if(!win.isVisible()) sendServiceOnNotify(selectedStrategyNum)
+                
             }
 
             menuItem.enabled = true
+            tray.closeContextMenu()
             tray.setContextMenu(buildTrayMenu())
             win.webContents.send('rollbackToStop', zapretStatus)
         }
@@ -60,10 +62,10 @@ export async function initializeTray(win: BrowserWindow, zapret: Zapret) {
 
     ipcMain.on('sendDisableToStop', () => {
         power_btn_menuItem.enabled = false
-        tray.setContextMenu(buildTrayMenu())
     })
     ipcMain.on('sendRollbackToStop', () => {
         power_btn_menuItem.enabled = true
+        tray.closeContextMenu()
         tray.setContextMenu(buildTrayMenu())
     })
 
