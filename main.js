@@ -165,7 +165,7 @@ app.whenReady().then(async () => {
 
   ipcMain.once('uwu', async () => {
     l('Uwu!')
-    initializeTray(win, zapret)
+    initializeTray(win, zapret, path.resolve(__dirname, 'public'))
     if (!run_only_tray) {
       // setTimeout(() => win.show(), 5000) // Start at any cost!!!!1
       loadingWin.close()
