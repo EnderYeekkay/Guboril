@@ -12,10 +12,8 @@
     "axios": "^1.13.2",
     "choices.js": "^11.1.0",
     "dotenv": "^17.2.3",
-    "iconv-lite": "^0.7.0",
     "jquery": "^3.7.1",
     "jquery-ui-dist": "^1.13.3",
-    "node-notifier": "^10.0.1",
     "node-unrar-js": "^2.0.2"
   },
   "devDependencies": {
