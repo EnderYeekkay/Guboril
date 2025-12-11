@@ -12,7 +12,7 @@ export function createTask(): boolean {
 
   try {
     console.log(`Creating task "Guboril" for autostart with flag "${launchArgs}"...`);
-    const cmd = `schtasks /Create /TN "Guboril" /TR "\\"${exePath}\\" ${launchArgs}" /SC ONLOGON /RL HIGHEST`;
+    const cmd = `schtasks /Create /TN "Guboril" /TR "\\"${exePath}\\" ${launchArgs}" /SC ONLOGON /RL HIGHEST /IT`;
     execSync(cmd);
   } catch (err: any) {
     if (err instanceof Error) {
