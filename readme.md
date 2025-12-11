@@ -1,12 +1,6 @@
 # Губорыл - GUI для Service.bat
 
-[█████─█──█─████─█──█─████─███─█───
-█──█─█─█──█──█─█──█─█──█──█──█───
-█────██───████─████─████──█──████
-█──█─█─█──█──█────█─█──█──█──█──█
-████─█──█─█──█────█─█──█──█──████
-
-](https://github.com/EnderYeekkay/Guboril/releases/download/Guboril-v1.1.1/GuborilInstaller.exe)
+# [>>> **СКАЧАТЬ**<<<](https://github.com/EnderYeekkay/Guboril/releases/download/Guboril-v1.1.1/GuborilInstaller.exe)
 
 ## Важно:
 
