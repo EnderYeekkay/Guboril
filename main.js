@@ -1,3 +1,7 @@
+const {initMainLogger, initRendererLogger}= require('./modules/logger')
+initMainLogger()
+initRendererLogger()
+
 const { ipcMain, webFrameMain, Tray, Menu, shell, Notification, nativeImage } = require('electron');
 const { app, dialog, BrowserWindow, webFrame} = require('electron/main')
 const path = require('node:path')
@@ -12,6 +16,9 @@ const { setSettings, getSettings } = require('./modules/settings.ts')
 const { debug, run_only_tray } = require('./modules/argsParser')
 const { zapretTest } = require('./tests/zapretTest.ts')
 const { initializeTray } = require('./modules/tray.ts')
+const { warpFix }= require('./modules/warpFix.ts')
+warpFix()
+
 if (!app.requestSingleInstanceLock()) {
   app.once('ready', () => {
     dialog.showErrorBox('Ошибка удвоения', 'Нельзя запустить более одного Губорыла!')
@@ -23,21 +30,6 @@ if (process.platform !== 'win32') {
   throw new Error(`Это приложение работает только на Windows. Обнаружено: ${process.platform}`);
 }
 
-/////////////////////////////
-// Убрать мусор из консоли //
-/////////////////////////////
-// process.stderr.write = (function(write) {
-//   return function(string, encoding, fd) {
-//     if (string.includes('Request Autofill')) return
-//     write.apply(process.stderr, arguments)
-//   }
-// })(process.stderr.write)
-//////////////////////////////////
-// Сохранение логов main в файл //
-//////////////////////////////////
-const {initMainLogger, initRendererLogger}= require('./modules/logger')
-initMainLogger()
-initRendererLogger()
 const l = console.log
 
 
@@ -78,19 +70,6 @@ app.whenReady().then(async () => {
   if (debug) {
     loadingWin.webContents.openDevTools({ mode: 'detach' }); // отдельное окно
   }
-
-  /////////////
-  // WarpFix //
-  /////////////
-    if (execSync('warp-cli tunnel host list').includes('api.github.com')) {
-      l('WarpFix is already installed')
-    } else {
-      execSync(`warp-cli tunnel host add "api.github.com"`)
-      execSync('sc stop "CloudflareWARP"')
-      setTimeout(() => exec('sc start "CloudflareWARP"'), 2000)
-      l('WarpFix has been installed.')
-    }
-  
   //////////////
   // Core API //
   //////////////
