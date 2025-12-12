@@ -16,7 +16,7 @@ const { setSettings, getSettings } = require('./modules/settings.ts')
 const { debug, run_only_tray } = require('./modules/argsParser')
 const { zapretTest } = require('./tests/zapretTest.ts')
 const { initializeTray } = require('./modules/tray.ts')
-const { warpFix }= require('./modules/warpFix.ts')
+const { warpFix } = require('./modules/warpFix.ts')
 warpFix()
 
 if (!app.requestSingleInstanceLock()) {
