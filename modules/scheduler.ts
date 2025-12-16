@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import { app, Notification } from 'electron/main';
+import { app, Notification } from 'electron';
 
 const exePath = app.getPath('exe'); // Path to current executable
 const launchArgs = '--tray'; // Flag for autostart
