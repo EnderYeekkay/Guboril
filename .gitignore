@@ -141,3 +141,5 @@ vite.config.ts.timestamp-*
 
 to_next_commit.txt
 to_next_update.txt
+
+scripts/issTemplateParser.ts
