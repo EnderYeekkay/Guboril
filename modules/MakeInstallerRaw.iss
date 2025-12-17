@@ -1,5 +1,5 @@
 #define MyAppName "Guboril"
-#define MyAppVersion "1.1.2"
+#define MyAppVersion %version%
 #define MyAppPublisher "EnderYeekkay"
 #define MyAppURL "https://github.com/EnderYeekkay/Guboril"
 #define MyAppExeName "Guboril.exe"
