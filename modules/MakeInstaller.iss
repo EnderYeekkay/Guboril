@@ -21,8 +21,11 @@ SetupIconFile="D:\JavaScript\zapret-gui\public\icon.ico"
 
 PrivilegesRequired=admin
 
-Compression=lzma2/ultra64
-SolidCompression=yes
+; Compression=lzma2/ultra64
+; SolidCompression=yes
+Compression=none
+SolidCompression=no
+
 LZMAUseSeparateProcess=yes
 LZMANumBlockThreads=32
 
@@ -48,59 +51,47 @@ Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "Launch {#MyAppName}"; Flags: nowait postinstall runascurrentuser skipifsilent
+Filename: "{app}\{#MyAppExeName}"; \
+    Parameters: "-ai"; \
+    Flags: waituntilterminated; \
+    StatusMsg: "Creating CLI tool... It may take a few seconds"
+
+Filename: "{app}\{#MyAppExeName}"; \
+    Description: "Launch {#MyAppName}"; \
+    Flags: nowait postinstall runascurrentuser skipifsilent
 
 [UninstallRun]
-Filename: "{sys}\taskkill.exe"; \
-Parameters: "/IM Guboril.exe /F /T"; \
-Flags: runhidden waituntilterminated; \
-RunOnceId: "KillGuborilProcess"
+Filename: "{app}\{#MyAppExeName}"; \
+    Parameters: "-bu"; \
+    Flags: runhidden waituntilterminated
 
 Filename: "{sys}\taskkill.exe"; \
-Parameters: "/IM winws /F /T"; \
-Flags: runhidden waituntilterminated; \
-RunOnceId: "KillWinwsProcess"
-
-
-Filename: "{sys}\sc.exe"; \
-Parameters: "stop WinDivert"; \
-Flags: runhidden waituntilterminated; \
-RunOnceId: "StopWinDivert"
+    Parameters: "/IM Guboril.exe /F /T"; \
+    Flags: runhidden waituntilterminated; \
+    RunOnceId: "KillGuborilProcess"
+Filename: "{sys}\taskkill.exe"; \
+    Parameters: "/IM winws /F /T"; \
+    Flags: runhidden waituntilterminated; \
+    RunOnceId: "KillWinwsProcess"
 
 Filename: "{sys}\sc.exe"; \
-Parameters: "delete WinDivert"; \
-Flags: runhidden waituntilterminated; \
-RunOnceId: "DeleteWinDivert"
-
+    Parameters: "stop WinDivert"; \
+    Flags: runhidden waituntilterminated; \
+    RunOnceId: "StopWinDivert"
+Filename: "{sys}\sc.exe"; \
+    Parameters: "delete WinDivert"; \
+    Flags: runhidden waituntilterminated; \
+    RunOnceId: "DeleteWinDivert"
 
 Filename: "{sys}\sc.exe"; \
-Parameters: "stop zapret"; \
-Flags: runhidden waituntilterminated; \
-RunOnceId: "StopZapret"
-
+    Parameters: "stop zapret"; \
+    Flags: runhidden waituntilterminated; \
+    RunOnceId: "StopZapret"
 Filename: "{sys}\sc.exe"; \
-Parameters: "delete zapret"; \
-Flags: runhidden waituntilterminated; \
-RunOnceId: "DeleteZapret"
+    Parameters: "delete zapret"; \
+    Flags: runhidden waituntilterminated; \
+    RunOnceId: "DeleteZapret"
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{userappdata}\guboril"
 Type: filesandordirs; Name: "{localappdata}\guboril"
-
-[Code]
-procedure CurStepChanged(CurStep: TSetupStep);
-var
-  BatPath, ExePath: string;
-begin
-  if CurStep = ssPostInstall then
-  begin
-    ExePath := ExpandConstant('{app}\{#MyAppExeName}');
-    BatPath := ExpandConstant('{win}\guboril.bat');
-
-    SaveStringToFile(BatPath,
-      '@echo off' + #13#10 +
-      '""' + ExePath + '"" %*',
-      False
-    );
-  end;
-end;

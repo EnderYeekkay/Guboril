@@ -1,3 +1,4 @@
+import { execSync, exec } from 'child_process';
 import { initMainLogger, initRendererLogger } from './modules/logger.js';
 initMainLogger()
 initRendererLogger()
@@ -7,7 +8,6 @@ import { app, dialog, BrowserWindow } from 'electron/main';
 import { join, resolve, dirname } from 'node:path';
 import fs from 'fs';
 import updateZapret from './modules/updateZapret.js';
-import { execSync, exec } from 'child_process';
 import pkg from './package.json' with { type: 'json' };
 const { version } = pkg;
 import { createTask, deleteTask, checkTask } from './modules/scheduler.ts';
@@ -40,10 +40,8 @@ const l = console.log
 
 
 import Zapret from './modules/Zapret.ts';
-import { init_cli } from './modules/cli.ts'
 if (debug) app.disableHardwareAcceleration() // Да ну нахуй эти VIDEO_SCHEDULER_INTERNAL_ERROR
 app.whenReady().then(async () => {
-  init_cli()
   process.on('uncaughtException', (err) => {
     err.cause
     l(err.stack)
