@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/archiver": "^7.0.0",
     "@types/jquery": "^3.5.33",
+    "@types/winreg": "^1.2.36",
     "electron": "^39.1.2",
     "electron-packager": "^17.1.2"
   }
