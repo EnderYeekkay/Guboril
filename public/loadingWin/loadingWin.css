@@ -31,11 +31,39 @@ footer {
     position: relative;
     height: 50px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: space-around;
     align-items: center;
 }
 
 #footer_text {
     font-size: large;
     font-weight: 500;
+}
+#current_progress_text_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+#current_progress_text {
+    font-weight: 200;
+}
+#progress_bar {
+    overflow: hidden;
+    position: relative;
+    height: 5px;
+    width: 80px;
+    border-radius: 2.5px;
+    background-color: var(--btn_secondary);
+}
+#current_progress {
+    display: block;
+    content: '';
+    position: relative;
+    left: 0;
+    width: 0;
+    background-color: var(--btn_primary);
+    border-radius: inherit;
+    height: inherit;
 }

@@ -2,8 +2,8 @@ import { execSync, exec } from 'child_process';
 import { initMainLogger, initRendererLogger } from './modules/logger.js';
 initMainLogger()
 initRendererLogger()
-import update from './modules/updateGuboril.ts'
-import { ipcMain, shell } from 'electron';
+import update, { fetchLatestGuborilVersion } from './modules/updateGuboril.ts'
+import { ipcMain, nativeImage, shell } from 'electron';
 import { app, dialog, BrowserWindow } from 'electron/main';
 import { join, resolve, dirname } from 'node:path';
 import fs from 'fs';
@@ -40,6 +40,7 @@ const l = console.log
 
 
 import Zapret from './modules/Zapret.ts';
+import { EventEmitter } from 'events'
 if (debug) app.disableHardwareAcceleration() // Да ну нахуй эти VIDEO_SCHEDULER_INTERNAL_ERROR
 app.whenReady().then(async () => {
   process.on('uncaughtException', (err) => {
@@ -52,6 +53,8 @@ app.whenReady().then(async () => {
     l(err.stack)
     sendURNotify(err)
   })
+  if (!Zapret.isInstalled()) await updateZapret()
+  let zapret = new Zapret()
 
   ////////////////
   // LoadingWin //
@@ -66,20 +69,43 @@ app.whenReady().then(async () => {
     alwaysOnTop: true,
     skipTaskbar: true,
     webPreferences: {
-      devTools: false
+      sandbox: false,
+      preload: resolve('preloads/preload_loadingWin.ts')
     }
   })
   loadingWin.loadFile('./public/loadingWin/loadingWin.html')
-  
-  if (run_only_tray) loadingWin.hide()
+  await new Promise((resolve, _) => ipcMain.on('lwuwu', resolve()))
   if (debug) {
     loadingWin.webContents.openDevTools({ mode: 'detach' }); // отдельное окно
   }
+  if (getSettings().autoUpdate) {
+    const { latestVersion, installerUrl } = await fetchLatestGuborilVersion()
+    if (latestVersion != version) {
+      const res = dialog.showMessageBoxSync(loadingWin, {
+        title: `Доступна новая версия ${latestVersion}`,
+        detail: `Текущая версия: ${version}. Вы хотите обновить приложение Guboril?`,
+        buttons: ['Обновить', 'Не обновлять'],
+        icon: nativeImage.createFromPath(resolve(__dirname, 'public/icon.ico')),
+        defaultId: 0,
+        cancelId: 1
+      })
+      if (res == 0) {
+        try {
+          if ((await update(zapret, loadingWin)) == 4) {
+            app.quit()
+          }
+        } catch (e) {
+          sendURNotify(e)
+        }
+      }
+    }
+  }
+
+  if (run_only_tray) loadingWin.hide()
+
   //////////////
   // Core API //
   //////////////
-  if (!Zapret.isInstalled()) await updateZapret()
-  let zapret = new Zapret()
   const latestVersion = await zapret.getLatestVersion()
   ipcMain.handle('zapret:checkStatus', () => zapret.checkStatus())
   ipcMain.handle('zapret:getAllStrategies', () => zapret.getAllStrategies())
@@ -144,7 +170,7 @@ app.whenReady().then(async () => {
     webPreferences: {
         sandbox: false,
         contextIsolation: true,
-        preload: join(__dirname, 'preload.ts')
+        preload: join(__dirname, 'preloads/preload.ts')
     }
   })
   ipcMain.on('save_logs', () => saveLogsArchive(win))

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../global/styles/style.css"></link>
     <link rel="stylesheet" href="./loadingWin.css">
+    <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
     <title>Губорыл</title>
     <script src="./loadingWin.js"></script>
 </head>
@@ -15,7 +16,16 @@
                 <animateTransform keyTimes="0;1" values="0 50 50;360 50 50" dur="1s" repeatCount="indefinite" type="rotate" attributeName="transform"></animateTransform>
             </circle><g></g></g></svg>
         </div>
-        <footer><span id="footer_text">Starting...</span></footer>
+        <footer>
+            <span id="footer_text">Starting...</span>
+            <div id="progress_bar" hidden>
+                <div id="current_progress"></div>
+            </div>
+            <div id="current_progress_text_container" hidden>
+                <div id="current_progress_title"></div>
+                <div id="current_progress_text"></div>
+            </div>
+        </footer>
     </div>
 </body>
 </html>
