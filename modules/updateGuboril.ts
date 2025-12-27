@@ -1,45 +1,85 @@
 import axios from "axios";
 import pkg from '../package.json' with { type: "json" }; 
-
+import { sendURNotify } from './myNotifcations.ts'
 import { log } from 'console'
 //@ts-ignore
 import Zapret from "./Zapret.ts";
 import { spawn } from "child_process";
 import path from "path";
-import { app, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import fs from 'fs'
+import { getSettings } from "./settings.ts";
 
 
-const UpdateResponse = { Newest: 0, LinkFetchFailed: 1}
-export default async function execute(zapret: Zapret): Promise<number | 0 | 1> {
+const UpdateResponse = {
+    Newest: 0,
+    LinkFetchFailed: 1,
+    DownloadFailed: 2,
+    InstallerFailed: 3,
+    Success: 4
+} as const
+export type UpdateResponseType = typeof UpdateResponse[keyof typeof UpdateResponse]
+
+export default async function execute(zapret: Zapret, loadingWin: BrowserWindow): Promise<UpdateResponseType> {
     if (!(zapret instanceof Zapret)) throw new Error('Parameter must be an instance of the Zapret class!')
-    const res = await axios.get('https://api.github.com/repos/EnderYeekkay/Guboril/releases/latest')
-    const latestVersion: string = res.data.tag_name
-    const installerUrl = res.data?.assets[0]?.browser_download_url
+    
     const installerPath = path.resolve(app.getPath('temp'), 'TempInstaller.exe')
-
+    const { latestVersion, installerUrl } = await fetchLatestGuborilVersion()
+    
     if (!installerUrl) return UpdateResponse.LinkFetchFailed
-    if (latestVersion.substring(latestVersion.indexOf('-v') + 2) == pkg.version) return UpdateResponse.Newest
+    if (latestVersion == pkg.version) return UpdateResponse.Newest
 
-    await downloadInstaller(installerUrl, installerPath)
+    loadingWin.webContents.send('installationStart')
+    try {
+        await downloadInstaller(installerUrl, installerPath, loadingWin)
+    } catch (e) { sendURNotify(e); return UpdateResponse.DownloadFailed }
+    loadingWin.webContents.send('installationFinish')
+
     await zapret.remove()
-    spawn(installerPath)
+
+    try {
+        await new Promise((resolve, reject) => {
+            spawn(installerPath, {
+                detached: true
+            })
+            .once('spawn', () => resolve(true))
+            .once('error', (err) => reject(err))
+        })
+    } catch (e) { sendURNotify(e); return UpdateResponse.InstallerFailed}
+    return UpdateResponse.Success
 }
-async function downloadInstaller(installerUrl: string, installerPath: string) {
+export async function fetchLatestGuborilVersion() {
+    const res = await axios.get('https://api.github.com/repos/EnderYeekkay/Guboril/releases/latest')
+    let latestVersion: string = res.data.tag_name
+    latestVersion = latestVersion.substring(latestVersion.indexOf('-v') + 2)
+    const installerUrl: string = res.data?.assets[0]?.browser_download_url
+
+    return { latestVersion, installerUrl }
+}
+async function downloadInstaller(installerUrl: string, installerPath: string, loadingWin: BrowserWindow) {
+    const writer = fs.createWriteStream(installerPath)
+    const headers = {}
+    const token = getSettings()?.GH_TOKEN
+    if (token) headers['Authorization'] = `token ${token}`
+
     const stream = await axios({
         method: 'get',
         url: installerUrl,
-        responseType: 'stream'
+        responseType: 'stream',
+        headers 
     })
-
-    const size = Number(stream.headers["Content-Length"])
+    const size = Number(stream.headers["content-length"])
     let current = 0
-
-    const writer = fs.createWriteStream(installerPath)
-
+    let lastTime = Date.now()
+    const eventInterval = 300
     stream.data.on('data', (chunk: Buffer) => {
+        let currentTime = Date.now()
         current += chunk.length
-        ipcMain.emit('downloadInstallerProgress', current / size)
+        if (currentTime - lastTime >= eventInterval || current == size) {
+            console.log(current, ' from ', size)
+            loadingWin.webContents.send('downloadInstallerProgress', current, size)
+            lastTime = currentTime
+        }
     })
     stream.data.pipe(writer)
 
