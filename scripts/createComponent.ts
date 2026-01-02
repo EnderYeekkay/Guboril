@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 const component_name = process.argv[2]
-if (!component_name || !component_name.match(/^[a-z]+$/)) throw new Error(`Wrong component name: ${component_name}`)
+if (!component_name || !component_name.match(/^[a-zA-Z]+$/)) throw new Error(`Wrong component name: ${component_name}`)
 
 const component_path = path.resolve(__dirname, '../public/mainwindowr/src/Components', component_name)
 fs.mkdirSync(component_path)

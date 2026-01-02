@@ -8,12 +8,13 @@
     }
   ],
   "configurations": [
+
     {
       "name": "Renderer",
       "request": "launch",
       "type": "chrome",
       "url": "http://localhost:5173",   // Vite dev server
-      "webRoot": "${workspaceFolder}/public/mainwindowr/src"
+      "webRoot": "${workspaceFolder}/public/mainwindowr/src",
     },
     {
       "name": "Main",

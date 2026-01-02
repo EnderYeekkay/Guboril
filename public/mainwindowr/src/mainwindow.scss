@@ -26,7 +26,9 @@
   /* background: var(--btn_link_active);    #272A2D — красиво темнеет */
 }
 #root {
-    /* border #393A3F */
+  margin-top: 48px;
+  padding: 10px;
+  display: flex;
 }
 
 body {
