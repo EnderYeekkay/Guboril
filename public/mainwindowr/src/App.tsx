@@ -1,15 +1,14 @@
 import React from "react";
 import Button from "./Components/button/button.tsx";
-import Header from "./Components/header/header.tsx";
+import LeftColumn from "./Components/leftColumn/leftColumn.tsx";
+import RightColumn from "./Components/rightColumn/rightColumn.tsx";
 export default class App extends React.Component {
     componentDidMount(): void {
-
     }
     render(): React.ReactNode {
-        return <div>
-            <Button label="some"/>
-            <Header/>
+        return <div id="app">
+            <LeftColumn/>
+            <RightColumn/>
         </div>
-        
     }
 }
