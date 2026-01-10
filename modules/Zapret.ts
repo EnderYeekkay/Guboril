@@ -3,7 +3,7 @@ import { spawn, ChildProcess } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
 import { app } from 'electron/main'
-import { shell } from 'electron'
+import { BrowserWindow, shell } from 'electron'
 import { EventEmitter } from 'node:events'
 import axios from 'axios'
 
@@ -14,22 +14,30 @@ const originalBat = path.join(destDir, 'service.bat');
 const coreDir = path.join(app.getPath('userData'), 'core');
 const settingsPath = path.join(app.getPath('userData'), 'settings.json')
 
-type Settings = {
+export type Settings = {
   gameFilter: boolean
   autoUpdate: boolean
+  autoLoad: boolean
   zapretVersion: string
   selectedStrategyNum: number
   notifications: boolean
   GH_TOKEN: string
 };
-type ZapretData = {
-    gf: string
+export type ZapretData = {
+    gf: 'enabled' | 'disabled'
     v: string
+    cs: 'enabled' | 'disabled'
+}
+export function resolveDataBooleanLike (value: DataBooleanLike | boolean): boolean | undefined {
+    if (typeof value === "boolean") return value
+    if (value === 'enabled') return true
+    if (value === 'disabled') return false
+    return
 }
 export default class Zapret extends EventEmitter{
 
     child: ChildProcess
-
+    static win: BrowserWindow
     _isBusy = false
     get isBusy() {
         return this._isBusy
@@ -45,6 +53,19 @@ export default class Zapret extends EventEmitter{
 
     constructor() {
         super()
+        if (!fs.existsSync(settingsPath)) {
+          let defaultSettings: Settings = {
+            gameFilter: false,
+            autoLoad: true,
+            autoUpdate: false,
+            zapretVersion: '0',
+            selectedStrategyNum: 11,
+            notifications: true,
+            GH_TOKEN: null
+          }
+          fs.writeFileSync(settingsPath, JSON.stringify(defaultSettings, null, 2))
+        }
+        
         if (Zapret.isInstalled())
         {
             this._patchedBat = path.join(destDir, 'service_patched.bat');
@@ -58,13 +79,9 @@ export default class Zapret extends EventEmitter{
                 /^\s*start\s+(.*)$/gmi,
                 'call $1'
             );
-            const menuBlockRegex = /echo =========\s+v!LOCAL_VERSION!\s+=========\r?\n[\s\S]*?\r?\necho 0\. Exit\s*/mi
+            const menuBlockRegex = /set "menu_choice=null"+[\s\S]*?(?=set \/p menu_choice=)/
+            code = code.replace(menuBlockRegex, `echo {{"gf": "!GameFilterStatus!", "v": "%LOCAL_VERSION%", "cs":"%CheckUpdatesStatus%"}}\r\n`)
 
-
-            code = code.replace(
-                menuBlockRegex,
-                'echo {{"gf": "%GameFilterStatus%", "v": "%LOCAL_VERSION%", "cs":"%CheckUpdatesStatus%"}}\r\n'
-            )
             // удаляем блок CHECK UPDATES целиком
             const checkUpdatesBlockRegex = /:: CHECK UPDATES =======================[\s\S]*?(?=:: DIAGNOSTICS =========================)/i;
             code = code.replace(checkUpdatesBlockRegex, '');
@@ -86,7 +103,8 @@ export default class Zapret extends EventEmitter{
     static setSettings(data: Partial<Settings>) {
         let old_settings = Zapret.getSettings()
         let new_settings = {...old_settings, ...data}
-        fs.writeFileSync(settingsPath, JSON.stringify(new_settings))
+        this.win.webContents.send('zapret:settingsChanged', new_settings)
+        fs.writeFileSync(settingsPath, JSON.stringify(new_settings, null, 2))
     }
 
     static isInstalled() {
@@ -160,12 +178,12 @@ export default class Zapret extends EventEmitter{
      * 
      * @returns {Promise<object>}
      */
-    async getData() {
+    async getData(): Promise<ZapretData> {
         this.isBusy = true
         this.spawnChild()
         l('\x1b[1;35mgetData()\x1b[0m')
         const handler = (chunk) => {
-            if (this.output.includes('Enter')) {
+            if (this.output.includes('Select')) {
                 l(this.output)
                 this.killChild()
                 this.emit('complete')
@@ -176,17 +194,24 @@ export default class Zapret extends EventEmitter{
         await EventEmitter.once(this, 'complete')
         this.off('out', handler)
 
-        let data = this.output.match(/\{[^{}]*\}/g)[0]
+        const data = this.output.match(/\{[^{}]*\}/g)[0]
         if (!data) throw new ZapretError('Empty data')
+
+        const parsedData: ZapretData = JSON.parse(data)
+        Zapret.setSettings({
+            gameFilter: resolveDataBooleanLike(parsedData.gf),
+            zapretVersion: parsedData.v
+        })
+
         this.isBusy = false
-        return JSON.parse(data)
+        return parsedData
     }
 
     async switchGameFilter() {
         this.isBusy = true
         this.spawnChild()
         l('\x1b[1;35mswitchGameFilter()\x1b[0m')
-        this.write(7)
+        this.write(4)
         const handler = (chunk) => {
             if (this.output.includes('Restart')) {
                 l(this.output)
@@ -198,6 +223,9 @@ export default class Zapret extends EventEmitter{
         this.on('out', handler)
         await EventEmitter.once(this, 'complete')
         this.off('out', handler)
+
+        const previousValue = Zapret.getSettings().gameFilter
+        Zapret.setSettings({gameFilter: !previousValue})
 
         this.isBusy = false
         return true
@@ -220,7 +248,7 @@ export default class Zapret extends EventEmitter{
         shell.showItemInFolder(originalBat);
     }
 
-    async checkStatus() {
+    async checkStatus(): Promise<[boolean]> {
         l('\x1b[1;35mcheckStatus()\x1b[0m')
         this.child = this.spawnChild()
         if (this.isBusy) throw new ZapretError('Queue error')
@@ -234,19 +262,17 @@ export default class Zapret extends EventEmitter{
                 this.killChild()
             }
         }
+
         this.on('out', handler)
         this.write(3)
-        
         let res = await EventEmitter.once(this, 'complete')
         this.off('out', handler)
+
         this.isBusy = false
-        return res
+        return res as [boolean]
     }
-    /**
-     * 
-     * @param {Number} strategyNum 
-     */
-    async install(strategyNum) {
+
+    async install(strategyNum: number): Promise<[boolean]> {
         l(`\x1b[1;35minstall(${strategyNum})\x1b[0m`)
         if (this.isBusy) throw new ZapretError('Queue error')
         strategyNum = Number(strategyNum)
@@ -272,7 +298,8 @@ export default class Zapret extends EventEmitter{
         this.killChild()
         this.isBusy = false
         l(res)
-        return res
+        Zapret.setSettings({selectedStrategyNum: strategyNum})
+        return res as [boolean]
     }
     async remove() {
         l(`\x1b[1;35mremove()\x1b[0m`)
@@ -288,8 +315,9 @@ export default class Zapret extends EventEmitter{
         this.off('out', handler)
         this.killChild()
         this.isBusy = false
+        return res
     }
-    async getAllStrategies() {
+    async getAllStrategies(): Promise<string[]> {
         l('\x1b[1;35mgetAllStrategies()\x1b[0m')
         this.spawnChild()
         if (this.isBusy) throw new ZapretError('Queue error');
@@ -313,8 +341,9 @@ export default class Zapret extends EventEmitter{
     /**
      * Удалить ядро из статической памяти
      */
-    uninstallCore(): string | boolean {
+    async uninstallCore(): Promise<any | boolean> {
         try {
+            await this.remove()
             fs.rmSync(destDir, {
                 recursive: true,
                 force: true,
@@ -324,18 +353,9 @@ export default class Zapret extends EventEmitter{
         } catch (e) {
             return e
         }
-        Zapret.setSettings({zapretVersion: '0'})
+        Zapret.setSettings({zapretVersion: '0', selectedStrategyNum: undefined})
         return true
     }
-    // async queue(callback, ...args) {
-    //     callback = callback.bind(this)
-    //     if (!this.isBusy) {
-    //         return await callback(...args)
-    //     } else {
-    //         await EventEmitter.once(this, 'not_busy')
-    //         return await callback(...args)
-    //     }
-    // }
 }
 
 class ZapretError extends Error {

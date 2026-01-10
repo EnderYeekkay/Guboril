@@ -4,7 +4,7 @@ import path from 'node:path';
 initMainLogger()
 initRendererLogger()
 import update, { fetchLatestGuborilVersion } from './modules/updateGuboril.ts'
-import { ipcMain, nativeImage, shell } from 'electron';
+import { ipcMain, nativeImage, shell, session } from 'electron';
 import { app, dialog, BrowserWindow } from 'electron/main';
 import { join, resolve, dirname } from 'node:path';
 import fs from 'fs';
@@ -14,11 +14,11 @@ const { version } = pkg;
 import { createTask, deleteTask, checkTask } from './modules/scheduler.ts';
 import { saveLogsArchive } from './modules/saveLogs.ts';
 import { sendUENotify, sendURNotify, sendServiceOnNotify, sendServiceOffNotify } from './modules/myNotifcations.ts';
-import { setSettings, getSettings } from './modules/settings.ts';
 import { debug, run_only_tray } from './modules/argsParser.js';
-// const { zapretTest } = require('./tests/zapretTest.ts')
+// import { zapretTest } from './tests/zapretTest.ts';
 import { initializeTray } from './modules/tray.ts';
 import { warpFix } from './modules/warpFix.ts';
+import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -44,6 +44,21 @@ import Zapret from './modules/Zapret.ts';
 import { EventEmitter } from 'events'
 if (debug) app.disableHardwareAcceleration() // Да ну нахуй эти VIDEO_SCHEDULER_INTERNAL_ERROR
 app.whenReady().then(async () => {
+  if (debug) {
+    try {
+      await session.defaultSession.clearStorageData({
+        storages: ['serviceworkers', 'cachestorage']
+      });
+      await installExtension(REACT_DEVELOPER_TOOLS, { 
+        forceDownload: true, 
+        loadExtensionOptions: { allowFileAccess: true } 
+      });
+      
+      console.log('React DevTools: Reloaded successfully');
+    } catch (e) {
+      console.error('React DevTools: Install failed', e);
+    }
+  }
   process.on('uncaughtException', (err) => {
     err.cause
     l(err.stack)
@@ -56,7 +71,6 @@ app.whenReady().then(async () => {
   })
   if (!Zapret.isInstalled()) await updateZapret()
   let zapret = new Zapret()
-
   ////////////////
   // LoadingWin //
   ////////////////
@@ -79,7 +93,7 @@ app.whenReady().then(async () => {
   if (debug) {
     loadingWin.webContents.openDevTools({ mode: 'detach' }); // отдельное окно
   }
-  if (getSettings().autoUpdate) {
+  if (Zapret.getSettings().autoUpdate) {
     const { latestVersion, installerUrl } = await fetchLatestGuborilVersion()
     if (latestVersion != version) {
       const res = dialog.showMessageBoxSync(loadingWin, {
@@ -110,6 +124,7 @@ app.whenReady().then(async () => {
   // Core API //
   //////////////
   const latestVersion = await zapret.getLatestVersion()
+  ipcMain.handle('zapret:isInstalled', () => Zapret.isInstalled())
   ipcMain.handle('zapret:checkStatus', () => zapret.checkStatus())
   ipcMain.handle('zapret:getAllStrategies', () => zapret.getAllStrategies())
   ipcMain.handle('zapret:getData', () => zapret.getData())
@@ -117,12 +132,15 @@ app.whenReady().then(async () => {
   ipcMain.handle('zapret:getLatestVersion', () => latestVersion)
   ipcMain.handle('zapret:fetchLatestVersion', async () => {
     let lv = '0'
-    if (getSettings().autoUpdate) lv = await zapret.getLatestVersion()
+    if (Zapret.getSettings().autoUpdate) lv = await zapret.getLatestVersion()
     return latestVersion = lv
   })
 
-  ipcMain.handle('zapret:getSettings', () => getSettings())
-  ipcMain.on('zapret:setSettings', (_, data) => setSettings(data))
+  ipcMain.handle('zapret:getSettings', () => Zapret.getSettings())
+  ipcMain.on('zapret:setSettings', (_, data) => {
+    Zapret.setSettings(data)
+    win.webContents.send('zapret:settingsChanged', Zapret.getSettings())
+  })
   ipcMain.handle('zapret:rendererLog', () => {})
 
   ipcMain.handle('zapret:install', async (_, strategy) => {
@@ -145,7 +163,6 @@ app.whenReady().then(async () => {
   ipcMain.handle('zapret:uninstallCore', () => zapret.uninstallCore())
   ipcMain.handle('zapret:updateZapret', async () => {
     await updateZapret()
-    
     zapret = new Zapret()
   })
   ipcMain.on('zapret:openCoreFolder', () => zapret.openCoreFolder())
@@ -177,6 +194,7 @@ app.whenReady().then(async () => {
         preload: join(__dirname, 'preloads/mainWindow/preload.ts')
     }
   })
+  Zapret.win = win
   ipcMain.on('save_logs', () => saveLogsArchive(win))
   win.hide()
 

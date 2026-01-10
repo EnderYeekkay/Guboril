@@ -25,7 +25,7 @@
 ::-webkit-scrollbar-thumb:active {
   /* background: var(--btn_link_active);    #272A2D — красиво темнеет */
 }
-#root {
+#app {
   margin-top: 48px;
   padding: 10px;
   display: flex;
@@ -39,4 +39,11 @@ body {
   user-select: none;
   color:whitesmoke;
     margin: 0;
+}
+.container {
+  background-color: var(--container_bg);
+  padding: 20px;
+  margin: 10px;
+  border-radius: 10px;
+  border: none;
 }

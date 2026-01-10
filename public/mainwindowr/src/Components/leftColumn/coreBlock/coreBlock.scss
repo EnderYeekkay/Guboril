@@ -1,0 +1,63 @@
+#core_block {
+    position: relative;
+}
+#core_block_top, #core_block_bottom {
+    position: relative;
+    left: 0;
+    right: 0;
+}
+#core_block_top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+
+    top: 0;
+    bottom: 50%;
+    margin-bottom: 20px;
+}
+
+#core_block_bottom {
+    top: 50%;
+    bottom: 0;
+}
+
+#core_block_text {
+    font-weight: bold;
+}
+
+#core_block_version_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#core_block_version_text {
+    padding-right: 2.5px;
+    font-weight: 100;
+}
+
+#core_block_version_number {
+    padding-left: 2.5px;
+    font-weight: 300;
+}
+
+#core_block_bottom {
+    display: flex;
+    flex-direction: column;
+    align-items:normal;
+}
+
+#core_block_controller {
+    display: flex;
+    justify-content:space-between;
+    margin-bottom: 10px;
+}
+
+#btn_update_core_static, #btn_delete_core{
+    width: calc(50% - 5px);
+}
+
+#btn_install_core {
+    width: 100%;
+}

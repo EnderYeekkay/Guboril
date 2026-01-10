@@ -18,6 +18,7 @@ contextBridge.exposeInMainWorld('mw', {
 })
 
 contextBridge.exposeInMainWorld('zapret', {
+  isInstalled: () => ipcRenderer.invoke('zapret:isInstalled'),
   checkStatus: () => ipcRenderer.invoke('zapret:checkStatus'),
   remove: () => ipcRenderer.invoke('zapret:remove'),
   install: (strategy) => ipcRenderer.invoke('zapret:install', strategy),
@@ -32,6 +33,7 @@ contextBridge.exposeInMainWorld('zapret', {
 
   getSettings: () => ipcRenderer.invoke('zapret:getSettings'),
   setSettings: (settings) => ipcRenderer.send('zapret:setSettings', settings),
+  settingsChanged: (cb) => ipcRenderer.on('zapret:settingsChanged', (_, settings) => cb(settings)),
   openCoreFolder: () => ipcRenderer.send('zapret:openCoreFolder'),
   
 })

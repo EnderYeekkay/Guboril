@@ -4,6 +4,7 @@ import path from 'node:path'
 import { app } from 'electron/main'
 import fs from 'node:fs'
 import { log } from 'node:console'
+import Zapret from './Zapret.ts'
 
 const repo = 'Flowseal/zapret-discord-youtube'
 const userData = app.getPath('userData')
@@ -17,15 +18,7 @@ export default async function updateZapret() {
     console.log('🔍 Checking zapret updates...')
 
     // Load settings.json
-    let settings = {};
-    if (fs.existsSync(settingsPath)) {
-        try {
-            settings = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
-        } catch {
-            console.log('⚠️ Failed to read settings.json, resetting...');
-            settings = {};
-        }
-    }
+    let settings = Zapret.getSettings()
 
     const currentVersion = settings.zapretVersion || null;
 
@@ -67,9 +60,7 @@ export default async function updateZapret() {
     }
 
     // 5. Update settings.json version
-    settings.zapretVersion = latestTag;
-    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
-
+    Zapret.setSettings({zapretVersion: latestTag})
     // 6. Remove RAR
     fs.unlinkSync(rarPath);
 
@@ -77,7 +68,7 @@ export default async function updateZapret() {
 
     return 0;
     async function ghRequest(url, options = {}) {
-        const token = JSON.parse(fs.readFileSync(settingsPath))?.GH_TOKEN
+        const token = Zapret.getSettings().GH_TOKEN
         const headers = options.headers || {}
 
         if (typeof token == 'string') {

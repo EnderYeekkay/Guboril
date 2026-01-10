@@ -8,8 +8,6 @@ import { spawn } from "child_process";
 import path from "path";
 import { app, BrowserWindow, ipcMain } from "electron";
 import fs from 'fs'
-import { getSettings } from "./settings.ts";
-
 
 const UpdateResponse = {
     Newest: 0,
@@ -63,7 +61,7 @@ export async function fetchLatestGuborilVersion() {
 async function downloadInstaller(installerUrl: string, installerPath: string, loadingWin: BrowserWindow) {
     const writer = fs.createWriteStream(installerPath)
     const headers = {}
-    const token = getSettings()?.GH_TOKEN
+    const token = Zapret.getSettings()?.GH_TOKEN
     if (token) headers['Authorization'] = `token ${token}`
 
     const stream = await axios({
