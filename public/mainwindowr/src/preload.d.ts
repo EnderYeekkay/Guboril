@@ -1,9 +1,6 @@
-// preload.d.ts
-
-// import type { IpcRendererEvent } from 'electron' // Можно удалить или использовать инлайн
-
+import { ZapretData, Settings } from '../../../modules/Zapret.ts'
+import { IpcRendererEvent } from 'electron'
 declare global {
-  // Убрали "declare" перед const, теперь это корректно
   const mw: { 
     version: string
     closeWindow: () => void
@@ -14,27 +11,30 @@ declare global {
   }
 
   const zapret: {
-    checkStatus: () => Promise<any>
-    remove: () => Promise<any>
-    install: (strategy: string) => Promise<any>
-    switchGameFilter: () => Promise<any>
-    getData: () => Promise<any>
+    isInstalled: () => Promise<boolean>
+    checkStatus: () => Promise<[boolean]>
+    remove: () => Promise<[boolean]>
+    install: (strategy: string) => Promise<[boolean]>
+    switchGameFilter: () => Promise<true>
+    getData: () => Promise<ZapretData>
     getAllStrategies: () => Promise<string[]>
 
-    getLatestVersion: () => Promise<string>
-    fetchLatestVersion: () => Promise<string>
-    updateZapret: () => Promise<any>
-    uninstallCore: () => Promise<any>
+    getLatestVersion: () => Promise<{tag: string, url: string}>
+    fetchLatestVersion: () => Promise<{tag: string, url: string}>
+    updateZapret: () => Promise<0 | 1>
+    uninstallCore: () => Promise<any | boolean>
 
-    getSettings: () => Promise<any>
-    setSettings: (settings: any) => void
-    openCoreFolder: () => void
+    getSettings: () => Promise<Settings>
+    setSettings: (data: Partial<Settings>) => Promise<true>
+    settingsChanged: (cb: (settings: Settings) => any) => Promise<Settings>
+    openCoreFolder: () => Promise<true>
+    
   }
   
   const tray_event: {
     // Используем инлайн-импорт типа
-    onDisableToStop: (cb: (event: import('electron').IpcRendererEvent) => void) => void
-    onRollbackToStop: (cb: (event: import('electron').IpcRendererEvent) => void) => void
+    onDisableToStop: (cb: (event: IpcRendererEvent) => void) => void
+    onRollbackToStop: (cb: (event: IpcRendererEvent) => void) => void
     sendDisableToStop: () => void
     sendRollbackToStop: () => void
   }

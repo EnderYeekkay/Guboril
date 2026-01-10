@@ -1,0 +1,87 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Vite",
+            "type": "shell",
+            "command": "npx vite",
+            "icon": {
+                "id": "build",
+                "color": "terminal.ansiCyan"
+            },
+            "presentation": {
+                "group": "my-group",
+                "panel": "new"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Vite Build",
+            "type": "shell",
+            "icon": {
+                "id": "eye-watch",
+                "color": "terminal.ansiGreen"
+            },
+            "command": "npx vite build --watch",
+            "presentation": {
+                "group": "my-group",
+                "panel": "new"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Git",
+            "type": "shell",
+            "icon": {
+                "id": "github-inverted",
+                "color": "terminal.ansiCyan"
+            },
+            "command": "powershell -NoExit -Command \"Write-Host GitHub\"",
+            "presentation": {
+                "panel": "new"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "React Component Creator",
+            "type": "shell",
+            "icon": {
+                "id": "new-folder",
+                "color": "terminal.ansiGreen"
+            },
+            "command": "powershell -NoExit -Command \"Write-Host 'npm run component'\"",
+            "presentation": {
+                "panel": "new"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "problemMatcher": []
+        },
+    {
+            "label": "npm",
+            "type": "shell",
+            "icon": {
+                "id": "package",
+                "color": "terminal.ansiRed"
+            },
+            "command": "powershell -NoExit -Command \"Write-Host \"NPM package manager\"",
+            "presentation": {
+                "panel": "new"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "problemMatcher": []
+        },
+    ]
+}

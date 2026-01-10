@@ -1,0 +1,61 @@
+/* --------------------------------------------------- */
+/*                      TOGGLE                         */
+/* --------------------------------------------------- */
+
+/* ---BASE (UNCHECKED) */
+.toggle {
+    appearance: none;
+    position: relative;
+    width: 40px;
+    height: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 0;
+
+    background-color: var(--cm_active);
+    transition: background-color .2s ease-in-out;
+}
+
+.toggle::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: inherit;
+    background-color: whitesmoke;
+    left: 0;
+    top: 0;
+    transition: .2s ease-in-out;
+}
+
+/* --- CHECKED --- */
+.toggle:checked {
+    background-color: var(--btn_primary);
+}
+
+.toggle:checked::after {
+    left: 20px;
+}
+
+/* --- DISABLED --- */
+.toggle:disabled {
+    cursor: not-allowed;
+    /* transition: none !important; отключаем анимацию */
+    background-color: var(--cm_inactive);
+}
+
+.toggle:disabled::after {
+    /* transition: none !important; */
+    background-color: #63656f;
+}
+
+/* --- DISABLED + CHECKED  (ОТДЕЛЬНО!) --- */
+.toggle:disabled:checked {
+    background-color: var(--btn_primary_disabled); /* фон */
+}
+
+.toggle:disabled:checked::after {
+    left: 20px;              /* бегунок остаётся справа */
+    background-color: var(--cm_inactive); 
+    /* или другой цвет, если хочешь ещё явнее отличить */
+}

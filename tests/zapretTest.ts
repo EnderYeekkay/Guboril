@@ -1,4 +1,4 @@
-import Zapret from "../modules/Zapret.js"
+import Zapret from "../modules/Zapret.ts"
 
 export async function zapretTest(zapret: Zapret, iterations = 20) {
   let startTime = Date.now()

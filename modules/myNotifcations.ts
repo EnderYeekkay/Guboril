@@ -1,8 +1,7 @@
 import { app, Notification } from 'electron/main';
-import path from 'path'
-import { getSettings } from '../modules/settings.ts'
+import Zapret from './Zapret.ts';
 function isNotificationsAllowed() {
-    return getSettings().notifications
+    return Zapret.getSettings().notifications
 }
 export function sendServiceOnNotify(strategy_num: number) {
     if (!isNotificationsAllowed()) return
