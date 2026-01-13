@@ -15,6 +15,7 @@ contextBridge.exposeInMainWorld('mw', {
   uwu: () => ipcRenderer.send('uwu'),
   open_github: () => ipcRenderer.send('open_github'),
   save_logs: () => ipcRenderer.send('save_logs'),
+  clear_discord_cache: () => ipcRenderer.invoke('clear_discord_cache')
 })
 
 contextBridge.exposeInMainWorld('zapret', {

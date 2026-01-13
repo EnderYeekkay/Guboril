@@ -1,7 +1,3 @@
-
-.choices, .is_open {
-    border: none !important;
-}
 .choices {
     margin-top: 5px;
     display: flex;
@@ -22,44 +18,77 @@
     background-color: var(--cm_bg) !important;
     border: var(--cm_border) 1px solid !important;
     border-radius: 10px !important;
-    padding: 10px !important;
-    display: flex !important;
-    flex-direction: column;
-    justify-content: center;
-    min-height: auto;
+    min-height: min-content !important;
 }
-.choices.is-disabled .choices__inner, .choices.is-disabled .choices__input {
-    background-color: var(--btn_link_disabled_border) !important;
+
+.choices__list {
+    height: max-content !important;
 }
 .choices__list--dropdown {
     width: inherit;
-    max-height: 300px;
+    // max-height: 300px;
     border-color: var(--cm_active) !important;
     border-radius: 10px;
+    border-bottom-left-radius: 10px !important;
+    border-bottom-right-radius: 10px !important;
     margin-top: 4px !important;
+    overflow: hidden !important;
+    border: 1px solid var(--cm_border) !important;
+    background-color: #00000000 !important;
 }
 
 .choices__list--single {
-    width: initial !important;
     position: relative;
-    border-radius: 5px;
+    width: fit-content !important;
+    padding: 4px !important;
     background: none;
+    left: 50%;
+    transform: translateX(-50%);
 }
 .choices__item--selectable {
     background: none;
 }
 
-.choices__list--dropdown .choices__item--selectable.is-highlighted, .choices__list[aria-expanded] .choices__item--selectable.is-highlighted  {
+ .choices__item--selectable.is-highlighted{
     background-color: var(--cm_active) !important;
 }
 
-.choices__list--dropdown, .choices__list[aria-expanded] {
-    border: none;
-    border-radius: 10px;
-    background-color: #00000000
-}
 .choices__input {
     background-color: var(--cm_bg) !important;
     color: whitesmoke !important;
     padding: 10px !important;
+}
+.choices__input--cloned {
+    border-top-left-radius: 10px !important;
+    border-top-right-radius: 10px !important;
+    overflow: hidden !important;
+    border: none !important;
+}
+
+/* Цвет стрелочки в закрытом состоянии */
+.choices[data-type*="select-one"]::after {
+  border-color: whitesmoke transparent transparent transparent !important; /* Замените red на ваш цвет */
+}
+
+/* Цвет стрелочки, когда список открыт (она переворачивается) */
+.choices.is-open[data-type*="select-one"]::after {
+  border-color: transparent transparent whitesmoke transparent !important; /* Замените blue на ваш цвет */
+  margin-top: -7.5px !important; /* Корректировка положения при открытии */
+}
+
+.is-selected {
+    background-color: var(--cm_active) !important;
+}
+.is-selected::after {
+    opacity: 1 !important;
+    content: '';
+    display: block;
+    position: absolute;
+    right: 10px;
+    background-image: url('../check.png');
+    background-size: cover;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    transform: translateY(-50%);
 }

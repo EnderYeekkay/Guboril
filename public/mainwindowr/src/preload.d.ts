@@ -8,6 +8,7 @@ declare global {
     uwu: () => void
     open_github: () => void
     save_logs: () => void
+    clear_discord_cache: () => Promise<boolean>
   }
 
   const zapret: {

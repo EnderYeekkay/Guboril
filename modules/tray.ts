@@ -36,7 +36,7 @@ export async function initializeTray(win: BrowserWindow, zapret: Zapret, publicP
                 power_btn_menuItem.label = power_on_text
                 if(!win.isVisible()) sendServiceOffNotify()
             } else {
-                let selectedStrategyNum = Zapret.getSettings().selectedStrategyNum + 1
+                let selectedStrategyNum = Zapret.getSettings().selectedStrategyNum
                 await zapret.install(selectedStrategyNum)
                 zapretStatus = true
                 power_btn_menuItem.label = power_off_text

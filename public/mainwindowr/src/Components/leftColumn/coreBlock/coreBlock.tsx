@@ -74,7 +74,7 @@ export default function CoreBlock() {
                 label='Открыть папку'
                 action={zapret.openCoreFolder}
                 Icon={{
-                    iconPath: '../../../../open_folder.png',
+                    iconPath: '../open_folder.png',
                     iconSize: ButtonIconSize.i18
                 }}
             />

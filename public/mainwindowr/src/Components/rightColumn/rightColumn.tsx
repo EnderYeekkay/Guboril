@@ -5,7 +5,7 @@ import Button, { ButtonIconSize, ButtonStyle } from '../button/button.tsx'
 import Checkbox from '../checkbox/checkbox.tsx'
 import ZapretProvider from '../../Contexts/Zapret/ZapretProvider.tsx'
 import { ChangeEvent, useContext } from 'react'
-
+import DiscordCacheCleaner from './discordCacheCleaner.tsx'
 export default function RightColumn() {
     const { changeGameFilter, settings } = useContext(ZapretProvider)
     function autoLoad (event: ChangeEvent<HTMLInputElement>) {
@@ -57,11 +57,15 @@ export default function RightColumn() {
                 style={ButtonStyle.Link}
                 Icon={{
                     iconSize: ButtonIconSize.i16,
-                    iconPath: '../../../link.png'
+                    iconPath: '../link.png'
                 }}
                 addictionClasses={['btn_settings']}
                 action={mw.open_github}
                 />
         </Container>
+        <Container text='Кэш Discord'>
+            <DiscordCacheCleaner/>
+        </Container>
+        
     </div>
 }

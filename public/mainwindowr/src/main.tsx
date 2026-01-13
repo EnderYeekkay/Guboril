@@ -11,7 +11,9 @@ import { ZapretProvider } from "./Contexts/Zapret/ZapretProvider.tsx";
 
 const log = console.log
 const root = ReactDOM.createRoot(document.getElementById('root'))
-async function renderer() {
+
+log('Yamete Kudasai');
+(async () => {
     await Intialize()
     root.render(
         <React.StrictMode>
@@ -22,5 +24,4 @@ async function renderer() {
         </React.StrictMode>
     )
     mw.uwu()
-}
-renderer()
+})()
