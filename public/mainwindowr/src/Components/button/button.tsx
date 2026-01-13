@@ -20,6 +20,7 @@ type ButtonProps = {
     }
     label: string
     toStop?: boolean
+    loading?: boolean
     action: (event?: React.MouseEvent<HTMLButtonElement>) => void
     btnRef?: Ref<HTMLButtonElement>
     addictionClasses?: string[]
@@ -34,7 +35,7 @@ export default function Button(props: ButtonProps) {
     const { busy } = useContext(ZapretContext)
     const imgRef = useRef<HTMLImageElement>(null)
     const textRef = useRef<HTMLDivElement>(null)
-    const [loading, setLoading] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(Boolean(props.loading))
 
     useEffect(() => {
         if (!busy && loading && props.toStop) { // Если busy стал true, кнопка загружается, и она toStop

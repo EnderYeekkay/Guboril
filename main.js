@@ -11,6 +11,7 @@ import fs from 'fs';
 import updateZapret from './modules/updateZapret.js';
 import pkg from './package.json' with { type: 'json' };
 const { version } = pkg;
+import discordCacheCleaner from './modules/discordCacheCleaner.ts'
 import { createTask, deleteTask, checkTask } from './modules/scheduler.ts';
 import { saveLogsArchive } from './modules/saveLogs.ts';
 import { sendUENotify, sendURNotify, sendServiceOnNotify, sendServiceOffNotify } from './modules/myNotifcations.ts';
@@ -23,7 +24,6 @@ import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-insta
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
 warpFix()
 
 if (!app.requestSingleInstanceLock()) {
@@ -139,7 +139,6 @@ app.whenReady().then(async () => {
   ipcMain.handle('zapret:getSettings', () => Zapret.getSettings())
   ipcMain.on('zapret:setSettings', (_, data) => {
     Zapret.setSettings(data)
-    win.webContents.send('zapret:settingsChanged', Zapret.getSettings())
   })
   ipcMain.handle('zapret:rendererLog', () => {})
 
@@ -172,7 +171,7 @@ app.whenReady().then(async () => {
   ipcMain.handle('scheduler:checkTask', () => checkTask())
 
   ipcMain.on('open_github', () => shell.openExternal('https://github.com/EnderYeekkay/Guboril'))
-  // await zapretTest(zapret, 40)
+  ipcMain.handle('clear_discord_cache', () => discordCacheCleaner())
   console.log(app.getPath('userData'))
 
   ////////////////

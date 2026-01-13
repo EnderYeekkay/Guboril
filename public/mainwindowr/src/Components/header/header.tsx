@@ -1,6 +1,7 @@
 import './header.scss'
 import Collapse from './collapse.tsx'
 import Close from './close.tsx'
+import { useEffect } from 'react'
 
 export default function Header() {
     return <header>

@@ -10,11 +10,11 @@ export default function ChoicesSelect() {
 
     useEffect(() => {
         let choicesOptions: Partial<Choices.Options> = {
+            shouldSort: false,
             searchEnabled: true,
             itemSelectText: '',
             position: "bottom",
             searchPlaceholderValue: "Введите название",
-            
         }
         //@ts-ignore
         choicesRef.current = new Choices(selectRef.current, choicesOptions) as Choices.default
@@ -33,19 +33,6 @@ export default function ChoicesSelect() {
         else choicesRef.current.enable()
     })
 
-    function generateStrategyList() {
-        let res = []
-        for (let i = 0; i <= strategies.length; i++) {
-            res.push(
-            <option
-                key={i}
-                value={i + 1}
-            >
-            {i+1}. {strategies[i]}
-            </option>)
-        }
-        return res
-    }
     
     return <select
         disabled={busy}
@@ -54,6 +41,15 @@ export default function ChoicesSelect() {
         id="strategy"
         onChange={(event) => installStrategy(event.target.value)}
     >
-        {generateStrategyList()}
+        {strategies.map((elem, i) => {
+            return  <option
+                key={i}
+                value={i + 1}
+            >
+            {elem.includes('general.bat')
+            ? elem.substring(0, elem.indexOf('.'))
+            : elem.substring(elem.indexOf('(') + 1, elem.indexOf(')'))}
+            </option>
+        })}
     </select>
 }

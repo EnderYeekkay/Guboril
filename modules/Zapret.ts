@@ -36,8 +36,8 @@ export function resolveDataBooleanLike (value: DataBooleanLike | boolean): boole
 }
 export default class Zapret extends EventEmitter{
 
-    child: ChildProcess
     static win: BrowserWindow
+    child: ChildProcess
     _isBusy = false
     get isBusy() {
         return this._isBusy
