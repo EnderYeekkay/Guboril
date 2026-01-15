@@ -1,18 +1,13 @@
 import packager from 'electron-packager';
-const settings = {
-    out: "dist",
-    icon: "public/icon.ico",
-    asar: false
-}
 const options = {
     dir: '.',
     name: 'Guboril',
     platform: 'win32',
     arch: 'x64',
     overwrite: true,
-    out: settings.out,
-    icon: settings.icon,
-    asar: settings.asar,
+    out: "dist",
+    icon: "public/icon.ico",
+    asar: true,
     win32metadata: {
         'requested-execution-level': 'requireAdministrator',
     },
@@ -33,6 +28,7 @@ const options = {
 
 async function bundleApp() {
     try {
+        //@ts-ignore
         const appPaths = await packager(options);
         console.log(`Successfully packaged app in: ${appPaths.join(', ')}`);
     } catch (err) {

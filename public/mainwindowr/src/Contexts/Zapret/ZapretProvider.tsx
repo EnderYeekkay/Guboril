@@ -23,7 +23,9 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
     const queue = async (zapretFunction: (...args: any[]) => Promise<any>, ...params: any[]) => {
         if ( busy) throw new Error('Renderer queue Error!')
         setBusy(true)
+        tray_event.sendDisableToStop()
         const res = await zapretFunction(...params)
+        tray_event.sendRollbackToStop()
         setBusy(false)
         return res
     }
@@ -31,11 +33,15 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
         tray_event.onDisableToStop(() => setBusy(true))
         tray_event.onRollbackToStop(async () => {
             await fetchSettings()
+            setStatus((await zapret.checkStatus())[0])
             setBusy(false)
         })
         zapret.settingsChanged((settings) => {
             setSettings(settings)
         })
+        return () => {
+            tray_event.clean()
+        }
     }, [])
 
 
