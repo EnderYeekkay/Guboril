@@ -42,7 +42,10 @@ contextBridge.exposeInMainWorld('zapret', {
 contextBridge.exposeInMainWorld('tray_event', {
    onDisableToStop: (cb) => ipcRenderer.on('disableToStop', cb),
    onRollbackToStop: (cb) => ipcRenderer.on('rollbackToStop', cb),
-
+   clean: () => {
+    ipcRenderer.removeAllListeners('disableToStop')
+    ipcRenderer.removeAllListeners('rollbackToStop')
+   },
    sendDisableToStop: () => ipcRenderer.send('sendDisableToStop'),
    sendRollbackToStop: () => ipcRenderer.send('sendRollbackToStop')
 })

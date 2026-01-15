@@ -36,6 +36,7 @@ declare global {
     // Используем инлайн-импорт типа
     onDisableToStop: (cb: (event: IpcRendererEvent) => void) => void
     onRollbackToStop: (cb: (event: IpcRendererEvent) => void) => void
+    clean: () => void
     sendDisableToStop: () => void
     sendRollbackToStop: () => void
   }
