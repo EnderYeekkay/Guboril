@@ -3,7 +3,9 @@ import './Checkbox.scss'
 type CheckboxProps = {
     toStop?: boolean
     checked?: boolean | DataBooleanLike
-    onChange: (event: ChangeEvent<HTMLInputElement>) => any
+    disabled?: boolean
+    onChange: (event: ChangeEvent<HTMLInputElement>) => void
+    onClick?: (event: React.MouseEvent<HTMLInputElement>) => void
 }
 import ZapretContext, { resolveDataBooleanLike } from '../../Contexts/Zapret/ZapretProvider.tsx'
 export default function Checkbox(props: CheckboxProps) {
@@ -14,8 +16,9 @@ export default function Checkbox(props: CheckboxProps) {
         ref={checkboxRef}
         type="checkbox"
         className="toggle"
-        disabled={props.toStop ? busy : false}
-        onChange={props.onChange}
+        disabled={props.disabled || props.toStop ? busy : false}
+        onChange={(e) => props.onChange(e)}
+        onClick={props.onClick ? (e) => props.onClick(e) : () => {}}
         checked={resolveDataBooleanLike(props.checked)}
     />
 }

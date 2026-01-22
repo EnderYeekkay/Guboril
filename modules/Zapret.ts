@@ -14,18 +14,19 @@ const originalBat = path.join(destDir, 'service.bat');
 const coreDir = path.join(app.getPath('userData'), 'core');
 const settingsPath = path.join(app.getPath('userData'), 'settings.json')
 
+export const SettingsLength = 7
 export type Settings = {
-  gameFilter: boolean
-  autoUpdate: boolean
-  autoLoad: boolean
-  zapretVersion: string
+  gameFilter:          boolean
+  autoUpdate:          boolean
+  autoLoad:            boolean
+  zapretVersion:       string
   selectedStrategyNum: number
-  notifications: boolean
-  GH_TOKEN: string
+  notifications:       boolean
+  GH_TOKEN:            string
 };
 export type ZapretData = {
     gf: 'enabled' | 'disabled'
-    v: string
+    v:  string
     cs: 'enabled' | 'disabled'
 }
 export function resolveDataBooleanLike (value: DataBooleanLike | boolean): boolean | undefined {
@@ -33,6 +34,17 @@ export function resolveDataBooleanLike (value: DataBooleanLike | boolean): boole
     if (value === 'enabled') return true
     if (value === 'disabled') return false
     return
+}
+export async function pingGithubAPI(): Promise<boolean>{
+    const startTime = Date.now()
+    try {
+        const res = await axios.get('https://api.github.com')
+        l('API responded in ', Date.now() - startTime, ' ms.')
+    } catch(e) {
+        l('API not responded.')
+        return false
+    }
+    return true
 }
 export default class Zapret extends EventEmitter{
 
@@ -53,21 +65,11 @@ export default class Zapret extends EventEmitter{
 
     constructor() {
         super()
-        if (!fs.existsSync(settingsPath)) {
-          let defaultSettings: Settings = {
-            gameFilter: false,
-            autoLoad: true,
-            autoUpdate: false,
-            zapretVersion: '0',
-            selectedStrategyNum: 11,
-            notifications: true,
-            GH_TOKEN: null
-          }
-          fs.writeFileSync(settingsPath, JSON.stringify(defaultSettings, null, 2))
-        }
+
         
         if (Zapret.isInstalled())
         {
+            this.child = this.spawnChild()
             this._patchedBat = path.join(destDir, 'service_patched.bat');
 
             // читаем оригинал
@@ -94,8 +96,21 @@ export default class Zapret extends EventEmitter{
         } else {
             l('Warning! No core has been detected!')
         }
-        this.child = this.spawnChild()
-        
+    }
+
+    async initializeSettings(): Promise<void>{
+        const tempData = await this.getData()
+        let defaultSettings: Settings = {
+            gameFilter: resolveDataBooleanLike(tempData.gf),
+            autoLoad: true,
+            autoUpdate: false,
+            zapretVersion: '0',
+            selectedStrategyNum: 11,
+            notifications: true,
+            GH_TOKEN: null
+        }
+        console.log('Reinitializing Settings', defaultSettings)
+        fs.writeFileSync(settingsPath, JSON.stringify(defaultSettings, null, 2))
     }
     static getSettings(): Settings {
         return JSON.parse(fs.readFileSync(settingsPath).toString())
@@ -116,8 +131,10 @@ export default class Zapret extends EventEmitter{
             return false;
         }
     }
+
     spawnChild () {
         l('\x1b[32mspawnChild()\x1b[0m')
+        if (!Zapret.isInstalled()) throw new Error('Trying to spawn child while core is not installed!')
         this.output = ''
         /**
          * @type {ChildProcess}
@@ -164,7 +181,11 @@ export default class Zapret extends EventEmitter{
         this.child.kill()
     }
     static async initialize() {
+
         let res = new this()
+        if (!fs.existsSync(settingsPath) || Object.keys(Zapret.getSettings()).length < SettingsLength) {
+            res.initializeSettings()
+        }
         return res
     }
     write(value) {
@@ -174,12 +195,13 @@ export default class Zapret extends EventEmitter{
         this.child.stdin.write(`${value.toString()}\n`)
     }
 
-    /**
-     * 
-     * @returns {Promise<object>}
-     */
     async getData(): Promise<ZapretData> {
         this.isBusy = true
+        if (!Zapret.isInstalled()) return {
+            gf: 'disabled',
+            v: '0',
+            cs: 'disabled'
+        }
         this.spawnChild()
         l('\x1b[1;35mgetData()\x1b[0m')
         const handler = (chunk) => {
@@ -207,12 +229,15 @@ export default class Zapret extends EventEmitter{
         return parsedData
     }
 
-    async switchGameFilter() {
+    async switchGameFilter(): Promise<boolean> {
         this.isBusy = true
         this.spawnChild()
         l('\x1b[1;35mswitchGameFilter()\x1b[0m')
         this.write(4)
+        let res: boolean = null
         const handler = (chunk) => {
+            if (this.output.includes('Disabling')) res = false
+            if (this.output.includes('Enabling')) res = true
             if (this.output.includes('Restart')) {
                 l(this.output)
                 this.killChild()
@@ -223,6 +248,8 @@ export default class Zapret extends EventEmitter{
         this.on('out', handler)
         await EventEmitter.once(this, 'complete')
         this.off('out', handler)
+        if (res === null) throw new ZapretError('Unable to detect game filter status')
+        console.log(res.toString().toUpperCase())
 
         const previousValue = Zapret.getSettings().gameFilter
         Zapret.setSettings({gameFilter: !previousValue})
@@ -234,7 +261,7 @@ export default class Zapret extends EventEmitter{
     async getLatestVersion() {
         const repo = 'Flowseal/zapret-discord-youtube';
         l('\x1b[1;35mgetLatestVersion()\x1b[0m')
-        const { data: latest } = await axios.get(`https://api.github.com/repos/${repo}/releases/latest`);
+        const { data: latest } = await axios.get(`https://api.github.com/repos/Flowseal/zapret-discord-youtube/releases/tags/1.9.3`);
 
         const latestTag = latest.tag_name || latest.name;
         const latestUrl = latest.assets.find(a => a.name.endsWith('.rar'))?.browser_download_url;
@@ -247,11 +274,12 @@ export default class Zapret extends EventEmitter{
     openCoreFolder() {
         shell.showItemInFolder(originalBat);
     }
-
-    async checkStatus(): Promise<[boolean]> {
+    async checkStatus(): Promise<[boolean]>{
         l('\x1b[1;35mcheckStatus()\x1b[0m')
+        if (!Zapret.isInstalled()) return [false]
         this.child = this.spawnChild()
         if (this.isBusy) throw new ZapretError('Queue error')
+        this.isBusy = true
         const handler = (output) => {
             if (output.includes('RUNNING')) {
                 this.emit('complete', true, (output.match(/Service strategy installed from "([^"]+)"/) || [])[1] || null)
@@ -276,9 +304,9 @@ export default class Zapret extends EventEmitter{
         l(`\x1b[1;35minstall(${strategyNum})\x1b[0m`)
         if (this.isBusy) throw new ZapretError('Queue error')
         strategyNum = Number(strategyNum)
-        this.spawnChild()
-        if (isNaN(strategyNum)) throw new ZapretError(`strategyNum must be number, but it is: ${strategyNum}`)
 
+        if (isNaN(strategyNum)) throw new ZapretError(`strategyNum must be number, but it is: ${strategyNum}`)
+        this.spawnChild()
         this.write(1)
         const handler = (output) => {
             if (output.includes('Input')) this.emit('complete', true)
@@ -319,6 +347,7 @@ export default class Zapret extends EventEmitter{
     }
     async getAllStrategies(): Promise<string[]> {
         l('\x1b[1;35mgetAllStrategies()\x1b[0m')
+        if (!Zapret.isInstalled()) return []
         this.spawnChild()
         if (this.isBusy) throw new ZapretError('Queue error');
         const handler = async (output) => {
@@ -342,6 +371,7 @@ export default class Zapret extends EventEmitter{
      * Удалить ядро из статической памяти
      */
     async uninstallCore(): Promise<any | boolean> {
+        if (!(await pingGithubAPI())) return false
         try {
             await this.remove()
             fs.rmSync(destDir, {
@@ -353,7 +383,7 @@ export default class Zapret extends EventEmitter{
         } catch (e) {
             return e
         }
-        Zapret.setSettings({zapretVersion: '0', selectedStrategyNum: undefined})
+        Zapret.setSettings({zapretVersion: '0', selectedStrategyNum: 11})
         return true
     }
 }

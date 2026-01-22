@@ -3,6 +3,7 @@ import '../../../../global/styles/style.css'
 import './button.scss'
 import ZapretContext from '../../Contexts/Zapret/ZapretProvider.tsx'
 import Dcloader from './dcloader/dcloader.tsx'
+import { event } from 'jquery'
 
 export enum ButtonStyle {
     Primary = 'btn_primary',
@@ -18,6 +19,7 @@ type ButtonProps = {
         iconPath?: string
         iconSize?: ButtonIconSize
     }
+    disabled?: boolean
     label: string
     toStop?: boolean
     loading?: boolean
@@ -47,19 +49,19 @@ export default function Button(props: ButtonProps) {
 
     let btn_classes = [
         'btn',
-        props.style,
+        props.style || ButtonStyle.Secondary,
         props.toStop && busy && "to_stop",
         ...(props.addictionClasses ? props.addictionClasses : [])
     ].filter((value) => !!value)
     .join(' ');
 
-    function onClick() {
+    function onClick(event: React.MouseEvent<HTMLButtonElement>): void {
         if (props.toStop) {
             setLoading(true)
             if (props.Icon) imgRef.current.style.opacity = '0'
             textRef.current.style.opacity = '0'
         }
-        props.action()
+        props.action(event)
     }
 
     const btnImg = <img ref={imgRef} src={props.Icon?.iconPath} className={props.Icon?.iconSize} alt=""/>
@@ -67,7 +69,7 @@ export default function Button(props: ButtonProps) {
         ref={props.btnRef}
         className={btn_classes}
         onClick={onClick}
-        disabled={props.toStop && busy}
+        disabled={props.toStop && busy || props.disabled}
     >
         {props.Icon ? btnImg : ''}
         <div ref={textRef} className="btn_text">{props.label}</div>

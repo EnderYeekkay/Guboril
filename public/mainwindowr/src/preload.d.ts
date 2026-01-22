@@ -20,7 +20,6 @@ declare global {
     getData: () => Promise<ZapretData>
     getAllStrategies: () => Promise<string[]>
 
-    getLatestVersion: () => Promise<{tag: string, url: string}>
     fetchLatestVersion: () => Promise<{tag: string, url: string}>
     updateZapret: () => Promise<0 | 1>
     uninstallCore: () => Promise<any | boolean>
@@ -38,7 +37,7 @@ declare global {
     onRollbackToStop: (cb: (event: IpcRendererEvent) => void) => void
     clean: () => void
     sendDisableToStop: () => void
-    sendRollbackToStop: () => void
+    sendRollbackToStop: (status: boolean) => void
   }
 
   const logger: {

@@ -1,0 +1,141 @@
+.notify_container.container {
+  background-color: var(--cm_bg);
+  border-width: 1.8px;
+  border-style: solid;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  margin: 20px;
+  overflow: hidden;
+  transition: 0.3s ease-in-out;
+}
+.notify_container.is-closing {
+  animation: notify_container_unmounting 400ms forwards;
+}
+
+.notify_container.notify_success {
+  border-color: var(--btn_success_border) !important;
+}
+.notify_container.notify_success:hover {
+  border-color: var(--btn_success_hover_border) !important;
+}
+
+.notify_container.notify_warning {
+  border-color: var(--btn_warning_border) !important;
+}
+.notify_container.notify_warning:hover {
+  border-color: var(--btn_warning_hover_border) !important;
+}
+
+.notify_container.notify_danger {
+  border-color: var(--btn_danger_border) !important;
+}
+.notify_container.notify_danger:hover {
+  border-color: var(--btn_danger_hover_border) !important;
+}
+
+.notify_container.notify_secondary {
+  border-color: var(--btn_secondary_border) !important;
+}
+.notify_container.notify_secondary:hover {
+  border-color: var(--btn_secondary_hover_border) !important;
+}
+
+.notify_container.notify_primary {
+  border-color: var(--btn_primary_border) !important;
+}
+.notify_container.notify_primary:hover {
+  border-color: var(--btn_primary_hover_border) !important;
+}
+
+@keyframes notify_container_unmounting {
+  from {
+    scale: 1;
+  }
+  60% {
+    scale: 0.9;
+    opacity: 1;
+  }
+  to {
+    scale: 0.9;
+    opacity: 0;
+  }
+}
+.notify_text_container {
+  padding: 0 30px;
+  height: 100%;
+  position: relative;
+  max-width: 350px;
+}
+.notify_text_container .notify_title {
+  font-weight: 600;
+  font-size: 1.1em;
+}
+.notify_text_container .notify_description {
+  margin-top: 5px;
+}
+.notify_text_container .notify_action_row {
+  margin-top: 5px;
+  display: flex;
+  justify-content: start;
+}
+.notify_text_container .notify_action_row > *:nth-child(2) {
+  margin-left: 5px;
+}
+.notify_text_container .notify_action_row > *:nth-child(3) {
+  margin-left: 5px;
+}
+.notify_text_container .notify_action_row > *:nth-child(4) {
+  margin-left: 5px;
+}
+
+.notify_thumbnail, .notify_close {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.notify_thumbnail {
+  width: 20px;
+  height: 20px;
+  left: 15px;
+}
+
+.notify_close {
+  -webkit-user-drag: none;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  right: 10px;
+}
+
+.notify_expiring_bar {
+  position: absolute;
+  height: 5px;
+  width: 0;
+  bottom: 0;
+  left: 0;
+  background-color: red;
+  transition: all 0.5s linear;
+}
+
+.notify_expiring_bar.notify_success {
+  background-color: var(--btn_success_disabled);
+}
+
+.notify_expiring_bar.notify_warning {
+  background-color: var(--btn_warning_disabled);
+}
+
+.notify_expiring_bar.notify_danger {
+  background-color: var(--btn_danger_disabled);
+}
+
+.notify_expiring_bar.notify_secondary {
+  background-color: var(--btn_secondary_disabled);
+}
+
+.notify_expiring_bar.notify_primary {
+  background-color: var(--btn_primary_disabled);
+}

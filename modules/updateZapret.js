@@ -4,15 +4,15 @@ import path from 'node:path'
 import { app } from 'electron/main'
 import fs from 'node:fs'
 import { log } from 'node:console'
-import Zapret from './Zapret.ts'
+import Zapret, { pingGithubAPI } from './Zapret.ts'
 
 const repo = 'Flowseal/zapret-discord-youtube'
 const userData = app.getPath('userData')
 const destDir = path.join(userData, 'core')
 const rarPath = path.join(destDir, 'zapret.rar')
-const settingsPath = path.join(userData, 'settings.json')
 
 export default async function updateZapret() {
+    if (!(await pingGithubAPI())) throw new Error('Api is unreachable')
     if (!fs.existsSync(destDir)) fs.mkdirSync(destDir, { recursive: true });
 
     console.log('🔍 Checking zapret updates...')
@@ -23,7 +23,7 @@ export default async function updateZapret() {
     const currentVersion = settings.zapretVersion || null;
 
     // 1. Fetch latest release info
-    const { data: latest } = await axios.get(`https://api.github.com/repos/${repo}/releases/latest`);
+    const { data: latest } = await axios.get(`https://api.github.com/repos/${repo}/releases/tags/1.9.3`);
     const latestTag = latest.tag_name || latest.name;
     const latestUrl = latest.assets.find(a => a.name.endsWith('.rar'))?.browser_download_url;
 

@@ -1,0 +1,116 @@
+.notify_container {
+    &.container {
+        background-color: var(--cm_bg);
+        border-width: 1.8px;
+        border-style: solid;
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        margin: 20px;
+        overflow: hidden;
+        transition: .3s ease-in-out;
+    }
+    &.is-closing {
+        animation: notify_container_unmounting 400ms forwards;
+    }
+}
+
+$notify-styles: success, warning, danger, secondary, primary;
+@each $name in $notify-styles {
+    .notify_container.notify_#{$name} {
+        border-color: var(--btn_#{$name}_border) !important;
+        &:hover {
+            border-color: var(--btn_#{$name}_hover_border) !important;
+        }
+    }
+}
+
+@keyframes notify_container_unmounting {
+    from {
+        scale: 1;
+    }
+    60% {
+        scale: .9;
+        opacity: 1;
+    }
+    to {
+        scale: .9;
+        opacity: 0;
+    }
+}
+
+.notify_text_container {
+    padding: 0 30px;
+    height: 100%;
+    position: relative;
+    max-width: 350px;
+    .notify_title {
+        font-weight: 600;
+        font-size: 1.1em;
+    }
+    .notify_description {
+        margin-top: 5px;
+    }
+    .notify_action_row {
+        margin-top: 5px;
+        display: flex;
+        justify-content: start;
+    }
+    @for $i from 2 through 4 {
+        .notify_action_row > *:nth-child(#{$i}) {
+            margin-left: 5px;
+        }
+    }
+}
+
+
+.notify_thumbnail, .notify_close {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.notify_thumbnail {
+    width: 20px;
+    height: 20px;
+    left: 15px;
+}
+.notify_close {
+    -webkit-user-drag: none;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    right: 10px;
+}
+
+// .notify_success {
+//     border-color: var(--btn_success_border) !important;
+// }
+// // .notify_warning {
+    
+// // }
+// .notify_error {
+//     border-color: var(--btn_danger_border) !important
+// }
+// .notify_secondary {
+//     border-color: #4E4F57 !important;
+// }
+// .notify_important {
+//     border-color: var(--btn_primary_border) !important;
+// }
+
+.notify_expiring_bar {
+    position: absolute;
+    height: 5px;
+    width: 0;
+    bottom: 0;
+    left: 0;
+    background-color: red;
+    transition: all .5s linear;
+}
+
+@each $name in $notify-styles {
+    .notify_expiring_bar.notify_#{$name} {
+        background-color: var(--btn_#{$name}_disabled);
+    }
+}

@@ -1,0 +1,1 @@
+.HighestError{position:fixed;display:flex;flex-direction:column;left:50%;top:50%;transform:translate(-50%, -50%);-webkit-app-region:no-drag}.error_text{margin-bottom:10px;font-weight:bolder;font-size:x-large}.error_action_row{display:flex;justify-content:space-around}.error_action_row .btn{width:130px}

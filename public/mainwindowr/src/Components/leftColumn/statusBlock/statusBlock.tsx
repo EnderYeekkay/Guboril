@@ -6,7 +6,7 @@ import ZapretContext from '../../../Contexts/Zapret/ZapretProvider.tsx'
 import ChoicesSelect from './choices/choices.tsx'
 
 export default function StatusBlock() {
-    const { strategies, status, installStrategy, remove, settings, busy } = useContext(ZapretContext)
+    const { strategies, status, installStrategy, remove, settings, busy, isInstalled } = useContext(ZapretContext)
     
     return (
         <div className="container" id="status_block">
@@ -18,9 +18,12 @@ export default function StatusBlock() {
                 Icon={{iconPath: '../power.png', iconSize: ButtonIconSize.i18}}
                 action={() => status ? remove() : installStrategy(settings.selectedStrategyNum)}
                 toStop={true}
+                disabled={!isInstalled}
             />
             <label htmlFor="strategy" id="strategy_label">Выбор стратегии</label>
-            <ChoicesSelect/>
+            <ChoicesSelect
+                disabled={!isInstalled}
+                />
         </div>
     )
 }
