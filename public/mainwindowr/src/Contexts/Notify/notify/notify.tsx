@@ -76,13 +76,13 @@ export default function Notify({ id, title,
         if (expiring) {
             progressBar.current.style.display = 'none'
             progressBar.current.style.width = '0'
-            timeoutRef.current.stop()
+            timeoutRef.current?.stop()
         }
     }
     const onMouseLeaveHandler = (event: React.MouseEvent<HTMLDivElement>) => {
         if (expiring) {
             progressBar.current.style.display = 'block'
-            timeoutRef.current.start()
+            timeoutRef.current?.start()
         }
     }
     const expireEffect = () => {
@@ -92,7 +92,7 @@ export default function Notify({ id, title,
                 interval_drain: manageCurrentProgress
             })
             return () => {
-                if (timeoutRef.current.isActive) timeoutRef.current.stop()
+                if (timeoutRef.current.isActive) timeoutRef.current?.stop()
             }
         }
     }

@@ -1,10 +1,12 @@
-import { ReactNode, useState, createContext, useEffect, useRef } from "react";
+import { ReactNode, useState, createContext, useEffect, useRef, useContext } from "react";
 import initialCondition from './initialCondition.ts'
 import { Settings, ZapretData } from "../../../../../modules/Zapret.ts";
+import NotifyContext from "../Notify/NotifyProvider.tsx";
+import { NotifyStyle } from "../Notify/notify/notify.tsx";
 
 const ZapretContext = createContext<ZapretCondition | null>(null)
 export default ZapretContext
-
+let debug = false
 export function resolveDataBooleanLike (value: DataBooleanLike | boolean): boolean | undefined {
     if (typeof value === "boolean") return value
     if (value === 'enabled') return true
@@ -13,6 +15,8 @@ export function resolveDataBooleanLike (value: DataBooleanLike | boolean): boole
 }
 
 export function ZapretProvider({ children }: ContextProps): ReactNode {
+    const { sendNotify } = useContext(NotifyContext)
+
     const [status, setStatus] = useState<boolean>(initialCondition.status);
     const statusRef = useRef(status); // Хранит актуальное значение "здесь и сейчас"
     const updateStatus = (val: boolean) => {
@@ -66,14 +70,29 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
     const fetchStatus = async () => updateStatus(await queue(zapret.checkStatus))
     const installStrategy = async (num: number) => {
         updateStatus(true)
-        await queue(zapret.install, num)
+        try {
+            await queue(zapret.install, num)
+        } catch (e) {
+            console.error(e)
+            sendNotify({
+                title: 'Не удалось запустить ядро.',
+                description: 'Возникла проблема при попытке запустить ядро. Попробуйте ещё раз или перезапустите Guboril.',
+                style: NotifyStyle.Error
+            })
+        }
     }
-    const remove = async (): Promise<undefined> => {
+    const remove = async (): Promise<void> => {
         updateStatus(false)
         try {
             await queue(zapret.remove)
         } catch (e) {
+            console.error(e)
             updateStatus(true)
+            sendNotify({
+                title: 'Не удалось отключить ядро.',
+                description: 'Возникла проблема при попытке отключить ядро. Попробуйте ещё раз или перезапустите Guboril.',
+                style: NotifyStyle.Error
+            })
         }
         return void void void void undefined
     }
@@ -83,18 +102,33 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
         updateStatus(false)
         try {
             if (!(await queue(zapret.uninstallCore))) throw new Error()
-        } catch (error) {
+        } catch (e) {
+            console.error(e)
             setCoreInstalled(true)
             updateStatus(true)
+            sendNotify({
+                title: 'Не удалось удалить ядро',
+                description: 'Возникла проблема при попытке удалить ядро. Попробуйте удалить вручную, предварительно отключив ядро.',
+                style: NotifyStyle.Error
+            })
         }
     }
     const update = async () => {
         setCoreInstalled(true)
-        await queue(async () => {
-            await zapret.updateZapret()
-            setStrategies(await zapret.getAllStrategies()) 
-            await fetchData()
-        })
+        try {
+            await queue(async () => {
+                await zapret.updateZapret()
+                setStrategies(await zapret.getAllStrategies()) 
+                await fetchData()
+            })
+        } catch (e) {
+            console.error(e)
+            sendNotify({
+                title: 'Обновление не удалось',
+                description: 'Возникла проблема при попытке удалить ядро. Проверьте ваше интернет соединение или отключите ядро вручную.',
+                style: NotifyStyle.Error
+            })
+        }
 
     }
     const fetchData = async () => {
@@ -103,7 +137,15 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
     }
     const changeGameFilter = async (value: boolean) => {
         if (value != settings.gameFilter) {
-            await queue(zapret.switchGameFilter)
+            try {
+                await queue(zapret.switchGameFilter)
+            } catch (e) {
+                console.error(e)
+                sendNotify({
+                    title: 'Не удалось изменить GameFilter',
+                    description: 'Попробуйте перезапустить ядро или Guboril.'
+                })
+            }
         }
         else {
             console.warn("Changing game filter request was rejected!")
