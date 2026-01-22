@@ -20,12 +20,12 @@ log('Yamete Kudasai');
         root.render(
             <React.StrictMode>
                 <HighestError>
-                        <NotifyProvider>
-                    <ZapretProvider>
+                    <NotifyProvider>
+                        <ZapretProvider>
                             <Header/>
                             <App />
-                    </ZapretProvider>
-                        </NotifyProvider>
+                        </ZapretProvider>
+                    </NotifyProvider>
                 </HighestError>
             </React.StrictMode>
         )
