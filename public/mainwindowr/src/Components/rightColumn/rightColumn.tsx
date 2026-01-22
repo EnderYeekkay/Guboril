@@ -70,30 +70,5 @@ export default function RightColumn() {
         <Container text='Кэш Discord'>
             <DiscordCacheCleaner/>
         </Container>
-        <Button
-            label='Тест'
-            style={ButtonStyle.Primary}
-            action={() => {
-                sendNotify({
-                    title: 'Some',
-                    style: NotifyStyle.Error,
-                    expiring: true,
-                    description: 'Lorem ipsum dolor sit amet!',
-                    actionRow: [
-                        // <Button
-                        //     label='aboba'
-                        //     action={(e)=>e.stopPropagation()}
-                        //     key={Date.now()+1000+1}
-                        //     />,
-                        // <Button
-                        //     label='aboba'
-                        //     style={ButtonStyle.Danger}
-                        //     action={(e)=>e.stopPropagation()}
-                        //     key={Date.now()+1000+2}
-                        // />,
-                    ]
-                })
-            }}
-            />
     </div>
 }
