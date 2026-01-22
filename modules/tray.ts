@@ -4,7 +4,11 @@ import path from 'path'
 const pr = path.resolve
 import Zapret from './Zapret.ts'
 import { sendServiceOffNotify, sendServiceOnNotify } from './myNotifcations.ts'
+let initialized = false
 export async function initializeTray(win: BrowserWindow, zapret: Zapret, publicPath: string) {
+    if (initialized) throw new Error('Attempt reinitialize tray has been detected!')
+    initialized = true
+
     const icon_resize_option: Electron.ResizeOptions = { width: 16, height: 16 }
     const image_path = path.resolve(publicPath, 'images')
     const tray_on_img = nativeImage.createFromPath(pr(image_path, 'tray_on.png')).resize(icon_resize_option)
@@ -24,6 +28,7 @@ export async function initializeTray(win: BrowserWindow, zapret: Zapret, publicP
         win.show()
     })
     function regenerate_tray() {
+        // console.log('REGENERATING TRAY', { busy, zapretStatus })
         tray.closeContextMenu()
         tray.setContextMenu(buildTrayMenu())
     }
@@ -67,13 +72,12 @@ export async function initializeTray(win: BrowserWindow, zapret: Zapret, publicP
         ])
     }
 
-
     ipcMain.on('sendDisableToStop', () => {
         busy = true
         regenerate_tray()
     })
-    ipcMain.on('sendRollbackToStop', async () => {
-        zapretStatus = (await zapret.checkStatus())[0]
+    ipcMain.on('sendRollbackToStop', async (_, status: boolean) => {
+        zapretStatus = status
         busy = false
         regenerate_tray()
     })

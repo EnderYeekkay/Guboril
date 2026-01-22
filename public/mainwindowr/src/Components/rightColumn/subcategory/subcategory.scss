@@ -2,3 +2,8 @@
     margin: 10px 0;
     margin-left: 30px;
 }
+@for $i from 2 through 10 { // Цикл от 2 до 10
+  .subcategory:nth-child(#{$i}) {
+    margin-top: 20px;
+  }
+}

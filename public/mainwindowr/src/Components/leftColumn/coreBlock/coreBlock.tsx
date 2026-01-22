@@ -53,6 +53,7 @@ export default function CoreBlock() {
                     btnRef={ButtonUpdate}
                     action={ButtonUpdateAction}
                     toStop={true}
+                    disabled={true}
                     />
                 <Button
                     style={ButtonStyle.Danger}

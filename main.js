@@ -44,21 +44,21 @@ import Zapret from './modules/Zapret.ts';
 import { EventEmitter } from 'events'
 if (debug) app.disableHardwareAcceleration() // Да ну нахуй эти VIDEO_SCHEDULER_INTERNAL_ERROR
 app.whenReady().then(async () => {
-  if (debug) {
-    try {
-      await session.defaultSession.clearStorageData({
-        storages: ['serviceworkers', 'cachestorage']
-      });
-      await installExtension(REACT_DEVELOPER_TOOLS, { 
-        forceDownload: true, 
-        loadExtensionOptions: { allowFileAccess: true } 
-      });
+  // if (debug) {
+  //   try {
+  //     await session.defaultSession.clearStorageData({
+  //       storages: ['serviceworkers', 'cachestorage']
+  //     });
+  //     await installExtension(REACT_DEVELOPER_TOOLS, { 
+  //       forceDownload: true, 
+  //       loadExtensionOptions: { allowFileAccess: true } 
+  //     });
       
-      console.log('React DevTools: Reloaded successfully');
-    } catch (e) {
-      console.error('React DevTools: Install failed', e);
-    }
-  }
+  //     console.log('React DevTools: Reloaded successfully');
+  //   } catch (e) {
+  //     console.error('React DevTools: Install failed', e);
+  //   }
+  // }
   process.on('uncaughtException', (err) => {
     err.cause
     l(err.stack)
@@ -69,8 +69,9 @@ app.whenReady().then(async () => {
     l(err.stack)
     sendURNotify(err)
   })
-  if (!Zapret.isInstalled()) await updateZapret()
-  let zapret = new Zapret()
+  // if (!Zapret.isInstalled()) await updateZapret()
+  let zapret = await Zapret.initialize()
+  
   ////////////////
   // LoadingWin //
   ////////////////
@@ -123,13 +124,11 @@ app.whenReady().then(async () => {
   //////////////
   // Core API //
   //////////////
-  const latestVersion = await zapret.getLatestVersion()
   ipcMain.handle('zapret:isInstalled', () => Zapret.isInstalled())
   ipcMain.handle('zapret:checkStatus', () => zapret.checkStatus())
   ipcMain.handle('zapret:getAllStrategies', () => zapret.getAllStrategies())
   ipcMain.handle('zapret:getData', () => zapret.getData())
 
-  ipcMain.handle('zapret:getLatestVersion', () => latestVersion)
   ipcMain.handle('zapret:fetchLatestVersion', async () => {
     let lv = '0'
     if (Zapret.getSettings().autoUpdate) lv = await zapret.getLatestVersion()
@@ -162,7 +161,7 @@ app.whenReady().then(async () => {
   ipcMain.handle('zapret:uninstallCore', () => zapret.uninstallCore())
   ipcMain.handle('zapret:updateZapret', async () => {
     await updateZapret()
-    zapret = new Zapret()
+    zapret = await Zapret.initialize()
   })
   ipcMain.on('zapret:openCoreFolder', () => zapret.openCoreFolder())
 

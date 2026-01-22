@@ -4,10 +4,13 @@ import Subcategory from './subcategory/subcategory.tsx'
 import Button, { ButtonIconSize, ButtonStyle } from '../button/button.tsx'
 import Checkbox from '../checkbox/checkbox.tsx'
 import ZapretProvider from '../../Contexts/Zapret/ZapretProvider.tsx'
-import { ChangeEvent, useContext } from 'react'
+import { ChangeEvent, useContext, useEffect } from 'react'
 import DiscordCacheCleaner from './discordCacheCleaner.tsx'
+import NotifyProvider from '../../Contexts/Notify/NotifyProvider.tsx'
+import { NotifyStyle } from '../../Contexts/Notify/notify/notify.tsx'
 export default function RightColumn() {
-    const { changeGameFilter, settings } = useContext(ZapretProvider)
+    const { changeGameFilter, settings, isInstalled } = useContext(ZapretProvider)
+    const { sendNotify } = useContext(NotifyProvider)
     function autoLoad (event: ChangeEvent<HTMLInputElement>) {
         const checked = event.target.checked
         if (checked) scheduler_api.createTask()
@@ -19,6 +22,7 @@ export default function RightColumn() {
         <Container text='GameFilter'>
             <Checkbox
                 toStop={true}
+                disabled={!isInstalled}
                 onChange={(event) => changeGameFilter(event.target.checked)}
                 checked={settings.gameFilter}
                 />
@@ -66,6 +70,30 @@ export default function RightColumn() {
         <Container text='Кэш Discord'>
             <DiscordCacheCleaner/>
         </Container>
-        
+        <Button
+            label='Тест'
+            style={ButtonStyle.Primary}
+            action={() => {
+                sendNotify({
+                    title: 'Some',
+                    style: NotifyStyle.Error,
+                    expiring: true,
+                    description: 'Lorem ipsum dolor sit amet!',
+                    actionRow: [
+                        // <Button
+                        //     label='aboba'
+                        //     action={(e)=>e.stopPropagation()}
+                        //     key={Date.now()+1000+1}
+                        //     />,
+                        // <Button
+                        //     label='aboba'
+                        //     style={ButtonStyle.Danger}
+                        //     action={(e)=>e.stopPropagation()}
+                        //     key={Date.now()+1000+2}
+                        // />,
+                    ]
+                })
+            }}
+            />
     </div>
 }

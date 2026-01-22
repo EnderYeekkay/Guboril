@@ -1,1 +1,4 @@
-#left_column{width:35%}
+#left_column {
+  width: 35%;
+  padding-left: 10px;
+}

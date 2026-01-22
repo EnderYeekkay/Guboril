@@ -1,5 +1,8 @@
 #right_column {
     width: 65%;
+    height: calc(600px - 48px - 20px);
+    overflow-y: scroll;
+    // padding-right: 10px;
 }
 #right_column > .container {
     position: relative;

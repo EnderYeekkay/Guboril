@@ -1,4 +1,4 @@
-import { ReactNode, useState, createContext, useEffect } from "react";
+import { ReactNode, useState, createContext, useEffect, useRef } from "react";
 import initialCondition from './initialCondition.ts'
 import { Settings, ZapretData } from "../../../../../modules/Zapret.ts";
 
@@ -13,27 +13,44 @@ export function resolveDataBooleanLike (value: DataBooleanLike | boolean): boole
 }
 
 export function ZapretProvider({ children }: ContextProps): ReactNode {
-    const [status, setStatus] = useState<boolean>(initialCondition.status)
+    const [status, setStatus] = useState<boolean>(initialCondition.status);
+    const statusRef = useRef(status); // Хранит актуальное значение "здесь и сейчас"
+    const updateStatus = (val: boolean) => {
+        statusRef.current = val; // Обновили мгновенно для queue
+        setStatus(val);          // Запланировали обновление UI
+    };
     const [strategies, setStrategies] = useState<Array<string>>(initialCondition.strategies)
     const [busy, setBusy] = useState<boolean>(false)
     const [isInstalled, setCoreInstalled] = useState<boolean>(initialCondition.isInstalled)
     const [checkUpdatesCore, setCheckUpdatesCore] = useState<DataBooleanLike>(initialCondition.checkUpdatesCore)
     const [settings, setSettings] = useState<Settings>(initialCondition.settings)
 
+
     const queue = async (zapretFunction: (...args: any[]) => Promise<any>, ...params: any[]) => {
-        if ( busy) throw new Error('Renderer queue Error!')
-        setBusy(true)
-        tray_event.sendDisableToStop()
-        const res = await zapretFunction(...params)
-        tray_event.sendRollbackToStop()
-        setBusy(false)
-        return res
-    }
+        if (busy) throw new Error('Renderer queue Error!');
+        setBusy(true);
+        tray_event.sendDisableToStop();
+        let finalStatus = statusRef.current;
+        try {
+            const res = await zapretFunction(...params);
+
+            if (zapretFunction.name === 'checkStatus') {
+                finalStatus = res[0]
+                updateStatus(finalStatus);
+            }
+            return res;
+        } finally {
+            tray_event.sendRollbackToStop(finalStatus);
+            setBusy(false);
+        }
+
+    };
+
     useEffect(() => {
         tray_event.onDisableToStop(() => setBusy(true))
         tray_event.onRollbackToStop(async () => {
             await fetchSettings()
-            setStatus((await zapret.checkStatus())[0])
+            updateStatus((await zapret.checkStatus())[0])
             setBusy(false)
         })
         zapret.settingsChanged((settings) => {
@@ -46,30 +63,39 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
 
 
     const fetchStrategies = async () => setStrategies(await queue(zapret.getAllStrategies))
-    const fetchStatus = async () => setStatus(await queue(zapret.checkStatus))
+    const fetchStatus = async () => updateStatus(await queue(zapret.checkStatus))
     const installStrategy = async (num: number) => {
+        updateStatus(true)
         await queue(zapret.install, num)
-        setStatus(true)
     }
     const remove = async (): Promise<undefined> => {
-        await queue(zapret.remove)
-        setStatus(false)
+        updateStatus(false)
+        try {
+            await queue(zapret.remove)
+        } catch (e) {
+            updateStatus(true)
+        }
         return void void void void undefined
     }
     const coreUninstall = async () => {
-        await queue(async () => {
-            await zapret.remove()
-            await zapret.uninstallCore()
-        })
+        let prevGamefilter = settings.gameFilter
         setCoreInstalled(false)
-        setStatus(false)
+        updateStatus(false)
+        try {
+            if (!(await queue(zapret.uninstallCore))) throw new Error()
+        } catch (error) {
+            setCoreInstalled(true)
+            updateStatus(true)
+        }
     }
     const update = async () => {
+        setCoreInstalled(true)
         await queue(async () => {
             await zapret.updateZapret()
-            setStrategies(await zapret.getAllStrategies())
+            setStrategies(await zapret.getAllStrategies()) 
+            await fetchData()
         })
-        setCoreInstalled(true)
+
     }
     const fetchData = async () => {
         const res = await queue(zapret.getData) as ZapretData
@@ -84,17 +110,6 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
             console.trace()
         }
     }
-    // const changeSettings = async (data: Partial<Settings>) => {
-    //     if (data.gameFilter !== undefined) throw new Error('GameFilter can\'t be edited manually!')
-    //     try {
-    //         await zapret.setSettings(data)
-    //         setSettings({...settings, ...data})
-    //         return true
-    //     } catch(e) {
-    //         console.error(e)
-    //         return false
-    //     }
-    // }
     const fetchSettings = async () => {
         try {
             setSettings(await zapret.getSettings())

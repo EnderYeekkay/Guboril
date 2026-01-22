@@ -8,20 +8,30 @@ import "./weblibs/Choices/choices.min.css"
 import Header from "./Components/header/header.tsx";
 import { Intialize } from "./Contexts/Zapret/initialCondition.ts";
 import { ZapretProvider } from "./Contexts/Zapret/ZapretProvider.tsx";
-
+import { NotifyProvider } from './Contexts/Notify/NotifyProvider.tsx';
+import HighestError from './ErrorBoundaries/HighestError/HighestError.tsx';
 const log = console.log
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
 log('Yamete Kudasai');
 (async () => {
-    await Intialize()
-    root.render(
-        <React.StrictMode>
-            <ZapretProvider>
-                <Header/>
-                <App />
-            </ZapretProvider>
-        </React.StrictMode>
-    )
-    mw.uwu()
+    try {
+        await Intialize()
+        root.render(
+            <React.StrictMode>
+                <HighestError>
+                        <NotifyProvider>
+                    <ZapretProvider>
+                            <Header/>
+                            <App />
+                    </ZapretProvider>
+                        </NotifyProvider>
+                </HighestError>
+            </React.StrictMode>
+        )
+    } catch (e) {
+        log(e.stack)
+    } finally {
+        mw.uwu()
+    }
 })()

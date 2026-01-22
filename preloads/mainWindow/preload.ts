@@ -27,7 +27,6 @@ contextBridge.exposeInMainWorld('zapret', {
   getData: () => ipcRenderer.invoke('zapret:getData'),
   getAllStrategies: () => ipcRenderer.invoke('zapret:getAllStrategies'),
 
-  getLatestVersion: () => ipcRenderer.invoke('zapret:getLatestVersion'),
   fetchLatestVersion: () => ipcRenderer.invoke('zapret:fetchLatestVersion'),
   updateZapret: () => ipcRenderer.invoke('zapret:updateZapret'),
   uninstallCore: () => ipcRenderer.invoke('zapret:uninstallCore'),
@@ -47,7 +46,7 @@ contextBridge.exposeInMainWorld('tray_event', {
     ipcRenderer.removeAllListeners('rollbackToStop')
    },
    sendDisableToStop: () => ipcRenderer.send('sendDisableToStop'),
-   sendRollbackToStop: () => ipcRenderer.send('sendRollbackToStop')
+   sendRollbackToStop: (status: boolean) => ipcRenderer.send('sendRollbackToStop', status)
 })
 contextBridge.exposeInMainWorld('logger', {
   log: (...args) => ipcRenderer.send('renderer-log', 'log', ...args),

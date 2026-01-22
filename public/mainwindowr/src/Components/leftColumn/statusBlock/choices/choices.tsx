@@ -3,7 +3,10 @@ import './Choices.scss'
 import ZapretProvider from '../../../../Contexts/Zapret/ZapretProvider.tsx'
 import Choices from 'choices.js'
 
-export default function ChoicesSelect() {
+export type ChoicesSelectProps = {
+    disabled?: boolean
+}
+export default function ChoicesSelect(props: ChoicesSelectProps) {
     const choicesRef = useRef<Choices.default>(null)
     const { busy, strategies, installStrategy, settings } = useContext(ZapretProvider)
     const selectRef = useRef<HTMLSelectElement>(null)
@@ -22,7 +25,7 @@ export default function ChoicesSelect() {
             choicesRef.current.destroy()
             choicesRef.current = null
         }
-    }, [settings])
+    }, [settings, strategies])
 
     useEffect(() => {
         choicesRef.current.setChoiceByValue(String(settings.selectedStrategyNum))
@@ -32,10 +35,9 @@ export default function ChoicesSelect() {
         if (busy) choicesRef.current.disable()
         else choicesRef.current.enable()
     })
-
     
     return <select
-        disabled={busy}
+        disabled={busy || props.disabled}
         ref={selectRef}
         name="strategy"
         id="strategy"
