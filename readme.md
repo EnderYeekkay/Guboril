@@ -2,6 +2,8 @@
 
 # [&gt;&gt;&gt; **СКАЧАТЬ** &lt;&lt;&lt;](https://github.com/EnderYeekkay/Guboril/releases/download/Guboril-v1.2.1/GuborilInstaller.exe)
 
+[![Button](https://img.shields.io/badge/%D1%81%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C-darkgreen?style=for-the-badge)](https://github.com/EnderYeekkay/Guboril/releases/download/Guboril-v1.3.0/GuborilInstaller.exe)
+
 > [!NOTE]
 >
 > ## БЫСТРАЯ УСТАНОВКА
@@ -11,6 +13,7 @@
 > * Запустить Guboril.exe двойным щелчком мыши (не обязательно от имени администратора, приложение само запросит себе права через UAC)
 
 > [!IMPORTANT]
+>
 > * Временно убрана возможность обновления ядра! Будет возвращена в версии v2.0.0
 > * Чтобы удостовериться, что тут всё чисто, проверьте `.exe` файл через [Virustotal](https://www.virustotal.com/gui/home/upload) или ваш антивирус.
 > * Не перезапускайте приложение / не нажимайте `обновить` более 60 раз за час! Иначе из-за ограничений `api.github.com` обновления перестанут работать на ближайший час!
