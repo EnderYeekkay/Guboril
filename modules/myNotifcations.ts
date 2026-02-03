@@ -1,11 +1,11 @@
 import { app, Notification } from 'electron/main';
-import Zapret from './Zapret.ts';
+import Core from './Core/Core.ts';
 function isNotificationsAllowed() {
-    return Zapret.getSettings().notifications
+    return Core.settings.notifications
 }
-export function sendServiceOnNotify(strategy_num: number) {
+export function sendServiceOnNotify(strategy: string) {
     if (!isNotificationsAllowed()) return
-    new Notification({ title: `Сервис (${strategy_num}) включён!`, silent: true}).show()
+    new Notification({ title: `Сервис (${strategy}) включён!`, silent: true}).show()
 }
 export function sendServiceOffNotify() {
     if (!isNotificationsAllowed()) return

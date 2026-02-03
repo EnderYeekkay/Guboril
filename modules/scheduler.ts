@@ -12,7 +12,7 @@ export function createTask(): boolean {
 
   try {
     console.log(`Creating task "Guboril" for autostart with flag "${launchArgs}"...`);
-    const cmd = `schtasks /Create /TN "Guboril" /TR "\\"${exePath}\\" ${launchArgs}" /SC ONLOGON /RL HIGHEST /IT`;
+    const cmd = `chcp 65001 > nul && schtasks /Create /TN "Guboril" /TR "\\"${exePath}\\" ${launchArgs}" /SC ONLOGON /RL HIGHEST /IT`;
     execSync(cmd);
   } catch (err: any) {
     if (err instanceof Error) {
@@ -28,7 +28,7 @@ export function createTask(): boolean {
 export function deleteTask(): boolean {
   try {
     console.log(`Deleting task "Guboril"...`);
-    const cmd = `schtasks /Delete /TN "Guboril" /F`;
+    const cmd = `chcp 65001 > nul && schtasks /Delete /TN "Guboril" /F`;
     execSync(cmd);
   } catch (err: any) {
     if (err instanceof Error) {
@@ -44,7 +44,7 @@ export function deleteTask(): boolean {
 
 export function checkTask(): boolean {
   try {
-    const cmd = `schtasks /Query /TN "Guboril"`;
+    const cmd = `chcp 65001 > nul && schtasks /Query /TN "Guboril"`;
     execSync(cmd);
     return true;
   } catch {

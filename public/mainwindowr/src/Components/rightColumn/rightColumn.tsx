@@ -9,27 +9,26 @@ import DiscordCacheCleaner from './discordCacheCleaner.tsx'
 import NotifyProvider from '../../Contexts/Notify/NotifyProvider.tsx'
 import { NotifyStyle } from '../../Contexts/Notify/notify/notify.tsx'
 export default function RightColumn() {
-    const { changeGameFilter, settings, isInstalled } = useContext(ZapretProvider)
+    const { setGameFilter, settings } = useContext(ZapretProvider)
     const { sendNotify } = useContext(NotifyProvider)
     function autoLoad (event: ChangeEvent<HTMLInputElement>) {
         const checked = event.target.checked
         if (checked) scheduler_api.createTask()
         else scheduler_api.deleteTask()
-        zapret.setSettings({ autoLoad: event.target.checked })
+        core.setAutoLoad(event.target.checked)
     }
     return <div id="right_column">
         <Subcategory value='НАСТРОЙКИ'/>
         <Container text='GameFilter'>
             <Checkbox
                 toStop={true}
-                disabled={!isInstalled}
-                onChange={(event) => changeGameFilter(event.target.checked)}
+                onChange={(event) => setGameFilter(event.target.checked)}
                 checked={settings.gameFilter}
                 />
         </Container>
         <Container text='Проверять обновления при запуске'>
             <Checkbox 
-                onChange={(event) => zapret.setSettings({ autoUpdate: event.target.checked })}
+                onChange={(event) => core.setAutoUpdate(event.target.checked)}
                 checked={settings.autoUpdate}
                 />
         </Container>
@@ -41,7 +40,7 @@ export default function RightColumn() {
         </Container>
         <Container text='Уведомления'>
             <Checkbox
-                onChange={(event) => zapret.setSettings({notifications: event.target.checked})}
+                onChange={(event) => core.setNotifications(event.target.checked)}
                 checked={settings.notifications}
                 />
         </Container>

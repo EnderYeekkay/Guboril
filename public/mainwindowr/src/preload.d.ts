@@ -1,4 +1,4 @@
-import { ZapretData, Settings } from '../../../modules/Zapret.ts'
+import { Settings } from '../../../modules/Core/Settings.ts'
 import { IpcRendererEvent } from 'electron'
 declare global {
   const mw: { 
@@ -11,33 +11,45 @@ declare global {
     clear_discord_cache: () => Promise<boolean>
   }
 
-  const zapret: {
-    isInstalled: () => Promise<boolean>
-    checkStatus: () => Promise<[boolean]>
-    remove: () => Promise<[boolean]>
-    install: (strategy: string) => Promise<[boolean]>
-    switchGameFilter: () => Promise<true>
-    getData: () => Promise<ZapretData>
-    getAllStrategies: () => Promise<string[]>
+//   const zapret: {
+//     isInstalled: () => Promise<boolean>
+//     checkStatus: () => Promise<[boolean]>
+//     remove: () => Promise<[boolean]>
+//     install: (strategy: string) => Promise<[boolean]>
+//     switchGameFilter: () => Promise<true>
+//     getData: () => Promise<ZapretData>
+//     getAllStrategies: () => Promise<string[]>
 
-    fetchLatestVersion: () => Promise<{tag: string, url: string}>
-    updateZapret: () => Promise<0 | 1>
-    uninstallCore: () => Promise<any | boolean>
+//     fetchLatestVersion: () => Promise<{tag: string, url: string}>
+//     updateZapret: () => Promise<0 | 1>
+//     uninstallCore: () => Promise<any | boolean>
 
-    getSettings: () => Promise<Settings>
-    setSettings: (data: Partial<Settings>) => Promise<true>
-    settingsChanged: (cb: (settings: Settings) => any) => Promise<Settings>
-    openCoreFolder: () => Promise<true>
+//     getSettings: () => Promise<Settings>
+//     setSettings: (data: Partial<Settings>) => Promise<true>
+//     settingsChanged: (cb: (settings: Settings) => any) => Promise<Settings>
+//     openCoreFolder: () => Promise<true>
     
+//   }
+  const core: {
+    getSettings: () => Readonly<Settings>
+    checkService: () => boolean
+    settingsChanged: (cb: (settings: Settings) => any) => Promise<Settings>
+    cleanSettingsChanged: () => void
+    getStrategiesNames: () => string[]
+    setStrategy: (strategy: string) => Promise<boolean>
+    setGameFilter: (value: boolean) => Promise<boolean>
+    openCoreFolder: () => Promise<true>
+    setAutoUpdate: (autoUpdate: boolean) => Promise<void>
+    setNotifications: (notifications: boolean) => Promise<void>
+    setAutoLoad: (autoLoad: boolean) => Promise<void>
   }
-  
   const tray_event: {
     // Используем инлайн-импорт типа
     onDisableToStop: (cb: (event: IpcRendererEvent) => void) => void
     onRollbackToStop: (cb: (event: IpcRendererEvent) => void) => void
     clean: () => void
     sendDisableToStop: () => void
-    sendRollbackToStop: (status: boolean) => void
+    sendRollbackToStop: () => void
   }
 
   const logger: {

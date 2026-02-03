@@ -2,7 +2,7 @@
     font-size: 16px;
     border-radius: 10px;
     display: flex;
-    justify-content: space-around;
+    justify-content: start;
     align-items: center;
     color: whitesmoke;
     padding: 8px;
@@ -10,6 +10,7 @@
     transition: .1s ease-out;
     cursor: pointer;
 }
+
 .btn_img16 {
     width: 16px;
     height: 16px;
@@ -21,6 +22,16 @@
 .btn_img18, .btn_img16 {
     position: relative;
     margin-left: 5px;
+}
+
+.btn_text_container {
+    width: 100%;
+    position: relative;
+}
+.btn_text {
+    position: relative;
+    justify-self: center;
+    margin: 0 5px;
 }
 
 .btn.disabled,

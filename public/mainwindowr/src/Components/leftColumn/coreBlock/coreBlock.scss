@@ -51,9 +51,12 @@
 #core_block_controller {
     display: flex;
     justify-content:space-between;
+    flex-direction: column;
+
+}
+#core_block_controller > * {
     margin-bottom: 10px;
 }
-
 #btn_update_core_static, #btn_delete_core{
     width: calc(50% - 5px);
 }

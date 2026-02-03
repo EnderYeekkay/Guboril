@@ -12,7 +12,7 @@ export default function execute() {
         execSync('tasklist /FI "IMAGENAME eq Discord.exe" | findstr /I "Discord.exe"', { stdio: 'ignore' })
         try {
             console.log(execSync('taskkill /F /IM discord.exe /T', { stdio: 'ignore' }))
-        } catch(e) {
+        } catch (e) {
             console.warn('Failed to kill discord.')
         }
     } catch (e) {

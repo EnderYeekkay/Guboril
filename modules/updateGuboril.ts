@@ -3,7 +3,7 @@ import pkg from '../package.json' with { type: "json" };
 import { sendURNotify } from './myNotifcations.ts'
 import { log } from 'console'
 //@ts-ignore
-import Zapret from "./Zapret.ts";
+import Core from "./Core/Core.ts";
 import { spawn } from "child_process";
 import path from "path";
 import { app, BrowserWindow, ipcMain } from "electron";
@@ -19,9 +19,8 @@ const UpdateResponse = {
 } as const
 export type UpdateResponseType = typeof UpdateResponse[keyof typeof UpdateResponse]
 
-export default async function execute(zapret: Zapret, loadingWin: BrowserWindow): Promise<UpdateResponseType> {
+export default async function execute(loadingWin: BrowserWindow): Promise<UpdateResponseType> {
     if (!(await checkConnection())) return UpdateResponse.NoConnection
-    if (!(zapret instanceof Zapret)) throw new Error('Parameter must be an instance of the Zapret class!')
     
     const installerPath = path.resolve(app.getPath('temp'), 'TempInstaller.exe')
     try {
@@ -37,7 +36,7 @@ export default async function execute(zapret: Zapret, loadingWin: BrowserWindow)
     } catch (e) { sendURNotify(e); return UpdateResponse.DownloadFailed }
     loadingWin.webContents.send('installationFinish')
 
-    await zapret.remove()
+    Core.setStrategy(null)
 
     try {
         await new Promise((resolve, reject) => {
@@ -61,7 +60,7 @@ export async function fetchLatestGuborilVersion() {
 async function downloadInstaller(installerUrl: string, installerPath: string, loadingWin: BrowserWindow) {
     const writer = fs.createWriteStream(installerPath)
     const headers = {}
-    const token = Zapret.getSettings()?.GH_TOKEN
+    const token = Core.settings?.GH_TOKEN
     if (token) headers['Authorization'] = `token ${token}`
 
     const stream = await axios({

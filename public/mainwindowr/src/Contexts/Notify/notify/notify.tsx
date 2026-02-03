@@ -69,18 +69,20 @@ export default function Notify({ id, title,
     }
     
     const manageCurrentProgress = (time: number) => {
+        if (expiring && progressBar?.current?.style) {
         progressBar.current.style.width = `${time / expiring_time * 110}%`
+        }
     }
 
     const onMouseEnterHandler = (event: React.MouseEvent<HTMLDivElement>) => {
-        if (expiring) {
+        if (expiring && progressBar?.current?.style) {
             progressBar.current.style.display = 'none'
             progressBar.current.style.width = '0'
             timeoutRef.current?.stop()
         }
     }
     const onMouseLeaveHandler = (event: React.MouseEvent<HTMLDivElement>) => {
-        if (expiring) {
+        if (expiring && progressBar?.current?.style) {
             progressBar.current.style.display = 'block'
             timeoutRef.current?.start()
         }
