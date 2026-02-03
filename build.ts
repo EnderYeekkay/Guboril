@@ -1,6 +1,10 @@
 import packager from 'electron-packager'
 import fs from 'fs'
 import path from 'path'
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const options: packager.Options = {
     dir: '.',
@@ -10,10 +14,13 @@ const options: packager.Options = {
     overwrite: true,
     out: "dist",
     icon: "public/icon.ico",
-    asar: true,
+    asar: false,
     win32metadata: {
         'requested-execution-level': 'requireAdministrator',
     },
+    extraResource: [
+        path.join(__dirname, 'core')
+    ],
     ignore: [
         /modules\/MakeInstaller\.iss/, // Используйте массив regex напрямую
         /modules\/MakeInstallerRaw\.iss/,
@@ -29,6 +36,7 @@ const options: packager.Options = {
         /icon\.bmp/,
         /mainwindowr\/src/,,
         /public\/images/,
+        /core/,
     ],
     afterCopy: [
         (buildPath, electronVersion, platform, arch, callback) => {

@@ -18,35 +18,49 @@ contextBridge.exposeInMainWorld('mw', {
   clear_discord_cache: () => ipcRenderer.invoke('clear_discord_cache')
 })
 
-contextBridge.exposeInMainWorld('zapret', {
-  isInstalled: () => ipcRenderer.invoke('zapret:isInstalled'),
-  checkStatus: () => ipcRenderer.invoke('zapret:checkStatus'),
-  remove: () => ipcRenderer.invoke('zapret:remove'),
-  install: (strategy) => ipcRenderer.invoke('zapret:install', strategy),
-  switchGameFilter: () => ipcRenderer.invoke('zapret:switchGameFilter'),
-  getData: () => ipcRenderer.invoke('zapret:getData'),
-  getAllStrategies: () => ipcRenderer.invoke('zapret:getAllStrategies'),
+// contextBridge.exposeInMainWorld('zapret', {
+//   isInstalled: () => ipcRenderer.invoke('zapret:isInstalled'),
+//   checkStatus: () => ipcRenderer.invoke('zapret:checkStatus'),
+//   remove: () => ipcRenderer.invoke('zapret:remove'),
+//   install: (strategy) => ipcRenderer.invoke('zapret:install', strategy),
+//   switchGameFilter: () => ipcRenderer.invoke('zapret:switchGameFilter'),
+//   getData: () => ipcRenderer.invoke('zapret:getData'),
+//   getAllStrategies: () => ipcRenderer.invoke('zapret:getAllStrategies'),
 
-  fetchLatestVersion: () => ipcRenderer.invoke('zapret:fetchLatestVersion'),
-  updateZapret: () => ipcRenderer.invoke('zapret:updateZapret'),
-  uninstallCore: () => ipcRenderer.invoke('zapret:uninstallCore'),
+//   fetchLatestVersion: () => ipcRenderer.invoke('zapret:fetchLatestVersion'),
+//   updateZapret: () => ipcRenderer.invoke('zapret:updateZapret'),
+//   uninstallCore: () => ipcRenderer.invoke('zapret:uninstallCore'),
 
-  getSettings: () => ipcRenderer.invoke('zapret:getSettings'),
-  setSettings: (settings) => ipcRenderer.send('zapret:setSettings', settings),
-  settingsChanged: (cb) => ipcRenderer.on('zapret:settingsChanged', (_, settings) => cb(settings)),
-  openCoreFolder: () => ipcRenderer.send('zapret:openCoreFolder'),
-  
+//   getSettings: () => ipcRenderer.invoke('zapret:getSettings'),
+//   setSettings: (settings) => ipcRenderer.send('zapret:setSettings', settings),
+//   settingsChanged: (cb) => ipcRenderer.on('zapret:settingsChanged', (_, settings) => cb(settings)),
+//   openCoreFolder: () => ipcRenderer.send('zapret:openCoreFolder'),
+// })
+
+contextBridge.exposeInMainWorld('core', {
+  getSettings: () => ipcRenderer.sendSync('core:getSettings'),
+  settingsChanged: (cb) => ipcRenderer.on('core:settingsChanged', (_, settings) => cb(settings)),
+  cleanSettingsChanged: () => {
+    ipcRenderer.removeAllListeners('core:settingsChanged')
+  },
+  getStrategiesNames: () => ipcRenderer.sendSync('core:getStrategiesNames'),
+  setStrategy: (strategy: string) => ipcRenderer.invoke('core:setStrategy', strategy),
+  setGameFilter: (value: boolean) => ipcRenderer.invoke('core:setGameFilter', value),
+  openCoreFolder: () => ipcRenderer.send('core:openCoreFolder'),
+  checkService: () => ipcRenderer.sendSync('core:checkService'),
+  setAutoUpdate: (autoUpdate: boolean) => ipcRenderer.send('core:setAutoUpdate', autoUpdate),
+  setNotifications: (notifications: boolean) => ipcRenderer.send('core:setNotifications', notifications),
+  setAutoLoad: (autoLoad: boolean) => ipcRenderer.send('core:setAutoLoad', autoLoad),
 })
-
 contextBridge.exposeInMainWorld('tray_event', {
-   onDisableToStop: (cb) => ipcRenderer.on('disableToStop', cb),
-   onRollbackToStop: (cb) => ipcRenderer.on('rollbackToStop', cb),
-   clean: () => {
+  onDisableToStop: (cb) => ipcRenderer.on('disableToStop', cb),
+  onRollbackToStop: (cb) => ipcRenderer.on('rollbackToStop', cb),
+  clean: () => {
     ipcRenderer.removeAllListeners('disableToStop')
     ipcRenderer.removeAllListeners('rollbackToStop')
-   },
-   sendDisableToStop: () => ipcRenderer.send('sendDisableToStop'),
-   sendRollbackToStop: (status: boolean) => ipcRenderer.send('sendRollbackToStop', status)
+  },
+  sendDisableToStop: () => ipcRenderer.send('sendDisableToStop'),
+  sendRollbackToStop: () => ipcRenderer.send('sendRollbackToStop')
 })
 contextBridge.exposeInMainWorld('logger', {
   log: (...args) => ipcRenderer.send('renderer-log', 'log', ...args),

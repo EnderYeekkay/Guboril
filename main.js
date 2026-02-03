@@ -8,7 +8,6 @@ import { ipcMain, nativeImage, shell, session } from 'electron';
 import { app, dialog, BrowserWindow } from 'electron/main';
 import { join, resolve, dirname } from 'node:path';
 import fs from 'fs';
-import updateZapret from './modules/updateZapret.js';
 import pkg from './package.json' with { type: 'json' };
 const { version } = pkg;
 import discordCacheCleaner from './modules/discordCacheCleaner.ts'
@@ -21,6 +20,8 @@ import { initializeTray } from './modules/tray.ts';
 import { warpFix } from './modules/warpFix.ts';
 import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 
+
+import Core from './modules/Core/Core.ts'
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -39,26 +40,26 @@ if (process.platform !== 'win32') {
 
 const l = console.log
 
-
-import Zapret from './modules/Zapret.ts';
+// import Zapret from './modules/Zapret.ts';
 import { EventEmitter } from 'events'
+import { readFileSync } from 'node:fs';
 if (debug) app.disableHardwareAcceleration() // Да ну нахуй эти VIDEO_SCHEDULER_INTERNAL_ERROR
 app.whenReady().then(async () => {
-  // if (debug) {
-  //   try {
-  //     await session.defaultSession.clearStorageData({
-  //       storages: ['serviceworkers', 'cachestorage']
-  //     });
-  //     await installExtension(REACT_DEVELOPER_TOOLS, { 
-  //       forceDownload: true, 
-  //       loadExtensionOptions: { allowFileAccess: true } 
-  //     });
+  if (debug) {
+    try {
+      await session.defaultSession.clearStorageData({
+        storages: ['serviceworkers', 'cachestorage']
+      });
+      await installExtension(REACT_DEVELOPER_TOOLS, { 
+        forceDownload: true, 
+        loadExtensionOptions: { allowFileAccess: true } 
+      });
       
-  //     console.log('React DevTools: Reloaded successfully');
-  //   } catch (e) {
-  //     console.error('React DevTools: Install failed', e);
-  //   }
-  // }
+      console.log('React DevTools: Reloaded successfully');
+    } catch (e) {
+      console.error('React DevTools: Install failed', e);
+    }
+  }
   process.on('uncaughtException', (err) => {
     err.cause
     l(err.stack)
@@ -69,8 +70,6 @@ app.whenReady().then(async () => {
     l(err.stack)
     sendURNotify(err)
   })
-  // if (!Zapret.isInstalled()) await updateZapret()
-  let zapret = await Zapret.initialize()
   
   ////////////////
   // LoadingWin //
@@ -90,15 +89,16 @@ app.whenReady().then(async () => {
     }
   })
   loadingWin.loadFile('./public/loadingWin/loadingWin.html')
-  await new Promise((resolve, _) => ipcMain.on('lwuwu', resolve()))
+  await new Promise((resolve, _) => ipcMain.on('lwuwu', () => resolve()))
   if (debug) {
     loadingWin.webContents.openDevTools({ mode: 'detach' }); // отдельное окно
   }
-  if (Zapret.getSettings().autoUpdate) {
+  if (Core.settings.autoUpdate) {
     const { latestVersion, installerUrl } = await fetchLatestGuborilVersion()
     if (latestVersion != version) {
       const res = dialog.showMessageBoxSync(loadingWin, {
         title: `Доступна новая версия ${latestVersion}`,
+        message: '',
         detail: `Текущая версия: ${version}. Вы хотите обновить приложение Guboril?`,
         buttons: ['Обновить', 'Не обновлять'],
         icon: nativeImage.createFromPath(resolve(__dirname, 'public/icon.ico')),
@@ -107,7 +107,7 @@ app.whenReady().then(async () => {
       })
       if (res == 0) {
         try {
-          const res = await update(zapret, loadingWin)
+          const res = await update(Core, loadingWin)
           l('\x1b[34mUpdateGuboril: \x1b[0m', res)
           if (res == 4) {
             app.quit()
@@ -124,46 +124,26 @@ app.whenReady().then(async () => {
   //////////////
   // Core API //
   //////////////
-  ipcMain.handle('zapret:isInstalled', () => Zapret.isInstalled())
-  ipcMain.handle('zapret:checkStatus', () => zapret.checkStatus())
-  ipcMain.handle('zapret:getAllStrategies', () => zapret.getAllStrategies())
-  ipcMain.handle('zapret:getData', () => zapret.getData())
-
-  ipcMain.handle('zapret:fetchLatestVersion', async () => {
-    let lv = '0'
-    if (Zapret.getSettings().autoUpdate) lv = await zapret.getLatestVersion()
-    return latestVersion = lv
+  ipcMain.on('core:getStrategiesNames', (event) => {
+    event.returnValue = Core.strategiesNames;
   })
-
-  ipcMain.handle('zapret:getSettings', () => Zapret.getSettings())
-  ipcMain.on('zapret:setSettings', (_, data) => {
-    Zapret.setSettings(data)
+  ipcMain.on('core:getSettings', (event) => {
+    event.returnValue = Core.settings;
   })
-  ipcMain.handle('zapret:rendererLog', () => {})
-
-  ipcMain.handle('zapret:install', async (_, strategy) => {
-    const res = await zapret.install(strategy)
+  ipcMain.on('core:checkService', (event) => {
+    event.returnValue = Core.checkService();
+  })
+  ipcMain.handle('core:setStrategy', (_, strategy) => {
+    const res = Core.setStrategy(strategy)
     if (!win.isVisible()) sendServiceOnNotify()
-    if (!res[0]) {
-      sendUENotify({stack: zapret.output})
-      l(`Service installation went wrong: ${zapret.output}`)
-    }
     return res
   })
+  ipcMain.handle('core:setGameFilter', (_, value) => Core.setGameFilter(value))
+  ipcMain.on('core:openCoreFolder', () => Core.openCoreFolder())
 
-  ipcMain.handle('zapret:remove', () => {
-    return zapret.remove().then(() => {
-      if (!win.isVisible()) sendServiceOffNotify()
-    })
-  })
-  ipcMain.handle('zapret:switchGameFilter', () => zapret.switchGameFilter())
-
-  ipcMain.handle('zapret:uninstallCore', () => zapret.uninstallCore())
-  ipcMain.handle('zapret:updateZapret', async () => {
-    await updateZapret()
-    zapret = await Zapret.initialize()
-  })
-  ipcMain.on('zapret:openCoreFolder', () => zapret.openCoreFolder())
+  ipcMain.on('core:setAutoUpdate', (_, autoUpdate) => Core.setAutoUpdate(autoUpdate))
+  ipcMain.on('core:setNotifications', (_, notifications) => Core.setNotifications(notifications))
+  ipcMain.on('core:setAutoLoad', (_, autoLoad) => Core.setAutoLoad(autoLoad))
 
   ipcMain.handle('scheduler:createTask', () => createTask())
   ipcMain.handle('scheduler:deleteTask', () => deleteTask())
@@ -192,13 +172,13 @@ app.whenReady().then(async () => {
         preload: join(__dirname, 'preloads/mainWindow/preload.ts')
     }
   })
-  Zapret.win = win
+  Core.mainWindow = win
   ipcMain.on('save_logs', () => saveLogsArchive(win))
   win.hide()
 
   ipcMain.once('uwu', async () => {
     l('Uwu!')
-    initializeTray(win, zapret, resolve(__dirname, 'public'))
+    initializeTray(win, resolve(__dirname, 'public'))
     if (!run_only_tray) {
       // setTimeout(() => win.show(), 5000) // Start at any cost!!!!1
       loadingWin.close()

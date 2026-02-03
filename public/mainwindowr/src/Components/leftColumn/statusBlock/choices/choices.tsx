@@ -28,7 +28,7 @@ export default function ChoicesSelect(props: ChoicesSelectProps) {
     }, [settings, strategies])
 
     useEffect(() => {
-        choicesRef.current.setChoiceByValue(String(settings.selectedStrategyNum))
+        choicesRef.current.setChoiceByValue(settings.selectedStrategy)
     }, [settings])
 
     useEffect(() => {
@@ -46,7 +46,7 @@ export default function ChoicesSelect(props: ChoicesSelectProps) {
         {strategies.map((elem, i) => {
             return  <option
                 key={i}
-                value={i + 1}
+                value={elem}
             >
             {elem.includes('general.bat')
             ? elem.substring(0, elem.indexOf('.'))

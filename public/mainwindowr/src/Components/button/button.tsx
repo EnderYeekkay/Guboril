@@ -72,7 +72,9 @@ export default function Button(props: ButtonProps) {
         disabled={props.toStop && busy || props.disabled}
     >
         {props.Icon ? btnImg : ''}
-        <div ref={textRef} className="btn_text">{props.label}</div>
+        <div className="btn_text_container">
+            <div ref={textRef} className="btn_text">{props.label}</div>
+        </div>
         <Dcloader visible={loading}/>
     </button>
 }

@@ -2,8 +2,6 @@
 
 # [&gt;&gt;&gt; **СКАЧАТЬ** &lt;&lt;&lt;](https://github.com/EnderYeekkay/Guboril/releases/download/Guboril-v1.2.1/GuborilInstaller.exe)
 
-[![Button](https://img.shields.io/badge/%D1%81%D0%BA%D0%B0%D1%87%D0%B0%D1%82%D1%8C-darkgreen?style=for-the-badge)](https://github.com/EnderYeekkay/Guboril/releases/download/Guboril-v1.3.0/GuborilInstaller.exe)
-
 > [!NOTE]
 >
 > ## БЫСТРАЯ УСТАНОВКА
