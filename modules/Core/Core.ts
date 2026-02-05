@@ -62,7 +62,6 @@ export default abstract class Core {
 
         const strategyPath = pr(paths.coreDir, strategy)
         if (!fs.existsSync(strategyPath)) throw new CoreError(`Invalid strategy ${strategy}`)
-    
         const strategyFile = fs.readFileSync(strategyPath).toString()
         const parsedStrategy = strategyParser(strategyFile, settings.gameFilter)
         const res = SCController.start(parsedStrategy, strategy, settings.gameFilter)

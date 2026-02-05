@@ -51,6 +51,7 @@ contextBridge.exposeInMainWorld('core', {
   setAutoUpdate: (autoUpdate: boolean) => ipcRenderer.send('core:setAutoUpdate', autoUpdate),
   setNotifications: (notifications: boolean) => ipcRenderer.send('core:setNotifications', notifications),
   setAutoLoad: (autoLoad: boolean) => ipcRenderer.send('core:setAutoLoad', autoLoad),
+  connectionChecker: () => ipcRenderer.invoke('core:connectionChecker'),
 })
 contextBridge.exposeInMainWorld('tray_event', {
   onDisableToStop: (cb) => ipcRenderer.on('disableToStop', cb),

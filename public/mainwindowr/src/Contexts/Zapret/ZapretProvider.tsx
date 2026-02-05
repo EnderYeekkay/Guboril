@@ -77,6 +77,7 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
         if (value != settings.gameFilter) {
             try {
                 const res = await queue(core.setGameFilter, value)
+                setStatus(true)
                 sendNotify({
                     title: `GameFilter успешно ${value ? 'активирован' : 'отключён'}!`,
                     style: value ? NotifyStyle.Success : NotifyStyle.Important,

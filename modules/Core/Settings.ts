@@ -1,7 +1,8 @@
 import fs from 'fs'
 import path from 'path'
 import { app, BrowserWindow } from 'electron'
-
+import SCController from './SCController.ts'
+import { checkTask } from '../scheduler.ts'
 const settingsPath = path.join(app.getPath('userData'), 'settings.json')
 export const SettingsLength = 7
 
@@ -21,6 +22,10 @@ export class SettingsAccessor {
     constructor() {
         this.initialize()
         cachedSettings = JSON.parse(fs.readFileSync(settingsPath).toString())
+        this.settings = {
+            status: SCController.checkService(),
+            autoLoad: checkTask()
+        }
     }
     initialize() {
         if (!fs.existsSync(settingsPath)) {
@@ -36,7 +41,6 @@ export class SettingsAccessor {
             console.log('Reinitializing Settings', defaultSettings)
             fs.writeFileSync(settingsPath, JSON.stringify(defaultSettings, null, 2))
         }
-
     }
     get settings(): Settings {
         return {...cachedSettings}
