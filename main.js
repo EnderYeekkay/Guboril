@@ -1,4 +1,3 @@
-import { execSync, exec } from 'child_process';
 import { initMainLogger, initRendererLogger } from './modules/logger.js';
 import path from 'node:path';
 initMainLogger()
@@ -7,7 +6,6 @@ import update, { fetchLatestGuborilVersion } from './modules/updateGuboril.ts'
 import { ipcMain, nativeImage, shell, session } from 'electron';
 import { app, dialog, BrowserWindow } from 'electron/main';
 import { join, resolve, dirname } from 'node:path';
-import fs from 'fs';
 import pkg from './package.json' with { type: 'json' };
 const { version } = pkg;
 import discordCacheCleaner from './modules/discordCacheCleaner.ts'
@@ -15,11 +13,10 @@ import { createTask, deleteTask, checkTask } from './modules/scheduler.ts';
 import { saveLogsArchive } from './modules/saveLogs.ts';
 import { sendUENotify, sendURNotify, sendServiceOnNotify, sendServiceOffNotify } from './modules/myNotifcations.ts';
 import { debug, run_only_tray } from './modules/argsParser.js';
-// import { zapretTest } from './tests/zapretTest.ts';
 import { initializeTray } from './modules/tray.ts';
 import { warpFix } from './modules/warpFix.ts';
 import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
-
+import ConnectionChecker from './modules/Core/ConnectionChecker.ts'
 
 import Core from './modules/Core/Core.ts'
 import { fileURLToPath } from 'url';
@@ -40,11 +37,9 @@ if (process.platform !== 'win32') {
 
 const l = console.log
 
-// import Zapret from './modules/Zapret.ts';
-import { EventEmitter } from 'events'
-import { readFileSync } from 'node:fs';
 if (debug) app.disableHardwareAcceleration() // Да ну нахуй эти VIDEO_SCHEDULER_INTERNAL_ERROR
 app.whenReady().then(async () => {
+  console.log(await ConnectionChecker())
   if (debug) {
     try {
       await session.defaultSession.clearStorageData({
@@ -89,7 +84,7 @@ app.whenReady().then(async () => {
     }
   })
   loadingWin.loadFile('./public/loadingWin/loadingWin.html')
-  await new Promise((resolve, _) => ipcMain.on('lwuwu', () => resolve()))
+  await new Promise((resolve, _) => ipcMain.once('lwuwu', () => resolve()))
   if (debug) {
     loadingWin.webContents.openDevTools({ mode: 'detach' }); // отдельное окно
   }
@@ -144,6 +139,7 @@ app.whenReady().then(async () => {
   ipcMain.on('core:setAutoUpdate', (_, autoUpdate) => Core.setAutoUpdate(autoUpdate))
   ipcMain.on('core:setNotifications', (_, notifications) => Core.setNotifications(notifications))
   ipcMain.on('core:setAutoLoad', (_, autoLoad) => Core.setAutoLoad(autoLoad))
+  ipcMain.handle('core:connectionChecker', () => ConnectionChecker())
 
   ipcMain.handle('scheduler:createTask', () => createTask())
   ipcMain.handle('scheduler:deleteTask', () => deleteTask())

@@ -1,13 +1,13 @@
 import './StatusBlock.scss'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 
 import Button, { ButtonIconSize, ButtonStyle } from '../../button/button.tsx'
 import ZapretContext from '../../../Contexts/Zapret/ZapretProvider.tsx'
 import ChoicesSelect from './choices/choices.tsx'
+import ConnectionChecker from './connectionChecker/connectionChecker.tsx'
 
 export default function StatusBlock() {
     const { status, installStrategy, settings } = useContext(ZapretContext)
-    console.log(settings)
     return (
         <div className="container" id="status_block">
             <div className="">Сервис</div>
@@ -21,6 +21,7 @@ export default function StatusBlock() {
             />
             <label htmlFor="strategy" id="strategy_label">Выбор стратегии</label>
             <ChoicesSelect/>
+            <ConnectionChecker/>
         </div>
     )
 }
