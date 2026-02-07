@@ -4,7 +4,6 @@ import { useContext, useEffect, useRef, useState } from 'react'
 import Button, { ButtonIconSize, ButtonStyle } from '../../button/button.tsx'
 import ZapretContext from '../../../Contexts/Zapret/ZapretProvider.tsx'
 import ChoicesSelect from './choices/choices.tsx'
-import ConnectionChecker from './connectionChecker/connectionChecker.tsx'
 
 export default function StatusBlock() {
     const { status, installStrategy, settings } = useContext(ZapretContext)
@@ -14,14 +13,12 @@ export default function StatusBlock() {
             <div id="service_status">{status ? "Работает" : "Отключён"}</div>
             <Button
                 label={status ? 'Отключить' : 'Запустить'}
-                style={status ? ButtonStyle.Danger : ButtonStyle.Success}
-                Icon={{iconPath: '../power.png', iconSize: ButtonIconSize.i18}}
+                style={status ? ButtonStyle.SilentDanger : ButtonStyle.Success}
+                Icon={!status ? {iconPath: '../power.png', iconSize: ButtonIconSize.i18} : null}
                 action={() => installStrategy(status ? null : settings.selectedStrategy)}
-                toStop={true}
             />
             <label htmlFor="strategy" id="strategy_label">Выбор стратегии</label>
             <ChoicesSelect/>
-            <ConnectionChecker/>
         </div>
     )
 }

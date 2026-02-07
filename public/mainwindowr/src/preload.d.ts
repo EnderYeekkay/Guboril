@@ -1,3 +1,4 @@
+import { ConnectionCheckerResult } from '../../../modules/Core/ConnectionChecker.ts'
 import { Settings } from '../../../modules/Core/Settings.ts'
 import { IpcRendererEvent } from 'electron'
 declare global {
@@ -42,7 +43,7 @@ declare global {
     setAutoUpdate: (autoUpdate: boolean) => Promise<void>
     setNotifications: (notifications: boolean) => Promise<void>
     setAutoLoad: (autoLoad: boolean) => Promise<void>
-    connectionChecker: () => Promise<boolean>
+    connectionChecker: () => Promise<ConnectionCheckerResult>
   }
   const tray_event: {
     // Используем инлайн-импорт типа

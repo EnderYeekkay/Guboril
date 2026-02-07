@@ -1,5 +1,6 @@
+import styles from './header.module.scss'
 export default function Collapse() {
-    return <div className="header_btn" id="minimize" onClick={mw.minimize}>
-        <img className="header_btn_ico" src="../collapse.png" alt=""/>
+    return <div className={styles.header_btn} id={styles.minimize} onClick={mw.minimize}>
+        <img className={styles.header_btn_ico} src="../collapse.png" alt=""/>
     </div>
 }

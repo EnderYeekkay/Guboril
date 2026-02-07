@@ -12,7 +12,7 @@ if (!component_name || !component_name.match(/^[a-zA-Z]+$/)) throw new Error(`Wr
 const component_path = path.resolve(__dirname, '../public/mainwindowr/src/Components', component_name)
 fs.mkdirSync(component_path)
 
-const ts_functional_template = `import './${capitalize(component_name)}.scss'
+const ts_functional_template = `import styles from './${component_name}.module.scss'
 
 export default function ${capitalize(component_name)}() {
     return <div>
@@ -21,7 +21,7 @@ export default function ${capitalize(component_name)}() {
 }\n`
 
 const ts_class_template = `import React, { Component } from 'react';
-import './${capitalize(component_name)}.scss';
+import styles from './${component_name}.module.scss'
 
 export default class ${capitalize(component_name)} extends Component {
   render() {
@@ -38,7 +38,7 @@ fs.writeFileSync(
     process.argv[3] == 'c' ? ts_class_template : ts_functional_template
 )
 fs.writeFileSync(
-    path.resolve(component_path, `${component_name}.scss`),
+    path.resolve(component_path, `${component_name}.module.scss`),
     ''
 )
 log('Component is ready:', component_path)

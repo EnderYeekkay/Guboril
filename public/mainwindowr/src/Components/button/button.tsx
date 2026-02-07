@@ -9,6 +9,7 @@ export enum ButtonStyle {
     Primary = 'btn_primary',
     Secondary = 'btn_secondary',
     Danger = 'btn_danger',
+    SilentDanger = 'btn_silent_danger',
     Success = 'btn_success',
     Link = 'btn_link',
 }

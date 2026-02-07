@@ -8,6 +8,7 @@ header {
     position: fixed;
     display: flex;
     background-color: var(--header_bg);
+    height: 48px;
 }
 #maintext {
     font-size: 20px;
@@ -53,4 +54,11 @@ header {
 }
 #close:hover {
     background-color: red;
+}
+#notifies_list {
+    margin-right: 20px;
+    opacity: .8;
+}
+#notifies_list:hover {
+    opacity: 1;
 }

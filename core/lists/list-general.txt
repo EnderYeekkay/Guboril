@@ -65,3 +65,15 @@ translate.planetaryannihilation.com
 translations.planetaryannihilation.com
 translators.planetaryannihilation.com
 web.planetaryannihilation.com
+instagram.com
+www.instagram.com
+api.instagram.com
+i.instagram.com
+scontent.cdninstagram.com
+cdninstagram.com
+graph.instagram.com
+z-p3.www.instagram.com
+z-p4.www.instagram.com
+facebook.com
+cdninstagram.com
+fbcdn.net
