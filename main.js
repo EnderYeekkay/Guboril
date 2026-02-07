@@ -165,7 +165,8 @@ app.whenReady().then(async () => {
     webPreferences: {
         sandbox: false,
         contextIsolation: true,
-        preload: join(__dirname, 'preloads/mainWindow/preload.ts')
+        preload: join(__dirname, 'preloads/mainWindow/preload.ts'),
+        cache: false
     }
   })
   Core.mainWindow = win
@@ -181,7 +182,7 @@ app.whenReady().then(async () => {
       win.show()
     }
   })
-
+  console.group('process.env.VITE_DEV_SERVER_URL', process.env.VITE_DEV_SERVER_URL)
   if (process.env.VITE_DEV_SERVER_URL) {
     win.loadURL(process.env.VITE_DEV_SERVER_URL)
   } else {

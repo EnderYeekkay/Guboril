@@ -23,7 +23,7 @@ export default function CoreBlock() {
         <div id="core_block_bottom">
             <div id="core_block_controller">
                 <Button
-                    style={ButtonStyle.Secondary}
+                    style={ButtonStyle.Primary}
                     label='Конфигурация'
                     Icon={{
                         iconSize: ButtonIconSize.i16,

@@ -11,6 +11,7 @@
     --header_bg: #393A3F;
     --container_bg: #323339;
     --whitesmoke: #F5F5F5;
+    --separator: #3E3F45;
 
     --cm_active: #4E4F57;
     --cm_inactive: #43444C;
@@ -28,6 +29,16 @@
 
     --btn_danger_disabled: #8F4046;
     --btn_danger_disabled_border: #73363A;
+
+
+    --btn_silent_danger: #45464E;
+    --btn_silent_danger_border: #494951;
+
+    --btn_silent_danger_hover: #3E3F45;
+    --btn_silent_danger_hover_border: #424349;
+
+    --btn_silent_danger_active: #494A52;
+    --btn_silent_danger_active_border: #4D4D55;
 
 
     --btn_primary: #5865F2;

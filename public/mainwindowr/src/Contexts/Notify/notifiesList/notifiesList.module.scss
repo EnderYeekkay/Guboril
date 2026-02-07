@@ -1,0 +1,9 @@
+.list {
+    position: fixed;
+    top: 48px;
+    right: 20px;
+    z-index: 1000;
+}
+.separator {
+    width: calc(100% - 40px);
+}

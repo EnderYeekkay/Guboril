@@ -9,6 +9,17 @@ export default defineConfig(({ mode }) => {
     root: 'public/mainwindowr',         // где лежит index.html
     base: isDev ? '/' : './',           // <-- вот оно: / в dev, ./ в prod (file:// friendly)
     plugins: [react()],
+    server: {
+      watch: {
+        usePolling: true, 
+        interval: 500
+      },
+      // Убедитесь, что HMR-хост явно указан
+      hmr: {
+        host: 'localhost', 
+        port: 5173,
+      }
+    },
     build: {
       outDir: 'dist',
       emptyOutDir: true,

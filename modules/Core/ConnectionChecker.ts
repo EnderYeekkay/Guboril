@@ -42,32 +42,30 @@ async function checkUrl(url: string, timeLimit?: number): Promise<boolean> {
     }
 }
 
-async function checkYoutube(timeLimit?: number): Promise<boolean> {
-    return checkUrl('https://youtube.com', timeLimit)
-}
-async function checkDiscord(timeLimit?: number): Promise<boolean> {
-    return checkUrl('https://discord.com', timeLimit)
-}
-async function check7tv(timeLimit?: number): Promise<boolean> {
-    return checkUrl('https://7tv.app', timeLimit)
-}
-
+export type ConnectionCheckerResult = {
+    passes: number
+    successfulPasses: number
+} | false
 /**
  * @example
  * true  - is ok
  * false - some checks failed
  * null  - all checks failed
  */
-export default async function ConnectionChecker(): Promise<boolean | null> {
+export default async function ConnectionChecker(): Promise<ConnectionCheckerResult> {
+    if (!(await checkInternet())) return false
     const timeLimit = await calcExpiringTime()
-    const status = await Promise.all([
-        checkDiscord(timeLimit),
-        checkYoutube(timeLimit),
-        // check7tv(timeLimit)
-    ])
-    const passesCount = status.filter(el => el).length
-
-    if (passesCount === status.length) return true
-    if (passesCount > 0 && passesCount < status.length) return false
-    return null
+    const urlsToCheck = [
+        'youtube.com',
+        'discord.com',
+        'instagram.com',
+        'facebook.com'
+    ]
+    const status = await Promise.all(
+        urlsToCheck.map((url) => checkUrl(`https://${url}`, timeLimit))
+    )
+    return {
+        passes: urlsToCheck.length,
+        successfulPasses: status.filter(el => el).length
+    }
 }
