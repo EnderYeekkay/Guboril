@@ -1,25 +1,32 @@
 import { useContext } from "react";
-import Button from "./button/button.tsx";
+import Button, { ButtonStyle } from "./button/button.tsx";
 import { FrameContext } from "../Contexts/FrameContext.tsx";
-import { Column, Row } from "./Structure/Alignment.tsx";
+import { Column, Layout, Row } from "./Structure/Alignment.tsx";
 import { Tab, TabPanel, Tabs } from "./Tab/Tab.tsx";
 import { IconTabSettings } from "../Icons/IconTabSettings.tsx";
+
+import styles from "./Structure/Alignment.module.css";
 
 export default function SettingsFrame() {
     type AllowedTabs = 'general' | 'ipset' | 'strategies' | 'debug';
     const frameContext = useContext(FrameContext);
     return (
-        <Row>
+        <div className={`${styles.fullWidth} ${styles.fullHeight} ${styles.column}`}>
+            <div className={styles.column}>
+                <Button label="Назад" action={() => frameContext.setFrame('home')}
+                    style={ButtonStyle.Secondary} addictionClasses={['btn_settings']} />
+            </div>
+
             <Tabs<AllowedTabs> defaultTab="general">
-                <Row>
-                    <Column>
+                <div className={styles.row}>
+                    <div className={styles.column}>
                         <Tab<AllowedTabs> icon={<IconTabSettings />} description="Основные" tabName="general" />
                         <Tab<AllowedTabs> icon={<IconTabSettings />} description="IPSET" tabName="ipset" />
                         <Tab<AllowedTabs> icon={<IconTabSettings />} description="Стратегии" tabName="strategies" />
                         <Tab<AllowedTabs> icon={<IconTabSettings />} description="Отладка" tabName="debug" />
-                    </Column>
+                    </div>
 
-                    <Column>
+                    <div className={styles.column}>
                         <TabPanel<AllowedTabs> tabName="general">
                             <p>Основные</p>
                         </TabPanel>
@@ -32,16 +39,9 @@ export default function SettingsFrame() {
                         <TabPanel<AllowedTabs> tabName="debug">
                             <p>Отладка</p>
                         </TabPanel>
-                    </Column>
-                </Row>
+                    </div>
+                </div>
             </Tabs>
-
-
-            <Column>
-                <p>Settings</p>
-                <Button label="Назад" action={() => frameContext.setFrame('home')} />
-            </Column>
-
-        </Row>
+        </div>
     )
 }

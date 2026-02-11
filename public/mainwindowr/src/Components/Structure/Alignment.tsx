@@ -11,3 +11,16 @@ export function Row({children}: {children: React.ReactNode}){
         {children}
     </div>
 }
+
+export type LayoutProps = {
+    fullWidth?: boolean,
+    fullHeight?: boolean,
+    direction?: 'row' | 'column',
+    children: React.ReactNode;
+}
+
+export function Layout({ fullWidth, fullHeight, direction, children }: LayoutProps) {
+    return <div className={`${fullWidth ? styles.fullWidth : ''} ${fullHeight ? styles.fullHeight : ''}`}>
+        {direction === 'row' ? <Row>{children}</Row> : <Column>{children}</Column>}
+    </div>
+}
