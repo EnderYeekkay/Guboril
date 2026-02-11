@@ -18,11 +18,3 @@ export function FrameProvider({children}: {children: React.ReactNode}) {
         </FrameContext.Provider>
     )
 }
-
-export function useFrame() {
-    const context = useContext(FrameContext);
-    if (!context) {
-        throw new Error('useFrame must be used within a FrameProvider');
-    }
-    return context;
-}

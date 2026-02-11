@@ -2,7 +2,7 @@ import './CoreBlock.scss'
 import Button, { ButtonStyle, ButtonIconSize } from '../../button/button.tsx'
 import { useContext, useEffect, useRef } from 'react'
 import ZapretContext from '../../../Contexts/Zapret/ZapretProvider.tsx'
-import { FrameContext } from '../../FrameContext.tsx';
+import { FrameContext } from '../../../Contexts/FrameContext.tsx';
 
 export default function CoreBlock() {
     const { settings, installStrategy } = useContext(ZapretContext)
