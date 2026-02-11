@@ -1,6 +1,6 @@
 import { Context, createContext, useContext, useState } from "react";
-import { Column, Row } from "../Structure/Alignment.tsx";
 import styles from './Tab.module.css';
+import stylesAlignment from "../Structure/Alignment.module.css";
 
 // TYPES
 
@@ -50,8 +50,8 @@ export function TabPanel<T extends string>({ tabName, children }: { tabName: T, 
     const { tab } = useTabs<T>();
     if (tab !== tabName) return null;
     return (
-        <Column>
+        <div className={stylesAlignment.column}>
             {children}
-        </Column>
+        </div>
     )
 }
