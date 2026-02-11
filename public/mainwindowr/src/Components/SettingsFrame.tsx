@@ -3,6 +3,7 @@ import Button from "./button/button.tsx";
 import { FrameContext } from "../Contexts/FrameContext.tsx";
 import { Column, Row } from "./Structure/Alignment.tsx";
 import { Tab, TabPanel, Tabs } from "./Tab/Tab.tsx";
+import { IconTabSettings } from "../Icons/IconTabSettings.tsx";
 
 export default function SettingsFrame() {
     type AllowedTabs = 'general' | 'ipset' | 'strategies' | 'debug';
@@ -12,10 +13,10 @@ export default function SettingsFrame() {
             <Tabs<AllowedTabs> defaultTab="general">
                 <Row>
                     <Column>
-                        <Tab<AllowedTabs> description="Основные" tabName="general" />
-                        <Tab<AllowedTabs> description="IPSET" tabName="ipset" />
-                        <Tab<AllowedTabs> description="Стратегии" tabName="strategies" />
-                        <Tab<AllowedTabs> description="Отладка" tabName="debug" />
+                        <Tab<AllowedTabs> icon={<IconTabSettings />} description="Основные" tabName="general" />
+                        <Tab<AllowedTabs> icon={<IconTabSettings />} description="IPSET" tabName="ipset" />
+                        <Tab<AllowedTabs> icon={<IconTabSettings />} description="Стратегии" tabName="strategies" />
+                        <Tab<AllowedTabs> icon={<IconTabSettings />} description="Отладка" tabName="debug" />
                     </Column>
 
                     <Column>
