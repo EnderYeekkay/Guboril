@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import Button from "./button/button.tsx";
-import { FrameContext } from "./FrameContext.tsx";
+import { FrameContext } from "../Contexts/FrameContext.tsx";
 
 export default function SettingsFrame() {
     const frameContext = useContext(FrameContext);
