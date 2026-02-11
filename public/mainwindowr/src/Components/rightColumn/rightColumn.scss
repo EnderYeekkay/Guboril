@@ -9,7 +9,7 @@
     height: 12px;
     font-weight: bold;
     display: flex;
-    justify-content: start;
+    justify-content: space-between;
     align-items: center;
 }
 #right_column .toggle {
@@ -22,7 +22,6 @@
     margin-left: 30px;
 }
 .btn_settings {
-    position: absolute;
     right: 20px;
     width: 107px;
 }
