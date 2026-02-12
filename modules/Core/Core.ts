@@ -1,12 +1,12 @@
 import { EventEmitter } from 'node:events'
 import { resolve as pr } from 'node:path'
-import { app, BrowserWindow, shell } from 'electron'
-import { log } from "console"
+import { BrowserWindow, shell } from 'electron'
 import * as paths from './paths.ts'
 import fs from 'fs'
 import SCController from './SCController.ts'
 import strategyParser from './strategyParser.ts'
 import { SettingsAccessor, settings, type Settings } from './Settings.ts'
+const { log } = console
 /** Absoulte path of some file.*/ type path = string
 
 SCController.enableTimestampsTCP()
@@ -55,6 +55,7 @@ export default abstract class Core {
         if (strategy === null) {
             SCController.delete()
             settings.status = false
+            this.events.emit('strategyChanged', null)
             return
         }
         if (!strategy || typeof strategy !== 'string') throw new CoreError('Wrong strategy!')

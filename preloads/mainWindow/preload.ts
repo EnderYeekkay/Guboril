@@ -53,16 +53,7 @@ contextBridge.exposeInMainWorld('core', {
   setAutoLoad: (autoLoad: boolean) => ipcRenderer.send('core:setAutoLoad', autoLoad),
   connectionChecker: () => ipcRenderer.invoke('core:connectionChecker'),
 })
-contextBridge.exposeInMainWorld('tray_event', {
-  onDisableToStop: (cb) => ipcRenderer.on('disableToStop', cb),
-  onRollbackToStop: (cb) => ipcRenderer.on('rollbackToStop', cb),
-  clean: () => {
-    ipcRenderer.removeAllListeners('disableToStop')
-    ipcRenderer.removeAllListeners('rollbackToStop')
-  },
-  sendDisableToStop: () => ipcRenderer.send('sendDisableToStop'),
-  sendRollbackToStop: () => ipcRenderer.send('sendRollbackToStop')
-})
+
 contextBridge.exposeInMainWorld('logger', {
   log: (...args) => ipcRenderer.send('renderer-log', 'log', ...args),
   warn: (...args) => ipcRenderer.send('renderer-log', 'warn', ...args),
