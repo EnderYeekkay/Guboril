@@ -6,6 +6,12 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const escapeRegExp = (value: string) =>
+    value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const rootCorePath = path.join(__dirname, 'core');
+const rootCoreIgnore = new RegExp(`^${escapeRegExp(rootCorePath)}([\\\\/]|$)`);
+
 const options: packager.Options = {
     dir: '.',
     name: 'Guboril',
@@ -14,7 +20,7 @@ const options: packager.Options = {
     overwrite: true,
     out: "dist",
     icon: "public/icon.ico",
-    asar: false,
+    asar: true,
     win32metadata: {
         'requested-execution-level': 'requireAdministrator',
     },
@@ -34,9 +40,9 @@ const options: packager.Options = {
         /readme\.md/,
         /roadmap\.md/,
         /icon\.bmp/,
-        /mainwindowr\/src/,,
+        /mainwindowr\/src/,
         /public\/images/,
-        /core/,
+        rootCoreIgnore,
     ],
     afterCopy: [
         (buildPath, electronVersion, platform, arch, callback) => {
