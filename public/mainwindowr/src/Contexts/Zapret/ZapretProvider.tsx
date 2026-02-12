@@ -12,35 +12,14 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
 
     const [status, setStatus] = useState<boolean>(core.checkService());
     const [strategies, setStrategies] = useState<Array<string>>(core.getStrategiesNames())
-    const [busy, setBusy] = useState<boolean>(false)
     const [settings, setSettings] = useState<Settings>(core.getSettings())
 
-    const queue = async (zapretFunction: (...args: any[]) => Promise<any>, ...params: any[]) => {
-        if (busy) throw new Error('Renderer queue Error!');
-        setBusy(true);
-        tray_event.sendDisableToStop()
-        try {
-            const res = await zapretFunction(...params);
-            return res;
-        } finally {
-            tray_event.sendRollbackToStop();
-            setBusy(false);
-        }
-
-    };
-
     useEffect(() => {
-        tray_event.onDisableToStop(() => setBusy(true))
-        tray_event.onRollbackToStop(async () => {
-            setSettings(core.getSettings())
-            setBusy(false)
-        })
         core.settingsChanged((settings) => {
             setSettings(settings)
             setStatus(settings.status)
         })
         return () => {
-            tray_event.clean()
             core.cleanSettingsChanged()
         }
     }, [])
@@ -48,7 +27,6 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
     const installStrategy = async (strategy: string | null): Promise<boolean> => {
         try {
             const res = core.setStrategy(strategy)
-            tray_event.sendDisableToStop()
             typeof strategy === 'string' ? setStatus(true) : setStatus(false)
             if (typeof strategy === 'string') {
                 sendNotify({
@@ -72,8 +50,6 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
                 description: 'Возникла проблема при попытке запустить ядро. Попробуйте ещё раз или перезапустите Guboril.',
                 style: NotifyStyle.Error
             })
-        } finally {
-            tray_event.sendRollbackToStop();
         }
     }
     const setGameFilter = async (value: boolean): Promise<boolean> => {
@@ -102,7 +78,6 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
     }
 
     return <ZapretContext.Provider value={{
-        busy,
         status,
         settings,
         strategies,

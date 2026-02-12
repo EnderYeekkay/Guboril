@@ -45,14 +45,6 @@ declare global {
     setAutoLoad: (autoLoad: boolean) => Promise<void>
     connectionChecker: () => Promise<ConnectionCheckerResult>
   }
-  const tray_event: {
-    // Используем инлайн-импорт типа
-    onDisableToStop: (cb: (event: IpcRendererEvent) => void) => void
-    onRollbackToStop: (cb: (event: IpcRendererEvent) => void) => void
-    clean: () => void
-    sendDisableToStop: () => void
-    sendRollbackToStop: () => void
-  }
 
   const logger: {
     log: (...args: any[]) => void
