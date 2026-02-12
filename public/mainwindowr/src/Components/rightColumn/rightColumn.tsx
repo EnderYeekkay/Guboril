@@ -6,7 +6,7 @@ import Checkbox from '../checkbox/checkbox.tsx'
 import ZapretProvider from '../../Contexts/Zapret/ZapretProvider.tsx'
 import { ChangeEvent, useContext, useEffect } from 'react'
 import DiscordCacheCleaner from './discordCacheCleaner.tsx'
-import NotifyProvider from '../../Contexts/Notify/NotifyProvider.tsx'
+import NotifyProvider from '../../Contexts/Notify/NotifyContext.ts'
 import { NotifyStyle } from '../../Contexts/Notify/notify/notify.tsx'
 export default function RightColumn() {
     const { setGameFilter, settings } = useContext(ZapretProvider)

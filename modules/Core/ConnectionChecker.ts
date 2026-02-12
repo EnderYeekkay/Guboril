@@ -1,5 +1,6 @@
 const urlRegex = /^https?:\/\/(www\.)?[\w\-\.@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([\w\-\.@:%_\+.~#?&\\\/\/\/=]*)$/m
-
+export type HTTPSString = `https://${string}.${string}`
+export type domainString = `${string}.${string}`
 async function calcExpiringTime(): Promise<number> {
     const start = performance.now()
     try {
@@ -16,7 +17,7 @@ export async function checkInternet() {
     return await checkUrl('https://ya.ru', 3_000)
 }
 
-async function checkUrl(url: string, timeLimit?: number): Promise<boolean> {
+async function checkUrl(url: HTTPSString, timeLimit?: number): Promise<boolean> {
     if (!urlRegex.test(url)) throw new Error(`Wrong URL given: ${url}!`)
     if (!timeLimit) timeLimit = await calcExpiringTime()
     console.log(`Checking: ${url}. TimeLimit: ${timeLimit}`)
@@ -60,7 +61,7 @@ export default async function ConnectionChecker(): Promise<ConnectionCheckerResu
         'discord.com',
         'instagram.com',
         'facebook.com'
-    ]
+    ] as domainString[]
     const status = await Promise.all(
         urlsToCheck.map((url) => checkUrl(`https://${url}`, timeLimit))
     )

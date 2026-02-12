@@ -3,7 +3,6 @@ import '../../../../global/styles/style.css'
 import './button.scss'
 import ZapretContext from '../../Contexts/Zapret/ZapretProvider.tsx'
 import Dcloader from './dcloader/dcloader.tsx'
-import { event } from 'jquery'
 
 export enum ButtonStyle {
     Primary = 'btn_primary',
@@ -35,7 +34,7 @@ export enum ButtonIconSize {
 }
 
 export default function Button(props: ButtonProps) {
-    const { busy } = useContext(ZapretContext)
+    const busy = false
     const imgRef = useRef<HTMLImageElement>(null)
     const textRef = useRef<HTMLDivElement>(null)
     const [loading, setLoading] = useState<boolean>(Boolean(props.loading))

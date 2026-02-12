@@ -1,6 +1,6 @@
 import { ReactNode, useState, createContext, useEffect, useRef, useContext } from "react";
 import { Settings } from "../../../../../modules/Core/Settings.ts";
-import NotifyContext from "../Notify/NotifyProvider.tsx";
+import NotifyContext from "../Notify/NotifyContext.ts";
 import { NotifyStyle } from "../Notify/notify/notify.tsx";
 
 const ZapretContext = createContext<ZapretCondition | null>(null)
@@ -47,7 +47,8 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
 
     const installStrategy = async (strategy: string | null): Promise<boolean> => {
         try {
-            const res = await queue(core.setStrategy, strategy)
+            const res = core.setStrategy(strategy)
+            tray_event.sendDisableToStop()
             typeof strategy === 'string' ? setStatus(true) : setStatus(false)
             if (typeof strategy === 'string') {
                 sendNotify({
@@ -71,12 +72,14 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
                 description: 'Возникла проблема при попытке запустить ядро. Попробуйте ещё раз или перезапустите Guboril.',
                 style: NotifyStyle.Error
             })
+        } finally {
+            tray_event.sendRollbackToStop();
         }
     }
     const setGameFilter = async (value: boolean): Promise<boolean> => {
         if (value != settings.gameFilter) {
             try {
-                const res = await queue(core.setGameFilter, value)
+                const res = core.setGameFilter(value)
                 setStatus(true)
                 sendNotify({
                     title: `GameFilter успешно ${value ? 'активирован' : 'отключён'}!`,

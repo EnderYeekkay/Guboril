@@ -34,7 +34,7 @@ export class SettingsAccessor {
                 autoLoad: true,
                 autoUpdate: false,
                 status: false,
-                selectedStrategy: null,
+                selectedStrategy: 'general (SIMPLE FAKE).bat',
                 notifications: true,
                 GH_TOKEN: null
             }
