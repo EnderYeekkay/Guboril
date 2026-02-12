@@ -1,34 +1,16 @@
-import { useContext, useEffect, useRef, useState } from 'react'
+import { Ref } from 'react'
 import './ConnectionChecker.scss'
-import ZapretContext from '../../../../Contexts/Zapret/ZapretProvider.tsx'
 import Dcloader from '../../../button/dcloader/dcloader.tsx'
 import { type ConnectionCheckerResult } from '../../../../../../../modules/Core/ConnectionChecker.ts'
 
-export default function ConnectionChecker() {
-    const { status, installStrategy, settings } = useContext(ZapretContext)
-    const [ connection, setConnection ] = useState<ConnectionCheckerResult>(null)
-    const [ checking, setChecking ] = useState<boolean>(false)
-    const statusRef = useRef<HTMLDivElement>(null)
-    const requestIdRef = useRef(0)
+interface ConnectionCheckerProps {
+    statusRef: Ref<HTMLDivElement>
+    connection: ConnectionCheckerResult
+    checking: boolean
+}
 
-    useEffect(() => {
-        let cancelled = false
-        const requestId = ++requestIdRef.current
-        setChecking(true)
-        core.connectionChecker().then((res) => {
-            if (cancelled || requestId !== requestIdRef.current) return
-            setConnection(res)
-            setChecking(false)
-        }).catch(() => {
-            if (cancelled || requestId !== requestIdRef.current) return
-            setConnection(null)
-            setChecking(false)
-        })
-
-        return () => {
-            cancelled = true
-        }
-    }, [settings?.gameFilter, settings?.selectedStrategy, status])
+export default function ConnectionChecker(props: ConnectionCheckerProps) {
+    const { statusRef, connection, checking } = props
 
     return <div id="connection_checker_container">
         <div id="connection_checker_text">Соединение</div>
@@ -36,8 +18,11 @@ export default function ConnectionChecker() {
             {checking 
             ? <Dcloader visible={true}/>
             : getConnectionStatus(connection)
-        }
+            }   
         </div>
+        {/* <div id="connection_checker_status" ref={statusRef}>
+            <Dcloader visible={true}/>
+        </div> */}
     </div>
 }
 
