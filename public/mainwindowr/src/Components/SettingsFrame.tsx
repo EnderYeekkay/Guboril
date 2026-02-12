@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import Button, { ButtonStyle } from "./button/button.tsx";
 import { FrameContext } from "../Contexts/FrameContext.tsx";
-import { Column, Layout, Row } from "./Structure/Alignment.tsx";
-import { Tab, TabPanel, Tabs } from "./Tab/Tab.tsx";
+import { Tab} from "./Tab/Tab.tsx";
 import { IconTabSettings } from "../Icons/IconTabSettings.tsx";
 
 import styles from "./Structure/Alignment.module.css";
+import { TabPanel } from "./Tab/TabPanel.tsx";
+import { Tabs } from "./Tab/Tabs.tsx";
 
 export default function SettingsFrame() {
     type AllowedTabs = 'general' | 'ipset' | 'strategies' | 'debug';
