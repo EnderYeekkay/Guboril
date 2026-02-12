@@ -9,13 +9,25 @@ export default function ConnectionChecker() {
     const [ connection, setConnection ] = useState<ConnectionCheckerResult>(null)
     const [ checking, setChecking ] = useState<boolean>(false)
     const statusRef = useRef<HTMLDivElement>(null)
+    const requestIdRef = useRef(0)
 
     useEffect(() => {
+        let cancelled = false
+        const requestId = ++requestIdRef.current
         setChecking(true)
         core.connectionChecker().then((res) => {
+            if (cancelled || requestId !== requestIdRef.current) return
             setConnection(res)
             setChecking(false)
+        }).catch(() => {
+            if (cancelled || requestId !== requestIdRef.current) return
+            setConnection(null)
+            setChecking(false)
         })
+
+        return () => {
+            cancelled = true
+        }
     }, [settings?.gameFilter, settings?.selectedStrategy, status])
 
     return <div id="connection_checker_container">

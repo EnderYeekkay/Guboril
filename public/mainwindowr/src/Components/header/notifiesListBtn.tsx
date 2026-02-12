@@ -1,6 +1,6 @@
 import { useContext } from 'react'
 import styles from './header.module.scss'
-import NotifyContext from '../../Contexts/Notify/NotifyProvider.tsx'
+import NotifyContext from '../../Contexts/Notify/NotifyContext.ts'
 export default function() {
     const { setVisibilityOfList, visibilityOfList, visibilityOfListBtn } = useContext(NotifyContext)
 

@@ -1,14 +1,16 @@
 import { useContext, useState } from "react";
 import Button, { ButtonStyle } from "../button/button.tsx";
-import NotifyContext from "../../Contexts/Notify/NotifyProvider.tsx";
+import NotifyContext from "../../Contexts/Notify/NotifyContext.ts";
 import { NotifyStyle } from "../../Contexts/Notify/notify/notify.tsx";
 export default function DiscordCacheCleaner() {
     const { sendNotify } = useContext(NotifyContext)
     const [loading, setLoading] = useState<boolean>(false)
 
     async function action() {
+        console.log('Cleaning Discord Cache...')
         setLoading(true)
         const res = await mw.clear_discord_cache()
+        console.log(res)
         sendNotify({
             title: res ? 'Выполнено' : 'Не выполнено',
             style: res ? NotifyStyle.Success : NotifyStyle.Error,

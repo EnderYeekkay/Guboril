@@ -3,7 +3,8 @@ import { app } from 'electron'
 import { rmdirSync, rmSync } from 'fs'
 import type { RmOptions } from 'fs'
 import path from 'path'
-export default function execute() {
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+export default async function execute() {
     const roamingPath = app.getPath('appData')
     const pathToCache = path.resolve(roamingPath, 'discord')
     const rmOptions: RmOptions = { recursive: true, force: true }
@@ -15,6 +16,7 @@ export default function execute() {
         } catch (e) {
             console.warn('Failed to kill discord.')
         }
+        await sleep(2000)
     } catch (e) {
         console.log('Discord is not launched.')
     }
@@ -23,7 +25,9 @@ export default function execute() {
         rmSync(path.resolve(pathToCache, 'Cache'), rmOptions)
         rmSync(path.resolve(pathToCache, 'Code Cache'), rmOptions)
         rmSync(path.resolve(pathToCache, 'GPUCache'), rmOptions)
+        console.log('Cache cleaned successfully!')
     } catch (e) {
+        console.log('Failed to clean cache ', e.stack)
         return false
     }
     return true

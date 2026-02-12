@@ -17,7 +17,7 @@ export default function CoreBlock() {
             <div id="core_block_text">ЯДРО</div>
             <div id="core_block_version_container">
                 <div id="core_block_version_text">Версия</div>
-                <div id="core_block_version_number">v72.2</div>
+                <div id="core_block_version_number">v72.9</div>
             </div>
         </div>
         <div id="core_block_bottom">
