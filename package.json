@@ -12,6 +12,7 @@
     "component": "node scripts\\createComponent.ts"
   },
   "dependencies": {
+    "ansi-styles": "^6.2.3",
     "archiver": "^7.0.1",
     "axios": "^1.13.2",
     "choices.js": "^11.1.0",

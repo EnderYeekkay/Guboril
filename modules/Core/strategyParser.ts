@@ -1,6 +1,6 @@
 import * as paths from'./paths.ts'
 import { sep } from 'path'
-
+const debug = false
 function get_gf(v: boolean): string {
     const gf_value_enabled = '1024-65535'
     const gf_value_disabled = '12'
@@ -26,7 +26,7 @@ export default function(str: string, game_filter: boolean): string {
     // Поиск первого параметра стратегии
     const entryFirstArgIdx = lines[0].indexOf('--')
     lines[0] = lines[0].substring(entryFirstArgIdx)
-    console.log(lines)
+    if (debug) console.log(lines)
     // Фильтрация мусора
     lines = lines.map(val => val.trim())
     lines = lines.filter(val => val.match(/^--.*$/))

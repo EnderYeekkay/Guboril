@@ -7,6 +7,10 @@ import SCController from './SCController.ts'
 import strategyParser from './strategyParser.ts'
 import { SettingsAccessor, settings, type Settings } from './Settings.ts'
 const { log } = console
+import ansi from 'ansi-styles'
+const { color } = ansi
+import hexResolve, { type HEX } from '../decor/hexToRGB.ts'
+const ansiHex = (hex: HEX) => color.ansi16m(...hexResolve(hex))
 /** Absoulte path of some file.*/ type path = string
 
 SCController.enableTimestampsTCP()
@@ -50,12 +54,35 @@ export default abstract class Core {
         return strategiesName
     }
     static checkService = () => SCController.checkService()
-    static setStrategy(strategy: string | null) {
-        console.log(`Core.setStrategy(${strategy})`)
+    static #setStrategy(strategy: string | null, gameFilter: boolean = null) {
+        if (gameFilter === null) gameFilter = settings.gameFilter
+        const initSetStrategyString = 
+        ansiHex('#8400FF')+
+        'Core' +
+        color.close +
+
+        '.' +
+
+        ansiHex('#67CCFF') +
+        'setStrategy' +
+        color.close + 
+
+        '(\"' +
+        ansiHex('#ECB664') +
+        strategy +
+        color.close +
+        '\", "' +
+        ansiHex('#ECB664') +
+        gameFilter +
+        color.close +
+        '\")';
+        console.log(initSetStrategyString)
+        
         if (strategy === null) {
             SCController.delete()
             settings.status = false
             this.events.emit('strategyChanged', null)
+            console.log()
             return
         }
         if (!strategy || typeof strategy !== 'string') throw new CoreError('Wrong strategy!')
@@ -63,17 +90,31 @@ export default abstract class Core {
 
         const strategyPath = pr(paths.coreDir, strategy)
         if (!fs.existsSync(strategyPath)) throw new CoreError(`Invalid strategy ${strategy}`)
+
+
+        console.log(`  ${color.greenBright.open}>${color.greenBright.close} Reading file...`)
         const strategyFile = fs.readFileSync(strategyPath).toString()
-        const parsedStrategy = strategyParser(strategyFile, settings.gameFilter)
-        const res = SCController.start(parsedStrategy, strategy, settings.gameFilter)
+
+        console.log(`  ${color.greenBright.open}>${color.greenBright.close} Parsing strategy...`)
+        const parsedStrategy = strategyParser(strategyFile, gameFilter)
+
+        console.log(`  ${color.greenBright.open}>${color.greenBright.close} Starting service...`)
+        const res = SCController.start(parsedStrategy, strategy, gameFilter)
+
+        
         if (res) {
             settings.selectedStrategy = strategy
+            settings.gameFilter = gameFilter
             settings.status = true
             this.events.emit('strategyChanged', strategy)
         }
         let end = Date.now() 
         console.log((end - begin) / 1000, 's')
+        console.log()
         return(res)
+    }
+    static setStrategy(strategy: string | null) {
+        return this.#setStrategy(strategy)
     }
     static setGameFilter(value: boolean) {
         if (typeof value !== 'boolean') throw new CoreError(`Wrong gameFilter value: ${value}`)
@@ -81,18 +122,8 @@ export default abstract class Core {
             console.warn('Skipping gameFilter')
             return
         }
-        const strategyName = settings.selectedStrategy
-        const strategyPath = pr(paths.coreDir, strategyName)
-        const strategyFile = fs.readFileSync(strategyPath).toString()
-        const parsedStrategy = strategyParser(strategyFile, value)
-        SCController.delete()
-        const res = SCController.start(parsedStrategy, settings.selectedStrategy, value)
-        if (res) {
-            settings.gameFilter = value
-            settings.status = true
-            this.events.emit('gameFilterChanged', value)
-        }
-        return res
+
+        return this.#setStrategy(settings.selectedStrategy, value)
     }
 
     static openCoreFolder() {

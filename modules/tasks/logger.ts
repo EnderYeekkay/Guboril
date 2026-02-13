@@ -1,8 +1,11 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { app, ipcMain } from 'electron'
+import ansi, { type CSPair } from 'ansi-styles'
+import reverseColors from '../decor/reverseColors.ts'
 
 const logDir = path.join(app.getPath('userData'), 'logs')
+type MethodType = 'log' | 'warn' | 'error'
 
 export function initMainLogger({ keep = 5 } = {}) {
   const mainLogDir = path.join(logDir, 'main')
@@ -32,7 +35,7 @@ export function initMainLogger({ keep = 5 } = {}) {
   } catch {}
 
   // Перехватываем console
-  ;['log', 'warn', 'error'].forEach(methodName => {
+  ;['log', 'warn', 'error'].forEach((methodName: MethodType) => {
     const orig = console[methodName].bind(console)
     console[methodName] = (...args) => {
       try {
@@ -42,7 +45,7 @@ export function initMainLogger({ keep = 5 } = {}) {
         }).join(' ')
         fs.appendFileSync(mainLogFile, `[${new Date().toISOString()}] [${methodName}] ${line}\n`)
       } catch {}
-      orig(...args) // обычный вывод в консоль
+      orig(getPrefix(methodName), ...args) // обычный вывод в консоль
     }
   })
 }
@@ -74,4 +77,15 @@ export function initRendererLogger({ keep = 5 } = {}) {
     } catch {}
     // console[level](...args) // дублируем в main консоль
   })
+}
+
+function getPrefix(method: MethodType) {
+  switch (method) {
+    case 'log':
+      return ''
+    case 'warn':
+      return reverseColors('WARN', ansi.bgYellow)
+    case 'error':
+      return reverseColors('ERROR', ansi.bgRed)
+  }
 }

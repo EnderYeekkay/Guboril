@@ -4,6 +4,7 @@ import * as paths from './paths.ts'
 import iconv from 'iconv-lite'
 import { error, log } from 'node:console'
 
+const debug = false
 /**
  * Коды возврата sc create (System Error Codes)
  * 0 - Успех
@@ -39,19 +40,20 @@ const SCController = {
         spawnSync('sc', [
             'description', 
             'GuborilCore', 
-`Служба фильтрации трафика Winws.exe\r\n
-Параметры:\r\n
-strategyTitle:${strategyTitle}:\r\n
-gameFilterTitle:${gameFilterTitle}:\r\n`
+            'Служба фильтрации трафика Winws.exe\r\n' +
+              'Параметры:\r\n' +
+              `strategyTitle:${strategyTitle}:\r\n` +
+              `gameFilterTitle:${gameFilterTitle}:\r\n`,
         ], options);
 
         const startRes = spawnSync('sc', ['start', 'GuborilCore'], options);
         const stdout = iconv.decode(startRes.stdout as Buffer<ArrayBufferLike>, 'cp866')
         const stderr = iconv.decode(startRes.stderr as Buffer<ArrayBufferLike>, 'cp866')
 
-        console.log('stdout:', stdout)
-        console.log('stderr:', stderr)
-        console.log('status:', startRes.status)
+        if (debug) console.log('stdout:', stdout)
+        if (debug) console.log('stderr:', stderr)
+        if (debug) console.log('status:', startRes.status)
+
         return startRes.status === 0
     },
 

@@ -17,7 +17,7 @@ import { initializeTray } from './modules/tasks/tray.ts';
 import { warpFix } from './modules/fixes/warpFix.ts';
 import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import ConnectionChecker from './modules/Core/ConnectionChecker.ts'
-
+import ansi from 'ansi-styles';
 import Core from './modules/Core/Core.ts'
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -39,7 +39,15 @@ const l = console.log
 
 if (debug) app.disableHardwareAcceleration() // Да ну нахуй эти VIDEO_SCHEDULER_INTERNAL_ERROR
 app.whenReady().then(async () => {
-  console.log(await ConnectionChecker())
+  console.log(
+    ansi.bgGreen.open +
+      ansi.bold.open +
+        ansi.blackBright.open +
+          ' <---- APP IS READY ----> ' +
+        ansi.blackBright.close +
+      ansi.bold.close +
+    ansi.bgGreen.close
+  )
   if (debug) {
     try {
       await session.defaultSession.clearStorageData({
@@ -182,7 +190,7 @@ app.whenReady().then(async () => {
       win.show()
     }
   })
-  console.group('process.env.VITE_DEV_SERVER_URL', process.env.VITE_DEV_SERVER_URL)
+  console.log('process.env.VITE_DEV_SERVER_URL', process.env.VITE_DEV_SERVER_URL)
   if (process.env.VITE_DEV_SERVER_URL) {
     win.loadURL(process.env.VITE_DEV_SERVER_URL)
   } else {

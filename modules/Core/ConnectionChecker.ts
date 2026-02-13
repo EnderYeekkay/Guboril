@@ -2,6 +2,8 @@ const urlRegex = /^https?:\/\/(www\.)?[\w\-\.@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1
 export type HTTPSString = `https://${string}.${string}`
 export type domainString = `${string}.${string}`
 
+const debug = false
+
 async function calcExpiringTime(): Promise<number> {
     const start = performance.now()
     try {
@@ -21,12 +23,12 @@ export async function checkInternet() {
 async function checkUrl(url: HTTPSString, timeLimit?: number): Promise<boolean> {
     if (!urlRegex.test(url)) throw new Error(`Wrong URL given: ${url}!`)
     if (!timeLimit) timeLimit = await calcExpiringTime()
-    console.log(`Checking: ${url}. TimeLimit: ${timeLimit}`)
+    if (debug) console.log(`Checking: ${url}. TimeLimit: ${timeLimit}`)
 
     const controller = new AbortController()
     const id = setTimeout(() => {
         controller.abort()
-        console.log(`\tChecking ${url} Failed!`)
+        if (debug) console.log(`\tChecking ${url} Failed!`)
     }, timeLimit)
 
     try {
@@ -34,10 +36,10 @@ async function checkUrl(url: HTTPSString, timeLimit?: number): Promise<boolean> 
             method: 'HEAD',
             signal: controller.signal,
         })
-        console.log(`\tResponce(${url}): `, response.ok)
+        if (debug) console.log(`\tResponce(${url}): `, response.ok)
         return response.ok
     } catch (err: any) {
-        console.log(`\tChecking ${url} Failed!`)
+        if (debug) console.log(`\tChecking ${url} Failed!`)
         return false
     } finally {
         clearTimeout(id)
