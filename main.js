@@ -1,4 +1,4 @@
-import { initMainLogger, initRendererLogger } from './modules/logger.js';
+import { initMainLogger, initRendererLogger } from './modules/logger.ts';
 import path from 'node:path';
 initMainLogger()
 initRendererLogger()
@@ -12,7 +12,7 @@ import discordCacheCleaner from './modules/discordCacheCleaner.ts'
 import { createTask, deleteTask, checkTask } from './modules/scheduler.ts';
 import { saveLogsArchive } from './modules/saveLogs.ts';
 import { sendUENotify, sendURNotify, sendServiceOnNotify, sendServiceOffNotify } from './modules/myNotifcations.ts';
-import { debug, run_only_tray } from './modules/argsParser.js';
+import { debug, run_only_tray } from './modules/argsParser.ts';
 import { initializeTray } from './modules/tray.ts';
 import { warpFix } from './modules/warpFix.ts';
 import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';

@@ -1,3 +1,7 @@
+/////////////////////////////////
+// Я тебя не забуду, уёбище... //
+/////////////////////////////////
+
 import { spawn, ChildProcess } from 'node:child_process'
 
 import fs from 'node:fs'
