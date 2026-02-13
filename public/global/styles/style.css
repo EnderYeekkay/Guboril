@@ -97,3 +97,6 @@
     --btn_link_disabled_border: #232528;
 
 }
+img{
+    -webkit-user-drag: none;
+}

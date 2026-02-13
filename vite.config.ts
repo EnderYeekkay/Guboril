@@ -23,6 +23,7 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: 'dist',
       emptyOutDir: true,
+      assetsInlineLimit: 0,
       rollupOptions: {
         input: 'public/mainwindowr/index.html',
         output: {

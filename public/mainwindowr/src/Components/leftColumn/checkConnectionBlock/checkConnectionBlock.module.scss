@@ -1,5 +1,12 @@
 .block {
     position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    place-items: center;
+    padding: 0 !important;
+}
+.text_subblock {
+    margin: 20px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
