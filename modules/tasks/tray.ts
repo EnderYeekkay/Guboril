@@ -2,7 +2,7 @@ import { ipcMain, nativeImage, BrowserWindow, Tray, Menu, app } from 'electron'
 import type { MenuItemConstructorOptions } from 'electron/main'
 import path from 'path'
 const pr = path.resolve
-import Core from './Core/Core.ts'
+import Core from '../Core/Core.ts'
 import { sendServiceOffNotify, sendServiceOnNotify } from './myNotifcations.ts'
 let initialized = false
 export async function initializeTray(win: BrowserWindow, publicPath: string) {

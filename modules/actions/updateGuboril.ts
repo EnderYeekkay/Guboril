@@ -1,9 +1,9 @@
 import axios from "axios";
-import pkg from '../package.json' with { type: "json" }; 
-import { sendURNotify } from './myNotifcations.ts'
+import pkg from '../../package.json' with { type: "json" }; 
+import { sendURNotify } from '../tasks/myNotifcations.ts'
 import { log } from 'console'
 //@ts-ignore
-import Core from "./Core/Core.ts";
+import Core from "../Core/Core.ts";
 import { spawn } from "child_process";
 import path from "path";
 import { app, BrowserWindow, ipcMain } from "electron";

@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { app, BrowserWindow } from 'electron'
 import SCController from './SCController.ts'
-import { checkTask } from '../scheduler.ts'
+import { checkTask } from '../actions/scheduler.ts'
 const settingsPath = path.join(app.getPath('userData'), 'settings.json')
 export const SettingsLength = 7
 

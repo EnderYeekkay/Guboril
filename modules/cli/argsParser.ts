@@ -1,8 +1,8 @@
 import { app } from 'electron'
-import pkg from '../package.json' with { type: 'json' }
+import pkg from '../../package.json' with { type: 'json' }
 const { version } = pkg
-import afterInstall from '../scripts/afterInstall.ts'
-import beforeUninstall from '../scripts/beforeUninstall.ts'
+import afterInstall from '../../scripts/afterInstall.ts'
+import beforeUninstall from '../../scripts/beforeUninstall.ts'
 
 // --help
 if (process.argv.includes('--help') || process.argv.includes('-h')) {

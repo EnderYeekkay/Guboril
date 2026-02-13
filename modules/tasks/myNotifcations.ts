@@ -1,5 +1,5 @@
 import { app, Notification } from 'electron/main';
-import Core from './Core/Core.ts';
+import Core from '../Core/Core.ts';
 function isNotificationsAllowed() {
     return Core.settings.notifications
 }

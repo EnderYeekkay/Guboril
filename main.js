@@ -1,20 +1,20 @@
-import { initMainLogger, initRendererLogger } from './modules/logger.ts';
+import { initMainLogger, initRendererLogger } from './modules/tasks/logger.ts';
 import path from 'node:path';
 initMainLogger()
 initRendererLogger()
-import update, { fetchLatestGuborilVersion } from './modules/updateGuboril.ts'
+import update, { fetchLatestGuborilVersion } from './modules/actions/updateGuboril.ts'
 import { ipcMain, nativeImage, shell, session } from 'electron';
 import { app, dialog, BrowserWindow } from 'electron/main';
 import { join, resolve, dirname } from 'node:path';
 import pkg from './package.json' with { type: 'json' };
 const { version } = pkg;
-import discordCacheCleaner from './modules/discordCacheCleaner.ts'
-import { createTask, deleteTask, checkTask } from './modules/scheduler.ts';
-import { saveLogsArchive } from './modules/saveLogs.ts';
-import { sendUENotify, sendURNotify, sendServiceOnNotify, sendServiceOffNotify } from './modules/myNotifcations.ts';
-import { debug, run_only_tray } from './modules/argsParser.ts';
-import { initializeTray } from './modules/tray.ts';
-import { warpFix } from './modules/warpFix.ts';
+import discordCacheCleaner from './modules/actions/discordCacheCleaner.ts'
+import { createTask, deleteTask, checkTask } from './modules/actions/scheduler.ts';
+import { saveLogsArchive } from './modules/actions/saveLogs.ts';
+import { sendUENotify, sendURNotify, sendServiceOnNotify, sendServiceOffNotify } from './modules/tasks/myNotifcations.ts';
+import { debug, run_only_tray } from './modules/cli/argsParser.ts';
+import { initializeTray } from './modules/tasks/tray.ts';
+import { warpFix } from './modules/fixes/warpFix.ts';
 import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import ConnectionChecker from './modules/Core/ConnectionChecker.ts'
 

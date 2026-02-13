@@ -1,5 +1,5 @@
-// @ts-ignore
-import { remove_cli } from '../modules/cli.ts'
+
+import { remove_cli } from '../modules/cli/cli.ts'
 export default function execute() {
     console.log('beforeInstall')
     remove_cli()

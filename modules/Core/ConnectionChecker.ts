@@ -1,6 +1,7 @@
 const urlRegex = /^https?:\/\/(www\.)?[\w\-\.@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([\w\-\.@:%_\+.~#?&\\\/\/\/=]*)$/m
 export type HTTPSString = `https://${string}.${string}`
 export type domainString = `${string}.${string}`
+
 async function calcExpiringTime(): Promise<number> {
     const start = performance.now()
     try {
