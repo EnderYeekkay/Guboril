@@ -1,5 +1,5 @@
 import styles from './Tab.module.css';
-import { useTabs } from "./Tabs.tsx";
+import { useTabs } from "./TabsProvider.tsx";
 
 // TAB COMPONENT
 export function Tab<T extends string>({ icon, description, tabName }: { icon?: React.ReactNode, description: string, tabName: T }) {

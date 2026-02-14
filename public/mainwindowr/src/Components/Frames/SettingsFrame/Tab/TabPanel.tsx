@@ -1,7 +1,7 @@
 
 // TAB PANEL COMPONENT
 
-import { useTabs } from "./Tabs.tsx";
+import { useTabs } from "./TabsProvider.tsx";
 import stylesAlignment from "../Structure/Alignment.module.css";
 
 export function TabPanel<T extends string>({ tabName, children }: { tabName: T, children: React.ReactNode }) {
