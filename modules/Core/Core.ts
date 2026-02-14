@@ -71,11 +71,11 @@ export default abstract class Core {
         ansiHex('#ECB664') +
         strategy +
         color.close +
-        '\", "' +
+        '\", ' +
         ansiHex('#ECB664') +
         gameFilter +
         color.close +
-        '\")';
+        ')';
         console.log(initSetStrategyString)
         
         if (strategy === null) {
@@ -108,7 +108,7 @@ export default abstract class Core {
             settings.status = true
             this.events.emit('strategyChanged', strategy)
         }
-        let end = Date.now() 
+        let end = Date.now()
         console.log((end - begin) / 1000, 's')
         console.log()
         return(res)

@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import Button from "./Components/button/button.tsx";
 import LeftColumn from "./Components/leftColumn/leftColumn.tsx";
 import RightColumn from "./Components/rightColumn/rightColumn.tsx";
-import SettingsFrame from "./Components/SettingsFrame.tsx";
+import SettingsFrame from "./Components/Frames/SettingsFrame/SettingsFrame.tsx";
 import { FrameContext, FrameProvider } from "./Contexts/FrameContext.tsx";
 export default function App() {
     return <div id="app">

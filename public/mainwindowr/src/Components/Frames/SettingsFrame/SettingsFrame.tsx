@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import Button, { ButtonStyle } from "./button/button.tsx";
-import { FrameContext } from "../Contexts/FrameContext.tsx";
+import Button, { ButtonStyle } from "../../button/button.tsx";
+import { FrameContext } from "../../../Contexts/FrameContext.tsx";
 import { Tab} from "./Tab/Tab.tsx";
-import { IconTabSettings } from "../Icons/IconTabSettings.tsx";
+import { IconTabSettings } from "../../../Icons/IconTabSettings.tsx";
 
 import styles from "./Structure/Alignment.module.css";
 import { TabPanel } from "./Tab/TabPanel.tsx";
