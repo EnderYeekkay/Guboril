@@ -1,3 +1,5 @@
+import ansi from "ansi-styles"
+const color = ansi.color
 const urlRegex = /^https?:\/\/(www\.)?[\w\-\.@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([\w\-\.@:%_\+.~#?&\\\/\/\/=]*)$/m
 export type HTTPSString = `https://${string}.${string}`
 export type domainString = `${string}.${string}`
@@ -20,7 +22,7 @@ export async function checkInternet() {
     return await checkUrl('https://ya.ru', 3_000)
 }
 
-async function checkUrl(url: HTTPSString, timeLimit?: number): Promise<boolean> {
+export async function checkUrl(url: HTTPSString, timeLimit?: number): Promise<boolean> {
     if (!urlRegex.test(url)) throw new Error(`Wrong URL given: ${url}!`)
     if (!timeLimit) timeLimit = await calcExpiringTime()
     if (debug) console.log(`Checking: ${url}. TimeLimit: ${timeLimit}`)
@@ -57,6 +59,7 @@ export type ConnectionCheckerResult = {
  * null  - all checks failed
  */
 export default async function ConnectionChecker(): Promise<ConnectionCheckerResult> {
+    let begin = Date.now()
     if (!(await checkInternet())) return false
     const timeLimit = await calcExpiringTime()
     const urlsToCheck = [
@@ -68,8 +71,25 @@ export default async function ConnectionChecker(): Promise<ConnectionCheckerResu
     const status = await Promise.all(
         urlsToCheck.map((url) => checkUrl(`https://${url}`, timeLimit))
     )
-    return {
+    const res = {
         passes: urlsToCheck.length,
         successfulPasses: status.filter(el => el).length
     }
+    let end = Date.now()
+    console.log(
+        'Connection check result: succesful passes (' +
+        color.green.open +
+        res.successfulPasses + 
+        color.green.close +
+        ' / ' +
+        color.cyan.open +
+        res.passes +
+        color.cyan.close +
+        '), time: ' +
+        color.yellow.open +
+        (end - begin) +
+        color.yellow.close +
+        'ms.'
+    )
+    return res
 }

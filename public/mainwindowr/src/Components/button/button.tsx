@@ -1,7 +1,6 @@
-import {  Ref,  useContext, useEffect, useRef, useState } from 'react'
+import {  JSX, Ref,  useContext, useEffect, useRef, useState } from 'react'
 import '../../../../global/styles/style.css'
 import './button.scss'
-import ZapretContext from '../../Contexts/Zapret/ZapretProvider.tsx'
 import Dcloader from './dcloader/dcloader.tsx'
 
 export enum ButtonStyle {
@@ -33,7 +32,8 @@ export enum ButtonIconSize {
     i18 = 'btn_img18'
 }
 
-export default function Button(props: ButtonProps) {
+export interface CButton extends JSX.Element {}
+export default function Button(props: ButtonProps): CButton {
     const busy = false
     const imgRef = useRef<HTMLImageElement>(null)
     const textRef = useRef<HTMLDivElement>(null)

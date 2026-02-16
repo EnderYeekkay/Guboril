@@ -9,6 +9,9 @@ import Header from "./Components/header/header.tsx";
 import { ZapretProvider } from "./Contexts/Zapret/ZapretProvider.tsx";
 import { NotifyProvider } from './Contexts/Notify/NotifyProvider.tsx';
 import HighestError from './ErrorBoundaries/HighestError/HighestError.tsx';
+import Modal from './Contexts/Modal/modal/modal.tsx'
+import Button, { ButtonStyle } from './Components/button/button.tsx';
+import ModalProvider from './Contexts/Modal/ModalProvider.tsx';
 const log = console.log
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
@@ -18,12 +21,14 @@ log('Yamete Kudasai');
         root.render(
             <React.StrictMode>
                 <HighestError>
-                    <NotifyProvider>
-                        <ZapretProvider>
-                            <Header/>
-                            <App />
-                        </ZapretProvider>
-                    </NotifyProvider>
+                    <ModalProvider>
+                        <NotifyProvider>
+                            <ZapretProvider>
+                                <Header/>
+                                <App />
+                            </ZapretProvider>
+                        </NotifyProvider>
+                    </ModalProvider>
                 </HighestError>
             </React.StrictMode>
         )

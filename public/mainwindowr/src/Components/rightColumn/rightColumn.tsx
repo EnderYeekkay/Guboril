@@ -8,7 +8,9 @@ import { ChangeEvent, useContext, useEffect } from 'react'
 import DiscordCacheCleaner from './discordCacheCleaner.tsx'
 import NotifyProvider from '../../Contexts/Notify/NotifyContext.ts'
 import { NotifyStyle } from '../../Contexts/Notify/notify/notify.tsx'
+import ModalContext from '../../Contexts/Modal/ModalContext.ts'
 export default function RightColumn() {
+    const { sendModal } = useContext(ModalContext)
     const { setGameFilter, settings } = useContext(ZapretProvider)
     const { sendNotify } = useContext(NotifyProvider)
     function autoLoad (event: ChangeEvent<HTMLInputElement>) {
@@ -69,5 +71,11 @@ export default function RightColumn() {
         <Container text='Кэш Discord'>
             <DiscordCacheCleaner/>
         </Container>
+        <Button
+            label='test'
+            action={() => {
+                sendModal({title: 'asdasdsda'}).then(console.log)
+            }}
+        />
     </div>
 }
