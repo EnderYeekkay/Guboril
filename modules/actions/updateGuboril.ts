@@ -29,7 +29,7 @@ export default async function execute(loadingWin: BrowserWindow): Promise<Update
     } catch (e) { sendURNotify(e); return UpdateResponse.LinkFetchFailed }
     
     if (!installerUrl) return UpdateResponse.LinkFetchFailed
-    
+
     // Compare versions
     if (!semver.gt(semver.coerce(latestVersion), pkg.version)) return UpdateResponse.Newest
 
@@ -55,7 +55,6 @@ export default async function execute(loadingWin: BrowserWindow): Promise<Update
 export async function fetchLatestGuborilVersion() {
     const res = await axios.get('https://api.github.com/repos/EnderYeekkay/Guboril/releases/latest')
     let latestVersion: string = res.data.tag_name
-    latestVersion = latestVersion.substring(latestVersion.indexOf('-v') + 2)
     const installerUrl: string = res.data?.assets[0]?.browser_download_url
 
     return { latestVersion, installerUrl }

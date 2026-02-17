@@ -20,6 +20,7 @@ import ConnectionChecker from './modules/Core/ConnectionChecker.ts'
 import Hosts from './modules/actions/hostsChanger.ts'
 Hosts.change()
 import ansi from 'ansi-styles';
+import semver from 'semver';
 import Core from './modules/Core/Core.ts'
 import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
@@ -100,7 +101,7 @@ app.whenReady().then(async () => {
   }
   if (Core.settings.autoUpdate) {
     const { latestVersion, installerUrl } = await fetchLatestGuborilVersion()
-    if (latestVersion != version) {
+    if (semver.gt(semver.coerce(latestVersion), version)) {
       const res = dialog.showMessageBoxSync(loadingWin, {
         title: `Доступна новая версия ${latestVersion}`,
         message: '',
