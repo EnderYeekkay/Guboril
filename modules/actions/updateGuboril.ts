@@ -1,4 +1,5 @@
 import axios from "axios";
+import semver from 'semver'
 import pkg from '../../package.json' with { type: "json" }; 
 import { sendURNotify } from '../tasks/myNotifcations.ts'
 import { log } from 'console'
@@ -28,7 +29,9 @@ export default async function execute(loadingWin: BrowserWindow): Promise<Update
     } catch (e) { sendURNotify(e); return UpdateResponse.LinkFetchFailed }
     
     if (!installerUrl) return UpdateResponse.LinkFetchFailed
-    if (latestVersion == pkg.version) return UpdateResponse.Newest
+    
+    // Compare versions
+    if (!semver.gt(semver.coerce(latestVersion), pkg.version)) return UpdateResponse.Newest
 
     loadingWin.webContents.send('installationStart')
     try {

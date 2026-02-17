@@ -23,6 +23,7 @@
     "node-unrar-js": "^2.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "semver": "^7.7.4",
     "winreg": "^1.2.5"
   },
   "devDependencies": {
@@ -30,6 +31,7 @@
     "@types/jquery": "^3.5.33",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "@types/semver": "^7.7.1",
     "@vitejs/plugin-react": "^4.7.0",
     "electron": "^40.2.1",
     "electron-packager": "^17.1.2",
