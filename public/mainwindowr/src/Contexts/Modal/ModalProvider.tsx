@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { ModalProps } from "./modal/modal.tsx";
 import ModalContext from "./ModalContext.ts";
 import Modal from "./modal/modal.tsx";
 import Button, { ButtonStyle } from "../../Components/button/button.tsx";

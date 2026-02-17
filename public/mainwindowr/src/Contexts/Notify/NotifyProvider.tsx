@@ -22,7 +22,10 @@ export function NotifyProvider({ children }: ContextProps) {
     const sendNotify = (props: NotifyOptions, silent = false) => {
         const newNotifyProps = {...props, id: Date.now()}
         if (!silent) setNotifyProps(newNotifyProps)
-        setArchivedNotifies([...archivedNotifies, newNotifyProps])
+        let newArchivedNotifies = [...archivedNotifies, newNotifyProps]
+        if (newArchivedNotifies.length > 30) newArchivedNotifies.shift()
+        setArchivedNotifies(newArchivedNotifies)
+
     }
     const clearNotify = () => setNotifyProps(null)
 
