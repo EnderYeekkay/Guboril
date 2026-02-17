@@ -39,7 +39,7 @@ if (process.platform !== 'win32') {
 
 const l = console.log
 
-if (debug) app.disableHardwareAcceleration() // Да ну нахуй эти VIDEO_SCHEDULER_INTERNAL_ERROR
+// if (debug) app.disableHardwareAcceleration() // Да ну нахуй эти VIDEO_SCHEDULER_INTERNAL_ERROR
 app.whenReady().then(async () => {
   console.log(
     ansi.bgGreen.open +

@@ -1,0 +1,9 @@
+.black_screen {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 48px;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.53);
+    backdrop-filter: blur(10px);
+}

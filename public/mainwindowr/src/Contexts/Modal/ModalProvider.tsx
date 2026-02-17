@@ -3,6 +3,7 @@ import { ModalProps } from "./modal/modal.tsx";
 import ModalContext from "./ModalContext.ts";
 import Modal from "./modal/modal.tsx";
 import Button, { ButtonStyle } from "../../Components/button/button.tsx";
+import BlackScreen from "../../Components/blackScreen/blackScreen.tsx";
 export interface ModalOptions {
     title: string
     description?: string
@@ -10,9 +11,11 @@ export interface ModalOptions {
 
     onSubmit?: () => void
     submitText?: string
+    submitStyle?: ButtonStyle
 
     onCancel?: () => void
     cancelText?: string
+    cancelStyle: ButtonStyle
 }
 export default function ModalProvider({ children }:ContextProps) {
     const [modalOptions, setModalOptions] = useState<ModalOptions>(null)
@@ -20,16 +23,31 @@ export default function ModalProvider({ children }:ContextProps) {
     const rejectRef = useRef<(reason?: any) => void>(null)
     const promise = useRef<Promise<boolean>>(null)
     
+    // Handle ESC to close modal
     useEffect(() => {
+        if (!modalOptions) return
+
         const controller = new AbortController()
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
+                event.stopImmediatePropagation()
                 if (modalOptions) clearModal()
             }
         }, { signal: controller.signal })
 
         return () => {
             controller.abort()
+        }
+    }, [modalOptions])
+
+    // Freeze UI while modal is open
+    useEffect(() => {
+        if (modalOptions) {
+            document.getElementById('right_column').inert = true
+            document.getElementById('left_column').inert = true
+        } else {
+            document.getElementById('right_column').inert = false
+            document.getElementById('left_column').inert = false
         }
     }, [modalOptions])
 
@@ -70,7 +88,11 @@ export default function ModalProvider({ children }:ContextProps) {
         if (modalOptions) resolveRef.current(false)
         setModalOptions({
             submitText: 'Подтвердить',
+            submitStyle: ButtonStyle.Primary,
+
             cancelText: 'Закрыть',
+            cancelStyle: ButtonStyle.Danger,
+
             ...props
         })
 
@@ -97,7 +119,7 @@ export default function ModalProvider({ children }:ContextProps) {
                 submitButton:
                     <Button
                         label={modalOptions.submitText}
-                        style={ButtonStyle.Primary}
+                        style={modalOptions.submitStyle}
                         action={() => {
                             resolveRef.current(true)
                             resolveRef.current = null
@@ -108,10 +130,11 @@ export default function ModalProvider({ children }:ContextProps) {
                 cancelButton:
                     <Button
                         label={modalOptions.cancelText}
-                        style={ButtonStyle.Danger}
+                        style={modalOptions.cancelStyle}
                         action={clearModal}
                     />
             }}
         />}
+        {modalOptions && <BlackScreen/>}
     </ModalContext.Provider>
 }
