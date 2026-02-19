@@ -18,8 +18,11 @@ async function calcExpiringTime(): Promise<number> {
 }
 
 
-export async function checkInternet() {
-    return await checkUrl('https://ya.ru', 3_000)
+export async function checkInternet(): Promise<boolean> {
+    if (await checkUrl('https://ya.ru', 3_000)) return true
+    if (await checkUrl('https://mail.ru', 3_000)) return true
+    if (await checkUrl('https://vk.ru', 3_000)) return true
+    return false
 }
 
 export async function checkUrl(url: HTTPSString, timeLimit?: number): Promise<boolean> {

@@ -178,3 +178,27 @@
     background-color: var(--btn_link_disabled);
     border-color: var(--btn_link_disabled_border);
 }
+/* ---------------------------------------------------- */
+/*                   TAB SELECTOR                       */
+/* ---------------------------------------------------- */
+
+.btn_tab_selector {
+    background-color: var(--container_bg);
+    border: none;
+    color: #ABACB2;
+    &:hover  {
+        background-color: #36373D;
+        color: #fff;
+    }
+
+    &:active, &:focus {
+        color: #fff;
+        background-color: #42434A;
+    }
+
+    & .btn_text {
+        left: 0;
+        width: fit-content;
+        justify-self: unset;
+    }
+}

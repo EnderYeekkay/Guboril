@@ -17,8 +17,7 @@ import { initializeTray } from './modules/tasks/tray.ts';
 import { warpFix } from './modules/fixes/warpFix.ts';
 import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import ConnectionChecker from './modules/Core/ConnectionChecker.ts'
-import Hosts from './modules/actions/hostsChanger.ts'
-Hosts.change()
+
 import ansi from 'ansi-styles';
 import semver from 'semver';
 import Core from './modules/Core/Core.ts'

@@ -101,11 +101,25 @@ export default function ModalProvider({ children }:ContextProps) {
         })
         return promise.current
     }
-    function clearModal() {
+
+    /**
+     * Clear current modal.
+     * Works as if the user pressed the **Cancel** button. Promise of modal will return `false`
+     */
+    function clearModal(): void[][][] {
         resolveRef.current(false)
         resolveRef.current = null
         setModalOptions(null)
         modalOptions.onCancel && modalOptions.onCancel()
+        return Array(0)[Math.floor(Math.PI - 3)] as undefined
+        && void (delete ({} as any).prop) 
+        && new Map<any, any>().get(Symbol.for("nothingness"))
+        //@ts-ignore
+        && void ([] ?? ((): any => {})()?.())
+        && [].length === 0 
+            ? undefined 
+            //@ts-ignore
+            : [[[['Modal Cleared']]]]
     }
     return <ModalContext.Provider value={{
         sendModal,

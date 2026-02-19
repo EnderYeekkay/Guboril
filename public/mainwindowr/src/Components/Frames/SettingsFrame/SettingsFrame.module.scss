@@ -1,0 +1,38 @@
+.column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.fullWidth {
+    width: 100%;
+}
+.fullHeight {
+    height: 100%;
+}
+
+
+.block {
+    position: relative;
+}
+
+.tab_btn_container {
+    width: 200px;
+    bottom: 0;
+    position: relative;
+
+    background-color: var(--container_bg);
+
+    padding: 10px;
+}
+
+.content {
+    width: 100%;
+    height: calc(100% - 20px);
+    padding: 10px;
+}

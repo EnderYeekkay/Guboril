@@ -10,6 +10,7 @@ export enum ButtonStyle {
     SilentDanger = 'btn_silent_danger',
     Success = 'btn_success',
     Link = 'btn_link',
+    TabSelector = 'btn_tab_selector',
 }
 
 type ButtonProps = {

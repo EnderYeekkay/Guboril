@@ -26,9 +26,13 @@
   /* background: var(--btn_link_active);    #272A2D — красиво темнеет */
 }
 #app {
-  margin-top: 48px;
-  padding: 10px 0;
+  position: absolute;
   display: flex;
+  
+  top: 48px;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 body {

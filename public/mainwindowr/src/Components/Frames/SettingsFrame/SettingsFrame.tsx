@@ -1,33 +1,40 @@
 import { useContext } from "react";
-import Button, { ButtonStyle } from "../../button/button.tsx";
+import Button, { ButtonIconSize, ButtonStyle } from "../../button/button.tsx";
 import { FrameContext } from "../../../Contexts/FrameContext.tsx";
-import { Tab} from "./Tab/Tab.tsx";
-import { IconTabSettings } from "./Tab/IconTabSettings.tsx";
+import { Tab } from "./Tab/Tab.tsx";
 
-import styles from "./Structure/Alignment.module.css";
+import styles from './SettingsFrame.module.scss'
+import back from './back.svg'
 import { TabPanel } from "./Tab/TabPanel.tsx";
 import { Tabs } from "./Tab/TabsProvider.tsx";
+import Separator from "../../separator/separator.tsx";
 
 export default function SettingsFrame() {
     type AllowedTabs = 'general' | 'ipset' | 'strategies' | 'debug';
     const frameContext = useContext(FrameContext);
     return (
-        <div className={`${styles.fullWidth} ${styles.fullHeight} ${styles.column}`}>
-            <div className={styles.column}>
-                <Button label="Назад" action={() => frameContext.setFrame('home')}
-                    style={ButtonStyle.Secondary} addictionClasses={['btn_settings']} />
-            </div>
-
+        <div className={`${styles.fullWidth} ${styles.fullHeight} ${styles.column} ${styles.block}`}>
             <Tabs<AllowedTabs> defaultTab="general">
-                <div className={styles.row}>
-                    <div className={styles.column}>
-                        <Tab<AllowedTabs> icon={<IconTabSettings />} description="Основные" tabName="general" />
-                        <Tab<AllowedTabs> icon={<IconTabSettings />} description="IPSET" tabName="ipset" />
-                        <Tab<AllowedTabs> icon={<IconTabSettings />} description="Стратегии" tabName="strategies" />
-                        <Tab<AllowedTabs> icon={<IconTabSettings />} description="Отладка" tabName="debug" />
+
+                <div className={`${styles.row} ${styles.fullHeight}`}>
+                    
+                    <div className={`${styles.column} ${styles.tab_btn_container}`}>
+                        <Button label="Назад"
+                            action={() => frameContext.setFrame('home')}
+                            style={ButtonStyle.Secondary}
+                            Icon={{
+                                iconSize: ButtonIconSize.i18,
+                                iconPath: back
+                            }}
+                        />
+                        <Separator/>
+                        <Tab<AllowedTabs> description="Основные" tabName="general" />
+                        <Tab<AllowedTabs> description="IPSET" tabName="ipset" />
+                        <Tab<AllowedTabs> description="Стратегии" tabName="strategies" />
+                        <Tab<AllowedTabs> description="Отладка" tabName="debug" />
                     </div>
 
-                    <div className={styles.column}>
+                    <div className={`${styles.column} ${styles.content}`}>
                         <TabPanel<AllowedTabs> tabName="general">
                             <p>Основные</p>
                         </TabPanel>
