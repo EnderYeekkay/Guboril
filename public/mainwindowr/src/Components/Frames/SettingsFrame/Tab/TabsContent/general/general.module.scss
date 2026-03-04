@@ -1,0 +1,13 @@
+$padding: 20px;
+.block {
+    width: calc(100% - 2 * $padding);
+    height: calc(100% - 2 * $padding);
+    
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: $padding;
+    overflow-y: scroll;
+}

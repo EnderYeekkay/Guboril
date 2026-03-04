@@ -12,4 +12,3 @@ export interface NotifyContextType {
 
 const NotifyContext = createContext<NotifyContextType>(null)
 export default NotifyContext
-

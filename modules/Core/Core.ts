@@ -4,7 +4,7 @@ import { BrowserWindow, shell } from 'electron'
 import * as paths from './paths.ts'
 import fs from 'fs'
 import SCController from './SCController.ts'
-import strategyParser from './strategyParser.ts'
+import strategyParser, {type GameFilterOptions} from './strategyParser.ts'
 import { SettingsAccessor, settings, type Settings } from './Settings.ts'
 const { log } = console
 import ansi from 'ansi-styles'
@@ -14,7 +14,10 @@ const ansiHex = (hex: HEX) => color.ansi16m(...hexResolve(hex))
 /** Absoulte path of some file.*/ type path = string
 
 SCController.enableTimestampsTCP()
-
+export const headerPAT = {
+    'Authorization': `token ${settings.GH_TOKEN}`,
+    'User-Agent': 'Guboril'
+}
 export default interface CoreEvents {
     strategyChanged: [strategy: string | null]
     gameFilterChanged: [value: boolean]
@@ -54,8 +57,12 @@ export default abstract class Core {
         return strategiesName
     }
     static checkService = () => SCController.checkService()
-    static #setStrategy(strategy: string | null, gameFilter: boolean = null) {
-        if (gameFilter === null) gameFilter = settings.gameFilter
+    static #setStrategy(strategy: string | null, gameFilter: GameFilterOptions) {
+        if (gameFilter === null) gameFilter = {
+            TCP: false,
+            UDP: false,
+            legacy: false
+        }
         const initSetStrategyString = 
         ansiHex('#8400FF')+
         'Core' +

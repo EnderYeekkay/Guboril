@@ -1,0 +1,22 @@
+.strategy_block {
+    display: flex;
+    flex-direction: row;
+    margin: 0 !important;
+    padding: 10px !important;
+    width: calc(100% - 20px);
+    background-color: var(--btn_link_disabled) !important;
+}
+
+.btns {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+}
+
+.close {
+
+}
+.edit {
+
+}

@@ -9,8 +9,16 @@ import { TabPanel } from "./Tab/TabPanel.tsx";
 import { Tabs } from "./Tab/TabsProvider.tsx";
 import Separator from "../../separator/separator.tsx";
 
+import IconGeneral from "./Tab/TabsContent/general/icon.svg.tsx";
+import General from "./Tab/TabsContent/general/general.tsx";
+import IconStrategies from "./Tab/TabsContent/strategies/icon.svg.tsx";
+import IconInstruments from "./Tab/TabsContent/instruments/icon.svg.tsx";
+import IconIpset from "./Tab/TabsContent/ipset/icon.svg.tsx";
+import IconDebug from "./Tab/TabsContent/debug/icon.svg.tsx";
+import Strategies from "./Tab/TabsContent/strategies/strategies.tsx";
+
 export default function SettingsFrame() {
-    type AllowedTabs = 'general' | 'ipset' | 'strategies' | 'debug';
+    type AllowedTabs = 'general' | 'ipset' | 'strategies'| 'instruments' | 'debug';
     const frameContext = useContext(FrameContext);
     return (
         <div className={`${styles.fullWidth} ${styles.fullHeight} ${styles.column} ${styles.block}`}>
@@ -28,21 +36,25 @@ export default function SettingsFrame() {
                             }}
                         />
                         <Separator/>
-                        <Tab<AllowedTabs> description="Основные" tabName="general" />
-                        <Tab<AllowedTabs> description="IPSET" tabName="ipset" />
-                        <Tab<AllowedTabs> description="Стратегии" tabName="strategies" />
-                        <Tab<AllowedTabs> description="Отладка" tabName="debug" />
+                        <Tab<AllowedTabs> description="Основные" tabName="general" icon={<IconGeneral/>} autoFocus={true}/>
+                        <Tab<AllowedTabs> description="Ipset" tabName="ipset" icon={<IconIpset/>}/>
+                        <Tab<AllowedTabs> description="Стратегии" tabName="strategies" icon={<IconStrategies/>}/>
+                        <Tab<AllowedTabs> description="Инструменты" tabName="instruments" icon={<IconInstruments/>}/>
+                        <Tab<AllowedTabs> description="Отладка" tabName="debug" icon={<IconDebug/>}/>
                     </div>
 
                     <div className={`${styles.column} ${styles.content}`}>
                         <TabPanel<AllowedTabs> tabName="general">
-                            <p>Основные</p>
+                            <General/>
                         </TabPanel>
                         <TabPanel<AllowedTabs> tabName="ipset">
                             <p>IPSET</p>
                         </TabPanel>
                         <TabPanel<AllowedTabs> tabName="strategies">
-                            <p>Стратегии</p>
+                            <Strategies/>
+                        </TabPanel>
+                        <TabPanel<AllowedTabs> tabName="instruments">
+                            <p>Инструменты</p>
                         </TabPanel>
                         <TabPanel<AllowedTabs> tabName="debug">
                             <p>Отладка</p>

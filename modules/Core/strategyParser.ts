@@ -6,7 +6,12 @@ function get_gf(v: boolean): string {
     const gf_value_disabled = '12'
     return `${v ? gf_value_enabled : gf_value_disabled}`
 }
-export default function(str: string, game_filter: boolean): string {
+export type GameFilterOptions = {
+    TCP: boolean
+    UDP: boolean
+    legacy: boolean
+}
+export default function(str: string, game_filter: GameFilterOptions): string {
     if (!str || game_filter === undefined) throw new Error(`Wrong parameters given: ${str}, ${game_filter}`)
     let lines = str.split(/\r?\n/)
     let entryIdx = -1
@@ -36,7 +41,9 @@ export default function(str: string, game_filter: boolean): string {
         arr[i] = val
             .replace(/\^$/, '')
             .replaceAll('=', ' ')
-            .replaceAll('%GameFilter%', get_gf(game_filter))
+            .replaceAll('%GameFilter%', get_gf(game_filter.legacy))
+            .replaceAll('%GameFilterTCP%', get_gf(game_filter.TCP))
+            .replaceAll('%GameFilterUDP%', get_gf(game_filter.UDP))
             .replaceAll('%LISTS%', paths.listsPath + sep)
             .replaceAll('%BIN%', paths.binPath + sep)
     })

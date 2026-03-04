@@ -7,13 +7,17 @@ const settingsPath = path.join(app.getPath('userData'), 'settings.json')
 export const SettingsLength = 7
 
 export type Settings = {
-  gameFilter:          boolean
-  autoUpdate:          boolean
-  autoLoad:            boolean
-  status:              boolean
-  selectedStrategy:    string | null
-  notifications:       boolean
-  GH_TOKEN:            string
+    gameFilter: {
+        legacy:    Readonly<boolean>
+        TCP:       Readonly<boolean>
+        UDP:       Readonly<boolean>
+    }
+    autoUpdate:          boolean
+    autoLoad:            boolean
+    status:              boolean
+    selectedStrategy:    string | null
+    notifications:       boolean
+    GH_TOKEN:            string
 };
 let cachedSettings: Settings
 let writingQueue = Promise.resolve();
@@ -30,7 +34,11 @@ export class SettingsAccessor {
     initialize() {
         if (!fs.existsSync(settingsPath)) {
             let defaultSettings: Settings = {
-                gameFilter: false,
+                gameFilter: {
+                    legacy: false,
+                    TCP: false,
+                    UDP: false
+                },
                 autoLoad: true,
                 autoUpdate: false,
                 status: false,

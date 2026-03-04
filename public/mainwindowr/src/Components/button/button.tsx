@@ -1,4 +1,4 @@
-import { JSX, Ref, useEffect, useRef, useState } from 'react'
+import { isValidElement, JSX, Ref, useEffect, useRef, useState } from 'react'
 import '../../../../global/styles/style.css'
 import './button.scss'
 import Dcloader from './dcloader/dcloader.tsx'
@@ -18,7 +18,7 @@ type ButtonProps = {
     Icon?: {
         iconPath?: string
         iconSize?: ButtonIconSize
-    }
+    } | JSX.Element
     disabled?: boolean
     label: string
     toStop?: boolean
@@ -26,6 +26,7 @@ type ButtonProps = {
     action: (event?: React.MouseEvent<HTMLButtonElement>) => void
     btnRef?: Ref<HTMLButtonElement>
     addictionClasses?: string[]
+    autoFocus?: boolean
 }
 
 export enum ButtonIconSize {
@@ -65,14 +66,21 @@ export default function Button(props: ButtonProps): CButton {
         props.action(event)
     }
 
-    const btnImg = <img ref={imgRef} src={props.Icon?.iconPath} className={props.Icon?.iconSize} alt=""/>
+    let btnImg: JSX.Element = null
+    if (props.Icon && ('iconPath' in props.Icon) && ('iconSize' in props.Icon) ) {
+        btnImg = <img ref={imgRef} src={props.Icon?.iconPath} className={props.Icon?.iconSize} alt=""/>
+    } else if (isValidElement(props.Icon)) {
+        btnImg = props.Icon
+    }
+
     return <button
         ref={props.btnRef}
         className={btn_classes}
         onClick={onClick}
         disabled={props.toStop && busy || props.disabled}
+        autoFocus={props.autoFocus}
     >
-        {props.Icon ? btnImg : ''}
+        {btnImg}
         <div className="btn_text_container">
             <div ref={textRef} className="btn_text">{props.label}</div>
         </div>

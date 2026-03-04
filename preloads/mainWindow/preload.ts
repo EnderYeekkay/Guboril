@@ -14,6 +14,7 @@ contextBridge.exposeInMainWorld('mw', {
   minimize: () => ipcRenderer.send('minimize'),
   uwu: () => ipcRenderer.send('uwu'),
   open_github: () => ipcRenderer.send('open_github'),
+  externalUrl: (url: string) => ipcRenderer.send('externalUrl', url),
   save_logs: () => ipcRenderer.send('save_logs'),
   clear_discord_cache: () => ipcRenderer.invoke('clear_discord_cache')
 })

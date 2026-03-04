@@ -17,7 +17,6 @@ import { initializeTray } from './modules/tasks/tray.ts';
 import { warpFix } from './modules/fixes/warpFix.ts';
 import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import ConnectionChecker from './modules/Core/ConnectionChecker.ts'
-
 import ansi from 'ansi-styles';
 import semver from 'semver';
 import Core from './modules/Core/Core.ts'
@@ -25,6 +24,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 warpFix()
+import {updateStrategies} from './modules/Core/CoreUpdater.ts'
 
 if (!app.requestSingleInstanceLock()) {
   app.once('ready', () => {
@@ -41,6 +41,7 @@ const l = console.log
 
 // if (debug) app.disableHardwareAcceleration() // Да ну нахуй эти VIDEO_SCHEDULER_INTERNAL_ERROR
 app.whenReady().then(async () => {
+  
   console.log(
     ansi.bgGreen.open +
       ansi.bold.open +
@@ -50,6 +51,7 @@ app.whenReady().then(async () => {
       ansi.bold.close +
     ansi.bgGreen.close
   )
+  console.log(await updateStrategies('https://api.github.com/repos/Flowseal/zapret-discord-youtube', /general(.*)\.bat/))
   if (debug) {
     try {
       await session.defaultSession.clearStorageData({
@@ -156,6 +158,7 @@ app.whenReady().then(async () => {
   ipcMain.handle('scheduler:checkTask', () => checkTask())
 
   ipcMain.on('open_github', () => shell.openExternal('https://github.com/EnderYeekkay/Guboril'))
+  ipcMain.on('externalUrl', (_, url) => shell.openExternal(url))
   ipcMain.handle('clear_discord_cache', () => discordCacheCleaner())
   console.log(app.getPath('userData'))
 

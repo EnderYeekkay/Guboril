@@ -5,7 +5,7 @@ import Button, { ButtonStyle } from "../../Components/button/button.tsx";
 import BlackScreen from "../../Components/blackScreen/blackScreen.tsx";
 export interface ModalOptions {
     title: string
-    description?: string
+    description?: string | React.ReactNode
     actionRow?: React.ReactNode[]
 
     onSubmit?: () => void
@@ -14,7 +14,7 @@ export interface ModalOptions {
 
     onCancel?: () => void
     cancelText?: string
-    cancelStyle: ButtonStyle
+    cancelStyle?: ButtonStyle
 }
 export default function ModalProvider({ children }:ContextProps) {
     const [modalOptions, setModalOptions] = useState<ModalOptions>(null)
@@ -42,11 +42,9 @@ export default function ModalProvider({ children }:ContextProps) {
     // Freeze UI while modal is open
     useEffect(() => {
         if (modalOptions) {
-            document.getElementById('right_column').inert = true
-            document.getElementById('left_column').inert = true
+            document.getElementById('app').inert = true
         } else {
-            document.getElementById('right_column').inert = false
-            document.getElementById('left_column').inert = false
+            document.getElementById('app').inert = false
         }
     }, [modalOptions])
 
@@ -120,6 +118,7 @@ export default function ModalProvider({ children }:ContextProps) {
             ? undefined 
             //@ts-ignore
             : [[[['Modal Cleared']]]]
+        && isNaN(-NaN) as undefined
     }
     return <ModalContext.Provider value={{
         sendModal,

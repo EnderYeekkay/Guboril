@@ -4,7 +4,7 @@ import pkg from '../../package.json' with { type: "json" };
 import { sendURNotify } from '../tasks/myNotifcations.ts'
 import { log } from 'console'
 //@ts-ignore
-import Core from "../Core/Core.ts";
+import Core, { headerPAT } from "../Core/Core.ts";
 import { spawn } from "child_process";
 import path from "path";
 import { app, BrowserWindow, ipcMain } from "electron";
@@ -53,7 +53,9 @@ export default async function execute(loadingWin: BrowserWindow): Promise<Update
     return UpdateResponse.Success
 }
 export async function fetchLatestGuborilVersion() {
-    const res = await axios.get('https://api.github.com/repos/EnderYeekkay/Guboril/releases/latest')
+    const res = await axios.get('https://api.github.com/repos/EnderYeekkay/Guboril/releases/latest', {
+        headers: headerPAT
+    })
     let latestVersion: string = res.data.tag_name
     const installerUrl: string = res.data?.assets[0]?.browser_download_url
 
@@ -69,7 +71,7 @@ async function downloadInstaller(installerUrl: string, installerPath: string, lo
         method: 'get',
         url: installerUrl,
         responseType: 'stream',
-        headers 
+        headers: headerPAT
     })
     const size = Number(stream.headers["content-length"])
     let current = 0
@@ -103,7 +105,8 @@ async function downloadInstaller(installerUrl: string, installerPath: string, lo
 async function checkConnection(): Promise<boolean> {
   try {
     await axios.head('https://api.github.com', {
-      timeout: 3000
+      timeout: 3000,
+      headers: headerPAT
     })
     return true
   } catch {

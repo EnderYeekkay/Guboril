@@ -1,0 +1,9 @@
+.url {
+    cursor: pointer;
+    color: #72A7EA;
+    font-weight: 400;
+    &:hover {
+        text-decoration: underline;
+        color: #75AEF5;
+    }
+}

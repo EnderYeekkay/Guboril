@@ -31,7 +31,6 @@
 }
 .btn_text {
     position: relative;
-    justify-self: center;
     margin: 0 5px;
 }
 
@@ -191,7 +190,7 @@
         color: #fff;
     }
 
-    &:active, &:focus {
+    &:active, &:focus, &.is-active {
         color: #fff;
         background-color: #42434A;
     }

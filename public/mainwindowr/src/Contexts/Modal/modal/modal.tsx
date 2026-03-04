@@ -15,7 +15,7 @@ export default function Modal(props: ModalProps) {
     const imgRef = useRef<HTMLImageElement>(null)
 
     useEffect(() => {
-        if (descriptionRef.current.scrollHeight > 150) {
+        if (descriptionRef.current?.scrollHeight > 150) {
             descriptionRef.current.style.overflowY='scroll'
         }
     }, [])

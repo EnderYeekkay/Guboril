@@ -1,0 +1,71 @@
+$p: 20px;
+$p2: $p * 2;
+@mixin flex-column($ai: align-items) {
+    display: flex;
+    flex-direction: column;
+    align-items: $ai;
+}
+
+.block {
+    @include flex-column(center);
+    width: calc(100% - $p2);
+    height: calc(100% - $p2);
+    gap: 20px;
+    
+    position: relative;
+    padding: $p;
+    // overflow-y: scroll;
+}
+
+.strategy_controller {
+    position: relative;
+    margin: 0 !important;
+    width: calc(100% - $p2);
+
+    display: grid;
+    gap: 10px;
+    grid-template-rows: auto repeat(5, 40px);
+    grid-template-columns: 350px 1fr;
+    grid-template-areas: 
+    "a a"
+    "b c"
+    "b c"
+    "b c"
+    "b c"
+    "b c"
+
+}
+
+.controller_text {
+    grid-area: a;
+    
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.list {
+    grid-area: b;
+
+    @include flex-column(start);
+
+    gap: 10px;
+    padding: 10px !important;
+    margin: 0 !important;
+
+    // color: var(--color_common);
+    font-weight: 300;
+    background-color: var(--cm_bg) !important;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar-track {
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+        background: var(--cm_bg);
+    }
+}
+
+.modal_description {
+    @include flex-column(start);
+    font-weight: 300;
+    gap: 5px;
+}
