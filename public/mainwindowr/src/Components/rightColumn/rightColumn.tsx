@@ -21,13 +21,6 @@ export default function RightColumn() {
     }
     return <div id="right_column">
         <Subcategory value='НАСТРОЙКИ'/>
-        <Container text='GameFilter'>
-            <Checkbox
-                toStop={true}
-                onChange={(event) => setGameFilter(event.target.checked)}
-                checked={settings.gameFilter}
-                />
-        </Container>
         <Container text='Проверять обновления при запуске'>
             <Checkbox 
                 onChange={(event) => core.setAutoUpdate(event.target.checked)}

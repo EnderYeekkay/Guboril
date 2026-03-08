@@ -24,7 +24,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 warpFix()
-import {updateStrategies} from './modules/Core/CoreUpdater.ts'
+import updateStrategies from './modules/Core/CoreUpdater.ts'
 
 if (!app.requestSingleInstanceLock()) {
   app.once('ready', () => {
@@ -51,7 +51,6 @@ app.whenReady().then(async () => {
       ansi.bold.close +
     ansi.bgGreen.close
   )
-  console.log(await updateStrategies('https://api.github.com/repos/Flowseal/zapret-discord-youtube', /general(.*)\.bat/))
   if (debug) {
     try {
       await session.defaultSession.clearStorageData({
@@ -101,28 +100,32 @@ app.whenReady().then(async () => {
     loadingWin.webContents.openDevTools({ mode: 'detach' }); // отдельное окно
   }
   if (Core.settings.autoUpdate) {
-    const { latestVersion, installerUrl } = await fetchLatestGuborilVersion()
-    if (semver.gt(semver.coerce(latestVersion), version)) {
-      const res = dialog.showMessageBoxSync(loadingWin, {
-        title: `Доступна новая версия ${latestVersion}`,
-        message: '',
-        detail: `Текущая версия: ${version}. Вы хотите обновить приложение Guboril?`,
-        buttons: ['Обновить', 'Не обновлять'],
-        icon: nativeImage.createFromPath(resolve(__dirname, 'public/icon.ico')),
-        defaultId: 0,
-        cancelId: 1
-      })
-      if (res == 0) {
-        try {
-          const res = await update(Core, loadingWin)
-          l('\x1b[34mUpdateGuboril: \x1b[0m', res)
-          if (res == 4) {
-            app.quit()
+    try {
+      const { latestVersion, installerUrl } = await fetchLatestGuborilVersion()
+      if (semver.gt(semver.coerce(latestVersion), version)) {
+        const res = dialog.showMessageBoxSync(loadingWin, {
+          title: `Доступна новая версия ${latestVersion}`,
+          message: '',
+          detail: `Текущая версия: ${version}. Вы хотите обновить приложение Guboril?`,
+          buttons: ['Обновить', 'Не обновлять'],
+          icon: nativeImage.createFromPath(resolve(__dirname, 'public/icon.ico')),
+          defaultId: 0,
+          cancelId: 1
+        })
+        if (res == 0) {
+          try {
+            const res = await update(Core, loadingWin)
+            l('\x1b[34mUpdateGuboril: \x1b[0m', res)
+            if (res == 4) {
+              app.quit()
+            }
+          } catch (e) {
+            sendURNotify(e)
           }
-        } catch (e) {
-          sendURNotify(e)
         }
       }
+    } catch (e) {
+      sendURNotify(e)
     }
   }
 
@@ -152,7 +155,7 @@ app.whenReady().then(async () => {
   ipcMain.on('core:setNotifications', (_, notifications) => Core.setNotifications(notifications))
   ipcMain.on('core:setAutoLoad', (_, autoLoad) => Core.setAutoLoad(autoLoad))
   ipcMain.handle('core:connectionChecker', () => ConnectionChecker())
-
+  ipcMain.handle('core:coreUpdater', () => updateStrategies())
   ipcMain.handle('scheduler:createTask', () => createTask())
   ipcMain.handle('scheduler:deleteTask', () => deleteTask())
   ipcMain.handle('scheduler:checkTask', () => checkTask())

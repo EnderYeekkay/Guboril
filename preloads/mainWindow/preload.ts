@@ -2,6 +2,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { contextBridge, ipcRenderer } from 'electron';
 import pkg from '../../package.json' with { type: 'json' };
+import type { GameFilterOptions } from '../../modules/Core/strategyParser.ts';
 
 // Эмуляция __dirname в ES-модулях
 const __filename = fileURLToPath(import.meta.url);
@@ -46,13 +47,14 @@ contextBridge.exposeInMainWorld('core', {
   },
   getStrategiesNames: () => ipcRenderer.sendSync('core:getStrategiesNames'),
   setStrategy: (strategy: string) => ipcRenderer.invoke('core:setStrategy', strategy),
-  setGameFilter: (value: boolean) => ipcRenderer.invoke('core:setGameFilter', value),
+  setGameFilter: (value: GameFilterOptions) => ipcRenderer.invoke('core:setGameFilter', value),
   openCoreFolder: () => ipcRenderer.send('core:openCoreFolder'),
   checkService: () => ipcRenderer.sendSync('core:checkService'),
   setAutoUpdate: (autoUpdate: boolean) => ipcRenderer.send('core:setAutoUpdate', autoUpdate),
   setNotifications: (notifications: boolean) => ipcRenderer.send('core:setNotifications', notifications),
   setAutoLoad: (autoLoad: boolean) => ipcRenderer.send('core:setAutoLoad', autoLoad),
   connectionChecker: () => ipcRenderer.invoke('core:connectionChecker'),
+  coreUpdater: () => ipcRenderer.invoke('core:coreUpdater')
 })
 
 contextBridge.exposeInMainWorld('logger', {

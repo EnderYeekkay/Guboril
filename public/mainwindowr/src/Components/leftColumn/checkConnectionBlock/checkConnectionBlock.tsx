@@ -37,7 +37,7 @@ export default function CheckConnectionBlock() {
         }
     }
 
-    useEffect(checkConnection, [settings?.gameFilter, settings?.selectedStrategy, status])
+    useEffect(checkConnection, [status, settings?.selectedStrategy])
 
     return <div className={`container ${styles.block}`}>
         <ConnectionCheckerImage

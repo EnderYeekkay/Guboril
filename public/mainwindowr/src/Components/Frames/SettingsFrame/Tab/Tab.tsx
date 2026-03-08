@@ -18,7 +18,7 @@ export function Tab<T extends string>({ icon, description, tabName, autoFocus }:
         <Button
             btnRef={btnRef}
             label={description}
-            addictionClasses={[styles.tab]}
+            addictionClasses={[styles.tab, autoFocus ? 'is-active' : '']}
             style={ButtonStyle.TabSelector}
             Icon={icon}
             autoFocus={autoFocus}

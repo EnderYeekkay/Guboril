@@ -20,7 +20,7 @@ export default function ModalProvider({ children }:ContextProps) {
     const [modalOptions, setModalOptions] = useState<ModalOptions>(null)
     const resolveRef = useRef<(value: boolean) => void>(null)
     const rejectRef = useRef<(reason?: any) => void>(null)
-    const promise = useRef<Promise<boolean>>(null)
+    const promiseRef = useRef<Promise<boolean>>(null)
     
     // Handle ESC to close modal
     useEffect(() => {
@@ -91,13 +91,12 @@ export default function ModalProvider({ children }:ContextProps) {
             cancelStyle: ButtonStyle.Danger,
 
             ...props
-        })
-
-        promise.current = new Promise<boolean>((res, rej) => {
-            resolveRef.current = res
-            rejectRef.current = rej
-        })
-        return promise.current
+        });
+        const {promise, resolve, reject} = Promise.withResolvers<boolean>()
+        promiseRef.current = promise
+        resolveRef.current = resolve
+        rejectRef.current = reject
+        return promise
     }
 
     /**

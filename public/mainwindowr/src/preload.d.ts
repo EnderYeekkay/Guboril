@@ -1,6 +1,8 @@
 import { ConnectionCheckerResult } from '../../../modules/Core/ConnectionChecker.ts'
 import { Settings } from '../../../modules/Core/Settings.ts'
 import { IpcRendererEvent } from 'electron'
+import type { GameFilterOptions } from '../../../modules/Core/strategyParser.ts'
+import type { updateStrategiesResult } from '../../../modules/Core/CoreUpdater.ts'
 declare global {
   const mw: { 
     version: string
@@ -40,12 +42,13 @@ declare global {
     cleanSettingsChanged: () => void
     getStrategiesNames: () => string[]
     setStrategy: (strategy: string) => Promise<boolean>
-    setGameFilter: (value: boolean) => Promise<boolean>
+    setGameFilter: (value: GameFilterOptions) => Promise<boolean>
     openCoreFolder: () => Promise<true>
     setAutoUpdate: (autoUpdate: boolean) => Promise<void>
     setNotifications: (notifications: boolean) => Promise<void>
     setAutoLoad: (autoLoad: boolean) => Promise<void>
     connectionChecker: () => Promise<ConnectionCheckerResult>
+    coreUpdater: () => Promise<updateStrategiesResult[]>
   }
 
   const logger: {

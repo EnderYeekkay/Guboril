@@ -1,6 +1,6 @@
 import { app } from "electron"
 import path from 'path'
-import fs from 'fs'
+import fs, { rmdirSync, rmSync } from 'fs'
 import axios from "axios"
 import {createExtractorFromData, createExtractorFromFile} from 'node-unrar-js'
 import { checkUrl, type HTTPSString } from "./ConnectionChecker.ts"
@@ -8,13 +8,13 @@ import { settings } from "./Settings.ts"
 import ansiStyles from "ansi-styles"
 import Core, { headerPAT } from "./Core.ts"
 import { coreDir } from './paths.ts'
-interface updateStrategiesResult {
+export interface updateStrategiesResult {
     ok: boolean
     text?: string
 }
 let key = 0
-export async function updateStrategies(repo: HTTPSString, filesFilter: RegExp): Promise<updateStrategiesResult> {
-    // if (!(await checkUrl('https://api.github.com', 5_000))) return {ok: false, text: 'Нет соединения с https://api.github.com'}
+export async function updateStrategy(repo: HTTPSString, filesFilter: RegExp): Promise<updateStrategiesResult> {
+    if (!(await checkUrl('https://api.github.com', 5_000))) return {ok: false, text: 'Нет соединения с https://api.github.com'}
 
     const tempRarPath = path.resolve(app.getPath('temp'), `guboril${key}.rar`)
 
@@ -24,7 +24,8 @@ export async function updateStrategies(repo: HTTPSString, filesFilter: RegExp): 
         if (fs.existsSync(tempDir)) fs.rmdirSync(tempDir, {recursive: true})
     } catch (e) {
         console.error(e.stack)
-        return {ok: false, text: 'Произошла при очистке старого кэша загрузок, попробуйте закрыть папку temp или перезагрузить ПК.'}
+        clearTemp()
+        return {ok: false, text: 'Произошла ошибка при очистке старого кэша загрузок, попробуйте закрыть папку temp или перезагрузить ПК.'}
     }
     fs.mkdirSync(tempDir)
 
@@ -57,8 +58,9 @@ export async function updateStrategies(repo: HTTPSString, filesFilter: RegExp): 
         await promise
     } catch (e) {
         console.error(e.stack)
+        clearTemp()
         return {ok: false, text: 'Произошла ошибка при скачивании архива, проверьте ваше интернет соединение или попробуйте ещё раз.'}
-    }
+    } 
 
     // Unrar
     try {
@@ -71,14 +73,12 @@ export async function updateStrategies(repo: HTTPSString, filesFilter: RegExp): 
         }
     } catch (e) {
         console.error(e.stack)
+        clearTemp()
         return {ok: false, text: 'Произошла ошибка при разархивировании файла, попробуйте закрыть папку temp или перезагрузить ПК.'}
     }
 
-    console.warn('a')
     // Replacing old files with new
     try {
-        Core.setStrategy(null)
-        console.warn('a')
         const strategyFiles = fs.readdirSync(tempDir)
         console.log('asd', strategyFiles)
         for (const strategyFile of strategyFiles) {
@@ -91,6 +91,18 @@ export async function updateStrategies(repo: HTTPSString, filesFilter: RegExp): 
         }
     } catch (e) {
         console.error(e.stack)
+        clearTemp()
+        return {ok: false, text: 'Произошла ошибка при замене файлов файлов в ядре, попробуйте отключить сервис вручную или закрыть папку Guboril'}
     }
-    return {ok: true, text: 'Стратегии обновлены'}
+    clearTemp()
+    return {ok: true, text: 'Стратегии обновлен ы'}
+    function clearTemp() {
+        rmSync(tempDir, {recursive: true, force: true})
+        rmSync(tempRarPath, {recursive: true, force: true})
+    }
+}
+export default async function updateStrategies(): Promise<updateStrategiesResult[]> {
+    return await Promise.all([
+        updateStrategy('https://api.github.com/repos/Flowseal/zapret-discord-youtube', /^general(.*)\.bat$/g)
+    ])
 }

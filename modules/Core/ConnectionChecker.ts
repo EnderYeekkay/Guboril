@@ -4,7 +4,7 @@ const urlRegex = /^https?:\/\/(www\.)?[\w\-\.@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1
 export type HTTPSString = `https://${string}.${string}`
 export type domainString = `${string}.${string}`
 
-const debug = false
+const debug = true
 
 async function calcExpiringTime(): Promise<number> {
     const start = performance.now()
@@ -68,7 +68,6 @@ export default async function ConnectionChecker(): Promise<ConnectionCheckerResu
     const urlsToCheck = [
         'youtube.com',
         'discord.com',
-        'instagram.com',
         'facebook.com'
     ] as domainString[]
     const status = await Promise.all(

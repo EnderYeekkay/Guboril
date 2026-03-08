@@ -2,6 +2,7 @@ import { ReactNode, useState, createContext, useEffect, useRef, useContext } fro
 import { Settings } from "../../../../../modules/Core/Settings.ts";
 import NotifyContext from "../Notify/NotifyContext.ts";
 import { NotifyStyle } from "../Notify/notify/notify.tsx";
+import type { GameFilterOptions } from "../../../../../modules/Core/strategyParser.ts";
 
 const ZapretContext = createContext<ZapretCondition | null>(null)
 export default ZapretContext
@@ -52,16 +53,14 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
             })
         }
     }
-    const setGameFilter = async (value: boolean): Promise<boolean> => {
+    const setGameFilter = async (value: Partial<GameFilterOptions>): Promise<boolean> => {
         if (value != settings.gameFilter) {
             try {
-                const res = core.setGameFilter(value)
-                setStatus(true)
-                sendNotify({
-                    title: `GameFilter успешно ${value ? 'активирован' : 'отключён'}!`,
-                    style: value ? NotifyStyle.Success : NotifyStyle.Important,
-                    expiring: true
+                const res = core.setGameFilter({
+                    ...settings.gameFilter,
+                    ...value
                 })
+                setStatus(true)
                 return res
             } catch (e) {
                 console.error(e)

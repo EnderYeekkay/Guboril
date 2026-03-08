@@ -14,9 +14,12 @@ const ansiHex = (hex: HEX) => color.ansi16m(...hexResolve(hex))
 /** Absoulte path of some file.*/ type path = string
 
 SCController.enableTimestampsTCP()
-export const headerPAT = {
-    'Authorization': `token ${settings.GH_TOKEN}`,
-    'User-Agent': 'Guboril'
+export let headerPAT = {}
+if (settings.GH_TOKEN) {
+    headerPAT = {
+        'Authorization': `token ${settings.GH_TOKEN}`,
+        'User-Agent': 'Guboril'
+    }
 }
 export default interface CoreEvents {
     strategyChanged: [strategy: string | null]
@@ -57,7 +60,7 @@ export default abstract class Core {
         return strategiesName
     }
     static checkService = () => SCController.checkService()
-    static #setStrategy(strategy: string | null, gameFilter: GameFilterOptions) {
+    static #setStrategy(strategy: string | null, gameFilter: GameFilterOptions = null) {
         if (gameFilter === null) gameFilter = {
             TCP: false,
             UDP: false,
@@ -121,15 +124,10 @@ export default abstract class Core {
         return(res)
     }
     static setStrategy(strategy: string | null) {
-        return this.#setStrategy(strategy)
+        return this.#setStrategy(strategy, settings.gameFilter)
     }
-    static setGameFilter(value: boolean) {
-        if (typeof value !== 'boolean') throw new CoreError(`Wrong gameFilter value: ${value}`)
-        if (settings.gameFilter == value) {
-            console.warn('Skipping gameFilter')
-            return
-        }
-
+    static setGameFilter(value: GameFilterOptions) {
+        if (typeof value !== 'object') throw new CoreError(`Wrong gameFilter value: ${value}`)
         return this.#setStrategy(settings.selectedStrategy, value)
     }
 

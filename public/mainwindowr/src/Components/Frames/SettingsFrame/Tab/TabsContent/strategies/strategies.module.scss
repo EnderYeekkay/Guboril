@@ -10,37 +10,68 @@ $p2: $p * 2;
     @include flex-column(center);
     width: calc(100% - $p2);
     height: calc(100% - $p2);
-    gap: 20px;
+    gap: 10px;
     
     position: relative;
     padding: $p;
-    // overflow-y: scroll;
+    overflow-y: scroll;
 }
 
 .strategy_controller {
     position: relative;
     margin: 0 !important;
     width: calc(100% - $p2);
-
     display: grid;
     gap: 10px;
     grid-template-rows: auto repeat(5, 40px);
     grid-template-columns: 350px 1fr;
     grid-template-areas: 
-    "a a"
-    "b c"
-    "b c"
-    "b c"
-    "b c"
-    "b c"
+    "a c"
+    "b b"
+    "b b"
+    "b b"
+    "b b"
+    "b b"
 
 }
 
 .controller_text {
-    grid-area: a;
-    
     font-weight: bold;
-    margin-bottom: 10px;
+
+    margin-top: -10px;
+    align-self: center;
+}
+.controller_btns {
+    display: flex;
+    justify-content: end;
+    margin-top: -10px;
+    gap: 10px;
+    
+    grid-area: c;
+    align-self: center;
+    justify-self: end;
+
+    color: var(--whitesmoke);
+
+}
+.controller_btn {
+    justify-self: center;
+    align-self: center;
+    grid-area: c;
+
+    width: 40px;
+    height: 40px;
+    & :global(.btn_text) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        transition: .1s ease-in-out;
+    }
+
+    &:hover :global(.btn_text) {
+        color: var(--color_common);
+    }
 }
 
 .list {
@@ -52,15 +83,27 @@ $p2: $p * 2;
     padding: 10px !important;
     margin: 0 !important;
 
+
     // color: var(--color_common);
     font-weight: 300;
     background-color: var(--cm_bg) !important;
     overflow-y: scroll;
-
+    border: 1px solid var(--cm_border) !important;
     &::-webkit-scrollbar-track {
-        border-top-right-radius: 10px;
-        border-bottom-right-radius: 10px;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
         background: var(--cm_bg);
+    }
+    &::-webkit-scrollbar {
+        background: transparent;        
+    }
+    &::-webkit-scrollbar-thumb {
+        border: 2px solid transparent;
+        background-clip: padding-box;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        border: 2px solid transparent;
+        background-clip: padding-box;
     }
 }
 
