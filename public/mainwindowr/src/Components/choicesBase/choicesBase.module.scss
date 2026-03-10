@@ -1,0 +1,97 @@
+// 1. Убираем лишний инпут поиска, который выглядит как дубликат
+.input {
+    display: none !important; 
+}
+
+// 2. Исправляем обрезанный низ и позиционирование
+.containerOuter {
+    margin-bottom: 0 !important;
+    position: relative;
+    width: 200px;
+    // Убираем overflow: visible, если он мешает дропдауну
+    overflow: visible !important; 
+    z-index: 10; 
+
+    &[data-type*="select-one"]::after {
+        content: '';
+        border-style: solid;
+        border-width: 5px 5px 0 5px;
+        border-color: whitesmoke transparent transparent transparent !important;
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+}
+
+.containerInner {
+    background-color: var(--cm_bg) !important;
+    border: var(--cm_border) 1px solid !important;
+    border-radius: 10px !important;
+    min-height: 40px !important;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+// 3. Список выбора (то, что внутри кнопки)
+.listSingle {
+    padding: 0 24px 0 12px !important;
+    width: 100% !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: none !important;
+}
+
+// 4. Выпадающий список (Дропдаун)
+.listDropdown {
+    position: absolute;
+    z-index: 100;
+    top: 100%; // Смещение строго под кнопку
+    left: 0;
+    width: 100%;
+    margin-top: 5px !important;
+    
+    background-color: var(--cm_inactive) !important;
+    border: 1px solid var(--cm_border) !important;
+    border-radius: 10px !important;
+    
+    // Чтобы низ не обрезался:
+    max-height: 300px !important; 
+    overflow-y: auto !important; // Включаем скролл, если элементов много
+}
+
+// Элементы внутри списка
+.item {
+    position: relative;
+    padding: 10px 12px !important;
+    font-size: 14px;
+    color: whitesmoke;
+    background-color: transparent !important;
+    word-break: break-word;
+
+    &.highlightedState {
+        background-color: var(--cm_active) !important;
+    }
+
+    &.selectedState {
+        background-color: var(--cm_active) !important;
+        // Галочка
+        &::after {
+            opacity: 1 !important;
+            content: '';
+            display: block;
+            position: absolute !important;
+            right: 10px;
+            background-image: url('./check.png');
+            background-size: cover;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+    }
+}

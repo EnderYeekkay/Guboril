@@ -16,8 +16,8 @@ import { NotifyStyle, type NotifyOptions } from '../../../../../../Contexts/Noti
 
 export default function Strategies() {
     const { sendNotify } = useContext(NotifyContext)
-    const {settings, setGameFilter} = useContext(ZapretContext)
-    const {sendModal} = useContext(ModalContext)
+    const { settings, setGameFilter } = useContext(ZapretContext)
+    const { sendModal } = useContext(ModalContext)
     const { strategies } = useContext(ZapretContext)
     const update = async () => {
         const modalRes = await sendModal({
@@ -45,10 +45,7 @@ export default function Strategies() {
         <div className={`container ${styles.strategy_controller}`}>
             <div className={styles.controller_text}>Управление стратегиями</div>
             <div className={`container ${styles.list}`}>
-                {strategies.map(strategy => {
-                    return <Strategy name={strategy} key={strategy}/>
-                })}
-                
+                {strategies.map(strategy => <Strategy name={strategy} key={strategy}/>)}
             </div>
             <div className={styles.controller_btns}>
                 <Button
@@ -63,7 +60,7 @@ export default function Strategies() {
                     tooltip='Открыть папку со стратегиями.'
                     addictionClasses={[styles.controller_btn]}
                     style={ButtonStyle.Link}
-                    action={() => {}}
+                    action={() => core.openCoreFolder()}
                     />
                 <Button
                     label={<Plus/>}
@@ -78,7 +75,7 @@ export default function Strategies() {
         <SettingBlock
             text='GameFilter (TCP)'
             description='Фильтрация TCP трафика на портах от 1024 до 65536.'
-        >            
+            >            
             <Checkbox
                 toStop={true}
                 onChange={(event) => setGameFilter({ TCP: event.target.checked })}
@@ -88,7 +85,7 @@ export default function Strategies() {
         <SettingBlock
             text='GameFilter (UDP)'
             description='Фильтрация UDP трафика на портах от 1024 до 65536.'
-        >            
+            >            
             <Checkbox
                 toStop={true}
                 onChange={(event) => setGameFilter({ UDP: event.target.checked })}
@@ -98,7 +95,7 @@ export default function Strategies() {
         <SettingBlock
             text='GameFilter (legacy)'
             description='Фильтрация всего трафика на портах от 1024 до 65536. Данный параметр влияет только на устаревшие стратегии.'
-        >            
+            >            
             <Checkbox
                 toStop={true}
                 onChange={(event) => setGameFilter({ legacy: event.target.checked })}
