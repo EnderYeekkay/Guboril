@@ -1,15 +1,20 @@
 import { EventEmitter } from 'node:events'
 import { resolve as pr } from 'node:path'
 import { BrowserWindow, shell } from 'electron'
-import * as paths from './paths.ts'
 import fs from 'fs'
-import SCController from './SCController.ts'
-import strategyParser, {type GameFilterOptions} from './strategyParser.ts'
-import { SettingsAccessor, settings, type Settings } from './Settings.ts'
 const { log } = console
 import ansi from 'ansi-styles'
 const { color } = ansi
+
+import * as paths from './paths.ts'
 import hexResolve, { type HEX } from '../decor/hexToRGB.ts'
+import SCController from './SCController.ts'
+import strategyParser, {type GameFilterOptions} from './strategyParser.ts'
+import { SettingsAccessor, settings, type Settings } from './Settings.ts'
+import StrategyManager from './StrategyManager.ts'
+import type { IStrategy, StrategyFullName } from './Strategy.ts'
+import type Strategy from './Strategy.ts'
+
 const ansiHex = (hex: HEX) => color.ansi16m(...hexResolve(hex))
 /** Absoulte path of some file.*/ type path = string
 
@@ -21,6 +26,10 @@ if (settings.GH_TOKEN) {
         'User-Agent': 'Guboril'
     }
 }
+
+export type Brand<T, K> = K & {readonly __brand: T}
+export type SpecialString<T> = Brand<T, string>
+
 export default interface CoreEvents {
     strategyChanged: [strategy: string | null]
     gameFilterChanged: [value: boolean]
@@ -50,17 +59,11 @@ export default abstract class Core {
         return {...settings}
     }
 
-    static get strategiesPaths(): path[] {
-        return Core.strategiesNames.map((val, i) => pr(paths.coreDir, val))
-    }
-
-    static get strategiesNames(): string[] {
-        let strategiesName = fs.readdirSync(paths.coreDir)
-        strategiesName = strategiesName.filter((val, i, arr) => arr[i].endsWith('.bat') && !arr[i].startsWith('service'))
-        return strategiesName
+    static get strategies(): IStrategy[] {
+        return StrategyManager.All.map(val => val.toJSON())
     }
     static checkService = () => SCController.checkService()
-    static #setStrategy(strategy: string | null, gameFilter: GameFilterOptions = null) {
+    static #setStrategy(strategy: StrategyFullName | null, gameFilter: GameFilterOptions = null) {
         if (gameFilter === null) gameFilter = {
             TCP: false,
             UDP: false,
@@ -98,20 +101,10 @@ export default abstract class Core {
         if (!strategy || typeof strategy !== 'string') throw new CoreError('Wrong strategy!')
         let begin = Date.now()
 
-        const strategyPath = pr(paths.coreDir, strategy)
-        if (!fs.existsSync(strategyPath)) throw new CoreError(`Invalid strategy ${strategy}`)
-
-
-        console.log(`  ${color.greenBright.open}>${color.greenBright.close} Reading file...`)
-        const strategyFile = fs.readFileSync(strategyPath).toString()
-
-        console.log(`  ${color.greenBright.open}>${color.greenBright.close} Parsing strategy...`)
-        const parsedStrategy = strategyParser(strategyFile, gameFilter)
-
+        const parsedStrategy = StrategyManager.withName(strategy)?.parse(gameFilter)
+        if (!parsedStrategy) throw new CoreError(`No strategy with name ${strategy} in cache!`)
         console.log(`  ${color.greenBright.open}>${color.greenBright.close} Starting service...`)
         const res = SCController.start(parsedStrategy, strategy, gameFilter)
-
-        
         if (res) {
             settings.selectedStrategy = strategy
             settings.gameFilter = gameFilter
@@ -123,7 +116,8 @@ export default abstract class Core {
         console.log()
         return(res)
     }
-    static setStrategy(strategy: string | null) {
+    static setStrategy(strategy: StrategyFullName | null) {
+        this.mainWindow.webContents.send('core:strategyChanged', StrategyManager.AllJSON)
         return this.#setStrategy(strategy, settings.gameFilter)
     }
     static setGameFilter(value: GameFilterOptions) {
@@ -156,3 +150,19 @@ class CoreError extends Error {
         }
     }
 }
+
+StrategyManager.events.on('cache_add', (strategy: Strategy) => {
+    Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
+    if (settings.selectedStrategy === strategy.fullName) {
+        Core.setStrategy(strategy.fullName)
+    }
+})
+StrategyManager.events.on('cache_change', (strategy: Strategy) => {
+    Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
+    if (settings.selectedStrategy === strategy.fullName) {
+        Core.setStrategy(strategy.fullName)
+    }
+})
+StrategyManager.events.on('cache_unlink', () => {
+    Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
+})

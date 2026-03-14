@@ -8,7 +8,7 @@ export type ChoicesSelectProps = {
 }
 export default function ChoicesSelect(props: ChoicesSelectProps) {
     const choicesRef = useRef<Choices.default>(null)
-    const { busy, strategies, installStrategy, settings } = useContext(ZapretProvider)
+    const { strategies, installStrategy, settings } = useContext(ZapretProvider)
     const selectRef = useRef<HTMLSelectElement>(null)
 
     useEffect(() => {
@@ -28,16 +28,16 @@ export default function ChoicesSelect(props: ChoicesSelectProps) {
     }, [settings, strategies])
 
     useEffect(() => {
-        choicesRef.current.setChoiceByValue(settings.selectedStrategy)
-    }, [settings])
+        if (strategies.find(s => s.fullName === settings.selectedStrategy)) {
+            choicesRef.current.setChoiceByValue(settings.selectedStrategy)
+        } else {
+            choicesRef.current.setChoiceByValue(undefined)
+        }
+    }, [settings, strategies])
 
-    useEffect(() => {
-        if (busy) choicesRef.current.disable()
-        else choicesRef.current.enable()
-    })
     
     return <select
-        disabled={busy || props.disabled}
+        disabled={props.disabled}
         ref={selectRef}
         name="strategy"
         id="strategy"
@@ -46,11 +46,9 @@ export default function ChoicesSelect(props: ChoicesSelectProps) {
         {strategies.map((elem, i) => {
             return  <option
                 key={i}
-                value={elem}
+                value={elem.fullName}
             >
-            {elem.includes('general.bat')
-            ? elem.substring(0, elem.indexOf('.'))
-            : elem.substring(elem.indexOf('(') + 1, elem.indexOf(')'))}
+            {elem.shortName}
             </option>
         })}
     </select>

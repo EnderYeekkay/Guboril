@@ -3,7 +3,8 @@ import { type SpawnSyncOptionsWithStringEncoding } from 'node:child_process'
 import * as paths from './paths.ts'
 import iconv from 'iconv-lite'
 import { error, log } from 'node:console'
-import type { GameFilterOptions } from './strategyParser.ts'
+import type { GameFilterOptions, parsedStrategy } from './strategyParser.ts'
+import { type SpecialString } from './Core.ts'
 
 const debug = false
 /**
@@ -28,7 +29,7 @@ const options: Partial<SpawnSyncOptionsWithStringEncoding> = {
     encoding: 'buffer'
 }
 const SCController = { 
-    start(params: string, strategyTitle: string, gameFilterTitle: GameFilterOptions): boolean {
+    start(params: SpecialString<parsedStrategy>, strategyTitle: string, gameFilterTitle: GameFilterOptions): boolean {
         SCController.delete()
         const exePath = `${paths.binPath}\\winws.exe`
         const binPathValue = `"${exePath}"  ${params}`;

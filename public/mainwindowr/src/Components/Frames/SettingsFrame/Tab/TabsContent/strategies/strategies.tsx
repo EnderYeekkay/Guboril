@@ -45,7 +45,7 @@ export default function Strategies() {
         <div className={`container ${styles.strategy_controller}`}>
             <div className={styles.controller_text}>Управление стратегиями</div>
             <div className={`container ${styles.list}`}>
-                {strategies.map(strategy => <Strategy name={strategy} key={strategy}/>)}
+                {strategies.map(strategy => <Strategy name={strategy.fullName} key={strategy.fullName}/>)}
             </div>
             <div className={styles.controller_btns}>
                 <Button

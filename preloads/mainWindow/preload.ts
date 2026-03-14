@@ -42,10 +42,14 @@ contextBridge.exposeInMainWorld('mw', {
 contextBridge.exposeInMainWorld('core', {
   getSettings: () => ipcRenderer.sendSync('core:getSettings'),
   settingsChanged: (cb) => ipcRenderer.on('core:settingsChanged', (_, settings) => cb(settings)),
-  cleanSettingsChanged: () => {
+  strategyChanged: (cb) => ipcRenderer.on('core:strategyChanged', (_, strategy) => cb(strategy)),
+  strategiesCacheChanged: (cb) => ipcRenderer.on('core:strategiesCacheChanged', (_, strategies) => cb(strategies)),
+  cleanCoreEventsHandlers: () => {
     ipcRenderer.removeAllListeners('core:settingsChanged')
+    ipcRenderer.removeAllListeners('core:strategyChanged')
+    ipcRenderer.removeAllListeners('core:strategiesCacheChanged')
   },
-  getStrategiesNames: () => ipcRenderer.sendSync('core:getStrategiesNames'),
+  getStrategies: () => ipcRenderer.sendSync('core:getStrategies'),
   setStrategy: (strategy: string) => ipcRenderer.invoke('core:setStrategy', strategy),
   setGameFilter: (value: GameFilterOptions) => ipcRenderer.invoke('core:setGameFilter', value),
   openCoreFolder: () => ipcRenderer.send('core:openCoreFolder'),

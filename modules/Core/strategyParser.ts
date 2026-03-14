@@ -1,3 +1,4 @@
+import { type SpecialString } from './Core.ts'
 import * as paths from'./paths.ts'
 import { sep } from 'path'
 const debug = false
@@ -11,7 +12,9 @@ export type GameFilterOptions = {
     UDP: boolean
     legacy: boolean
 }
-export default function(str: string, game_filter: GameFilterOptions): string {
+export type parsedStrategy = string
+
+export default function(str: string, game_filter: GameFilterOptions): SpecialString<parsedStrategy> {
     if (!str || game_filter === undefined) throw new Error(`Wrong parameters given: ${str}, ${game_filter}`)
     let lines = str.split(/\r?\n/)
     let entryIdx = -1
@@ -49,5 +52,5 @@ export default function(str: string, game_filter: GameFilterOptions): string {
     })
     lines = lines.map(val => val.trim())
     let res = lines.join(' ')
-    return res
+    return res as SpecialString<parsedStrategy>
 }

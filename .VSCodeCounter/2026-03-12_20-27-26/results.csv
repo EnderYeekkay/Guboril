@@ -1,0 +1,181 @@
+"filename", "language", "TypeScript", "JSON with Comments", "Markdown", "JSON", "Inno Setup", "PostCSS", "HTML", "JavaScript", "Batch", "XML", "PowerShell", "TypeScript JSX", "SCSS", "comment", "blank", "total"
+"d:\JavaScript\zapret-gui\build.ts", "TypeScript", 73, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 8, 83
+"d:\JavaScript\zapret-gui\core\general (ALT).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (ALT10).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (ALT11).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (ALT2).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (ALT3).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (ALT4).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (ALT5).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 0, 0, 2, 4, 24
+"d:\JavaScript\zapret-gui\core\general (ALT6).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (ALT7).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (ALT8).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (ALT9).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (FAKE TLS AUTO ALT).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (FAKE TLS AUTO ALT2).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (FAKE TLS AUTO ALT3).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (FAKE TLS AUTO).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (SIMPLE FAKE ALT).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (SIMPLE FAKE ALT2).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (SIMPLE FAKE).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\general (TF).bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 3, 25
+"d:\JavaScript\zapret-gui\core\general.bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 1, 4, 26
+"d:\JavaScript\zapret-gui\core\service.bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 801, 0, 0, 0, 0, 43, 183, 1027
+"d:\JavaScript\zapret-gui\coreplan.md", "Markdown", 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2
+"d:\JavaScript\zapret-gui\faq.md", "Markdown", 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 8
+"d:\JavaScript\zapret-gui\main.js", "JavaScript", 0, 0, 0, 0, 0, 0, 0, 194, 0, 0, 0, 0, 0, 11, 19, 224
+"d:\JavaScript\zapret-gui\modules\Core\ConnectionChecker.ts", "TypeScript", 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 9, 98
+"d:\JavaScript\zapret-gui\modules\Core\Core.ts", "TypeScript", 137, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 164
+"d:\JavaScript\zapret-gui\modules\Core\CoreUpdater.ts", "TypeScript", 96, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 8, 108
+"d:\JavaScript\zapret-gui\modules\Core\SCController.ts", "TypeScript", 166, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 21, 211
+"d:\JavaScript\zapret-gui\modules\Core\Settings.ts", "TypeScript", 83, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8, 92
+"d:\JavaScript\zapret-gui\modules\Core\Strategy.ts", "TypeScript", 52, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 6, 72
+"d:\JavaScript\zapret-gui\modules\Core\StrategyManager.ts", "TypeScript", 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 29
+"d:\JavaScript\zapret-gui\modules\Core\paths.ts", "TypeScript", 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 14
+"d:\JavaScript\zapret-gui\modules\Core\strategyParser.ts", "TypeScript", 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 5, 57
+"d:\JavaScript\zapret-gui\modules\MakeInstaller.iss", "Inno Setup", 0, 0, 0, 0, 76, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 94
+"d:\JavaScript\zapret-gui\modules\MakeInstallerRaw.iss", "Inno Setup", 0, 0, 0, 0, 73, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 91
+"d:\JavaScript\zapret-gui\modules\actions\discordCacheCleaner.ts", "TypeScript", 32, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 35
+"d:\JavaScript\zapret-gui\modules\actions\hostsChanger.ts", "TypeScript", 84, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 18, 104
+"d:\JavaScript\zapret-gui\modules\actions\saveLogs.ts", "TypeScript", 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 8, 36
+"d:\JavaScript\zapret-gui\modules\actions\scheduler.ts", "TypeScript", 48, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 54
+"d:\JavaScript\zapret-gui\modules\actions\updateGuboril.ts", "TypeScript", 101, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 13, 116
+"d:\JavaScript\zapret-gui\modules\cli\argsParser.ts", "TypeScript", 34, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 8, 48
+"d:\JavaScript\zapret-gui\modules\cli\cli.ts", "TypeScript", 50, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 69
+"d:\JavaScript\zapret-gui\modules\decor\hexToRGB.ts", "TypeScript", 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 23
+"d:\JavaScript\zapret-gui\modules\decor\reverseColors.ts", "TypeScript", 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14
+"d:\JavaScript\zapret-gui\modules\fixes\warpFix.ts", "TypeScript", 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15
+"d:\JavaScript\zapret-gui\modules\tasks\logger.ts", "TypeScript", 74, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 13, 92
+"d:\JavaScript\zapret-gui\modules\tasks\myNotifcations.ts", "TypeScript", 21, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 23
+"d:\JavaScript\zapret-gui\modules\tasks\tray.ts", "TypeScript", 62, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 69
+"d:\JavaScript\zapret-gui\package-lock.json", "JSON", 0, 0, 0, 5756, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5757
+"d:\JavaScript\zapret-gui\package.json", "JSON", 0, 0, 0, 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 45
+"d:\JavaScript\zapret-gui\preloads\loadingWin\preload.ts", "TypeScript", 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 13
+"d:\JavaScript\zapret-gui\preloads\mainWindow\preload.ts", "TypeScript", 45, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 9, 71
+"d:\JavaScript\zapret-gui\public\global\styles\style.css", "PostCSS", 0, 0, 0, 0, 0, 73, 0, 0, 0, 0, 0, 0, 0, 0, 32, 105
+"d:\JavaScript\zapret-gui\public\images\loading.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 3
+"d:\JavaScript\zapret-gui\public\loadingWin\loadingWin.css", "PostCSS", 0, 0, 0, 0, 0, 68, 0, 0, 0, 0, 0, 0, 0, 0, 2, 70
+"d:\JavaScript\zapret-gui\public\loadingWin\loadingWin.html", "HTML", 0, 0, 0, 0, 0, 0, 31, 0, 0, 0, 0, 0, 0, 0, 0, 31
+"d:\JavaScript\zapret-gui\public\loadingWin\loadingWin.js", "JavaScript", 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0, 23
+"d:\JavaScript\zapret-gui\public\loadingWin\preload.d.ts", "TypeScript", 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 9
+"d:\JavaScript\zapret-gui\public\mainwindowr\index.html", "HTML", 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 2, 16
+"d:\JavaScript\zapret-gui\public\mainwindowr\loading.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 3
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\App.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 0, 5, 35
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\SettingBlock\SettingBlock.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 29, 1, 0, 30
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\SettingBlock\SettingBlock.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 3, 25
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\SettingsFrame.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 8, 38
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\SettingsFrame.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 61, 0, 0, 6, 67
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\Tab.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 1, 10
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\Tab.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 1, 3, 34
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabPanel.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 1, 3, 11
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsContent\Icon.d.ts", "TypeScript", 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsContent\debug\icon.svg.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 1, 6
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsContent\general\general.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 2, 14
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsContent\general\general.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 80, 0, 0, 4, 84
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsContent\general\icon.svg.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 1, 14
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsContent\instruments\icon.svg.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 1, 6
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsContent\ipset\icon.svg.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 1, 1, 5
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsContent\strategies\download.svg.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 1, 6
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsContent\strategies\icon.svg.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 1, 6
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsContent\strategies\open_folder.svg.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 1, 6
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsContent\strategies\plus.svg.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 1, 6
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsContent\strategies\strategies.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 96, 1, 18, 115
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsContent\strategies\strategies.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 102, 0, 0, 5, 107
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsContent\strategies\strategy\edit.svg.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 1, 6
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsContent\strategies\strategy\strategy.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 5, 23
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsContent\strategies\strategy\strategy.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 2, 18
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\Tab\TabsProvider.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 3, 5, 29
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\Frames\SettingsFrame\back.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\blackScreen\blackScreen.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 9
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\blackScreen\blackScreen.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 3, 8
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\button\button.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 169, 21, 14, 204
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\button\button.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 73, 0, 0, 8, 81
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\button\dcloader\dcloader.css", "PostCSS", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\button\dcloader\dcloader.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 38, 0, 3, 41
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\button\dcloader\dcloader.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 2, 11
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\checkbox\checkbox.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 48, 10, 10, 68
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\checkbox\checkbox.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 2, 25
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\choicesBase\choicesBase.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 78, 8, 12, 98
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\choicesBase\choicesBase.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 52, 0, 2, 7, 61
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\header\close.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 1, 7
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\header\collapse.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 6
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\header\header.css", "PostCSS", 0, 0, 0, 0, 0, 53, 0, 0, 0, 0, 0, 0, 0, 0, 7, 60
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\header\header.module.css", "PostCSS", 0, 0, 0, 0, 0, 61, 0, 0, 0, 0, 0, 0, 0, 0, 9, 70
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\header\header.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 61, 0, 3, 64
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\header\header.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 1, 18
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\header\notifiesListBtn.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 1, 15
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\header\notifiesList\notifiesList.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 76, 0, 7, 83
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\header\notifiesList\notifiesList.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 35, 0, 0, 4, 39
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\header\notifiesList\notifyArchived.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 38, 0, 0, 1, 39
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\checkConnectionBlock\checkConnectionBlock.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 13
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\checkConnectionBlock\checkConnectionBlock.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 66, 0, 0, 10, 76
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\checkConnectionBlock\connectionCheckerImage\assets\bad.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 1, 11
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\checkConnectionBlock\connectionCheckerImage\assets\good.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 4
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\checkConnectionBlock\connectionCheckerImage\assets\no_internet.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 1, 11
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\checkConnectionBlock\connectionCheckerImage\assets\unstable.svg", "XML", 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 4
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\checkConnectionBlock\connectionCheckerImage\connectionCheckerImage.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 3
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\checkConnectionBlock\connectionCheckerImage\connectionCheckerImage.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 6, 43
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\checkConnectionBlock\connectionChecker\connectionChecker.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 0, 0, 17
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\checkConnectionBlock\connectionChecker\connectionChecker.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 3, 3, 29
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\coreBlock\coreBlock.css", "PostCSS", 0, 0, 0, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 0, 12, 68
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\coreBlock\coreBlock.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 56, 0, 10, 66
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\coreBlock\coreBlock.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 47, 0, 0, 4, 51
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\leftColumn.css", "PostCSS", 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\leftColumn.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 5
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\leftColumn.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 1, 12
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\statusBlock\choices\choices.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 80, 7, 7, 94
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\statusBlock\choices\choices.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 51, 0, 1, 6, 58
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\statusBlock\statusBlock.css", "PostCSS", 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 0, 0, 0, 4, 25
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\statusBlock\statusBlock.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 3, 24
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\leftColumn\statusBlock\statusBlock.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 3, 25
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\rightColumn\container\container.css", "PostCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\rightColumn\container\container.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\rightColumn\container\container.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 2, 13
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\rightColumn\discordCacheCleaner.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 6, 45
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\rightColumn\rightColumn.css", "PostCSS", 0, 0, 0, 0, 0, 26, 0, 0, 0, 0, 0, 0, 0, 0, 4, 30
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\rightColumn\rightColumn.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 1, 0, 26
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\rightColumn\rightColumn.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 84, 0, 0, 4, 88
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\rightColumn\subcategory\subcategory.css", "PostCSS", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\rightColumn\subcategory\subcategory.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 9
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\rightColumn\subcategory\subcategory.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 3, 9
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\separator\separator.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 8
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\separator\separator.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 3, 10
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\url\url.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 9
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Components\url\url.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 1, 15
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Contexts\FrameContext.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 5, 20
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Contexts\Modal\ModalContext.ts", "TypeScript", 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 10
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Contexts\Modal\ModalProvider.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 41, 10, 151
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Contexts\Modal\modal\modal.module.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 47, 0, 6, 53
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Contexts\Modal\modal\modal.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 43, 0, 0, 4, 47
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Contexts\Notify\NotifyContext.ts", "TypeScript", 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 15
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Contexts\Notify\NotifyProvider.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 70, 0, 0, 14, 84
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Contexts\Notify\notify\notify.css", "PostCSS", 0, 0, 0, 0, 0, 126, 0, 0, 0, 0, 0, 0, 0, 0, 15, 141
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Contexts\Notify\notify\notify.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 93, 0, 8, 101
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Contexts\Notify\notify\notify.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 117, 0, 3, 11, 131
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Contexts\Zapret\Zapret.d.ts", "TypeScript", 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 13
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Contexts\Zapret\ZapretProvider.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 82, 0, 0, 7, 89
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\ErrorBoundaries\HighestError\HighestError.css", "PostCSS", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\ErrorBoundaries\HighestError\HighestError.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 21
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\ErrorBoundaries\HighestError\HighestError.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 2, 10, 65
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Modules\NodeLikeTimeout.ts", "TypeScript", 82, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 89
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\Modules\logger.ts", "TypeScript", 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 2, 21
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\global.d.ts", "TypeScript", 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 5
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\main.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 2, 41
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\mainwindow.css", "PostCSS", 0, 0, 0, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 6, 7, 52
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\mainwindow.scss", "SCSS", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 41, 6, 6, 53
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\preload.d.ts", "TypeScript", 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 8, 68
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\vite-env.d.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\weblibs\Choices\choices.min.css", "PostCSS", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"d:\JavaScript\zapret-gui\public\mainwindowr\src\weblibs\Choices\choices.min.js", "JavaScript", 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 3
+"d:\JavaScript\zapret-gui\readme.md", "Markdown", 0, 0, 42, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 56
+"d:\JavaScript\zapret-gui\roadmap.md", "Markdown", 0, 0, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 82
+"d:\JavaScript\zapret-gui\scripts\afterInstall.ts", "TypeScript", 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 6
+"d:\JavaScript\zapret-gui\scripts\beforeUninstall.ts", "TypeScript", 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 8
+"d:\JavaScript\zapret-gui\scripts\createComponent.ts", "TypeScript", 44, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 49
+"d:\JavaScript\zapret-gui\scripts\issTemplateParser.ts", "TypeScript", 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 27
+"d:\JavaScript\zapret-gui\service.bat", "Batch", 0, 0, 0, 0, 0, 0, 0, 0, 801, 0, 0, 0, 0, 43, 183, 1027
+"d:\JavaScript\zapret-gui\tests\zapretTest.ts", "TypeScript", 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 19
+"d:\JavaScript\zapret-gui\tsconfig.json", "JSON with Comments", 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 15
+"d:\JavaScript\zapret-gui\utils\test zapret.ps1", "PowerShell", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 785, 0, 0, 39, 121, 945
+"d:\JavaScript\zapret-gui\vite.config.ts", "TypeScript", 33, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 2, 39
+"Total", "-", 1716, 14, 105, 5800, 149, 531, 45, 218, 2019, 33, 785, 1635, 1121, 403, 1335, 15909

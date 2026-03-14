@@ -134,8 +134,8 @@ app.whenReady().then(async () => {
   //////////////
   // Core API //
   //////////////
-  ipcMain.on('core:getStrategiesNames', (event) => {
-    event.returnValue = Core.strategiesNames;
+  ipcMain.on('core:getStrategies', (event) => {
+    event.returnValue = Core.strategies;
   })
   ipcMain.on('core:getSettings', (event) => {
     event.returnValue = Core.settings;

@@ -3,6 +3,7 @@ import { Settings } from "../../../../../modules/Core/Settings.ts";
 import NotifyContext from "../Notify/NotifyContext.ts";
 import { NotifyStyle } from "../Notify/notify/notify.tsx";
 import type { GameFilterOptions } from "../../../../../modules/Core/strategyParser.ts";
+import type { IStrategy } from "../../../../../modules/Core/Strategy.ts";
 
 const ZapretContext = createContext<ZapretCondition | null>(null)
 export default ZapretContext
@@ -12,7 +13,7 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
     const { sendNotify } = useContext(NotifyContext)
 
     const [status, setStatus] = useState<boolean>(core.checkService());
-    const [strategies, setStrategies] = useState<Array<string>>(core.getStrategiesNames())
+    const [strategies, setStrategies] = useState<IStrategy[]>(core.getStrategies())
     const [settings, setSettings] = useState<Settings>(core.getSettings())
 
     useEffect(() => {
@@ -20,15 +21,18 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
             setSettings(settings)
             setStatus(settings.status)
         })
+        core.strategyChanged((strategy) => {
+            
+        })
+        core.strategiesCacheChanged(newStrategies => setStrategies(newStrategies))
         return () => {
-            core.cleanSettingsChanged()
+            core.cleanCoreEventsHandlers()
         }
     }, [])
 
     const installStrategy = async (strategy: string | null): Promise<boolean> => {
         try {
             const res = core.setStrategy(strategy)
-            typeof strategy === 'string' ? setStatus(true) : setStatus(false)
             if (typeof strategy === 'string') {
                 sendNotify({
                     title: `Сервис успешно запущен!`,
@@ -60,7 +64,6 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
                     ...settings.gameFilter,
                     ...value
                 })
-                setStatus(true)
                 return res
             } catch (e) {
                 console.error(e)

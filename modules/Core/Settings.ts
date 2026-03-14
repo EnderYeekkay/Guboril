@@ -3,8 +3,10 @@ import path from 'path'
 import { app, BrowserWindow } from 'electron'
 import SCController from './SCController.ts'
 import { checkTask } from '../actions/scheduler.ts'
+import type { StrategyFullName } from './Strategy.ts'
 const settingsPath = path.join(app.getPath('userData'), 'settings.json')
 export const SettingsLength = 7
+
 
 export type Settings = {
     gameFilter: {
@@ -15,7 +17,7 @@ export type Settings = {
     autoUpdate:          boolean
     autoLoad:            boolean
     status:              boolean
-    selectedStrategy:    string | null
+    selectedStrategy:    StrategyFullName | null
     notifications:       boolean
     GH_TOKEN:            string
 };

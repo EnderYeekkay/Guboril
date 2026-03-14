@@ -2,7 +2,7 @@ declare type Avoid = Promise<void>
 declare interface ZapretCondition  {
     status: boolean
     settings: import("../../../../../modules/Core/Settings.ts").Settings
-    strategies: string[]
+    strategies: import("../../../../../modules/Core/Strategy.ts").IStrategy[]
     installStrategy: (strategy: string | null) => Promise<boolean>
     setGameFilter: (value: Partial<import("../../../../../modules/Core/strategyParser.ts").GameFilterOptions>) => Promise<boolean>
 }

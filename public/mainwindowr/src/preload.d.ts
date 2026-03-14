@@ -3,6 +3,7 @@ import { Settings } from '../../../modules/Core/Settings.ts'
 import { IpcRendererEvent } from 'electron'
 import type { GameFilterOptions } from '../../../modules/Core/strategyParser.ts'
 import type { updateStrategiesResult } from '../../../modules/Core/CoreUpdater.ts'
+import type { IStrategy } from '../../../modules/Core/Strategy.ts'
 declare global {
   const mw: { 
     version: string
@@ -38,9 +39,11 @@ declare global {
   const core: {
     getSettings: () => Readonly<Settings>
     checkService: () => boolean
-    settingsChanged: (cb: (settings: Settings) => any) => Promise<Settings>
-    cleanSettingsChanged: () => void
-    getStrategiesNames: () => string[]
+    settingsChanged: (cb: (settings: Settings) => void) => void
+    strategyChanged: (cb: (strategy: IStrategy, strategies: IStrategy[]) => void) => void
+    strategiesCacheChanged: (cb: (strategies: IStrategy[]) => void) => void
+    cleanCoreEventsHandlers: () => void
+    getStrategies: () => IStrategy[]
     setStrategy: (strategy: string) => Promise<boolean>
     setGameFilter: (value: GameFilterOptions) => Promise<boolean>
     openCoreFolder: () => Promise<true>
