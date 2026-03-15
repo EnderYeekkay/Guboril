@@ -24,7 +24,7 @@ $p2: $p * 2;
     display: grid;
     gap: 10px;
     grid-template-rows: auto repeat(5, 40px);
-    grid-template-columns: 350px 1fr;
+    grid-template-columns: max-content 1fr;
     grid-template-areas: 
     "a c"
     "b b"
@@ -42,6 +42,7 @@ $p2: $p * 2;
     align-self: center;
 }
 .controller_btns {
+    width: max-content;
     display: flex;
     justify-content: end;
     margin-top: -10px;

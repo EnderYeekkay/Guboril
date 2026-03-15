@@ -44,7 +44,7 @@ declare global {
     strategiesCacheChanged: (cb: (strategies: IStrategy[]) => void) => void
     cleanCoreEventsHandlers: () => void
     getStrategies: () => IStrategy[]
-    setStrategy: (strategy: string) => Promise<boolean>
+    setStrategy: (strategy: number) => Promise<boolean>
     setGameFilter: (value: GameFilterOptions) => Promise<boolean>
     openCoreFolder: () => Promise<true>
     setAutoUpdate: (autoUpdate: boolean) => Promise<void>

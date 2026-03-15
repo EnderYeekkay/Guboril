@@ -15,14 +15,14 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
     const [status, setStatus] = useState<boolean>(core.checkService());
     const [strategies, setStrategies] = useState<IStrategy[]>(core.getStrategies())
     const [settings, setSettings] = useState<Settings>(core.getSettings())
-
+    const [strategy, setStrategy] = useState<IStrategy>(core.getStrategies().find(s => s.ino === settings.selectedStrategy))
     useEffect(() => {
         core.settingsChanged((settings) => {
             setSettings(settings)
             setStatus(settings.status)
         })
         core.strategyChanged((strategy) => {
-            
+            setStrategy(strategy)
         })
         core.strategiesCacheChanged(newStrategies => setStrategies(newStrategies))
         return () => {
@@ -30,7 +30,7 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
         }
     }, [])
 
-    const installStrategy = async (strategy: string | null): Promise<boolean> => {
+    const installStrategy = async (strategy: number | null): Promise<boolean> => {
         try {
             const res = core.setStrategy(strategy)
             if (typeof strategy === 'string') {
@@ -83,6 +83,7 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
         status,
         settings,
         strategies,
+        strategy,
         installStrategy,
         setGameFilter,
     }}>

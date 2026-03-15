@@ -63,7 +63,7 @@ export default abstract class Core {
         return StrategyManager.All.map(val => val.toJSON())
     }
     static checkService = () => SCController.checkService()
-    static #setStrategy(strategy: StrategyFullName | null, gameFilter: GameFilterOptions = null) {
+    static #setStrategy(strategyIno: number | null, gameFilter: GameFilterOptions = null) {
         if (gameFilter === null) gameFilter = {
             TCP: false,
             UDP: false,
@@ -82,7 +82,7 @@ export default abstract class Core {
 
         '(\"' +
         ansiHex('#ECB664') +
-        strategy +
+        strategyIno +
         color.close +
         '\", ' +
         ansiHex('#ECB664') +
@@ -91,22 +91,27 @@ export default abstract class Core {
         ')';
         console.log(initSetStrategyString)
         
-        if (strategy === null) {
+        if (strategyIno === null) {
             SCController.delete()
             settings.status = false
             this.events.emit('strategyChanged', null)
             console.log()
-            return
+            return false
         }
-        if (!strategy || typeof strategy !== 'string') throw new CoreError('Wrong strategy!')
+        const strategy = StrategyManager.withIno(strategyIno)
+        if (!strategy) {
+            console.warn('No strategy with ino in cache:', strategyIno)
+            return false
+        }
+        
         let begin = Date.now()
 
-        const parsedStrategy = StrategyManager.withName(strategy)?.parse(gameFilter)
+        const parsedStrategy = StrategyManager.withIno(strategyIno)?.parse(gameFilter)
         if (!parsedStrategy) throw new CoreError(`No strategy with name ${strategy} in cache!`)
         console.log(`  ${color.greenBright.open}>${color.greenBright.close} Starting service...`)
-        const res = SCController.start(parsedStrategy, strategy, gameFilter)
+        const res = SCController.start(parsedStrategy, strategy.fullName, gameFilter)
         if (res) {
-            settings.selectedStrategy = strategy
+            settings.selectedStrategy = strategy.ino
             settings.gameFilter = gameFilter
             settings.status = true
             this.events.emit('strategyChanged', strategy)
@@ -116,8 +121,8 @@ export default abstract class Core {
         console.log()
         return(res)
     }
-    static setStrategy(strategy: StrategyFullName | null) {
-        this.mainWindow.webContents.send('core:strategyChanged', StrategyManager.AllJSON)
+    static setStrategy(strategy: number | null) {
+        this.mainWindow.webContents.send('core:strategyChanged', StrategyManager.withIno(strategy))
         return this.#setStrategy(strategy, settings.gameFilter)
     }
     static setGameFilter(value: GameFilterOptions) {
@@ -153,14 +158,14 @@ class CoreError extends Error {
 
 StrategyManager.events.on('cache_add', (strategy: Strategy) => {
     Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
-    if (settings.selectedStrategy === strategy.fullName) {
-        Core.setStrategy(strategy.fullName)
+    if (settings.selectedStrategy === strategy.ino) {
+        Core.setStrategy(strategy.ino)
     }
 })
 StrategyManager.events.on('cache_change', (strategy: Strategy) => {
     Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
-    if (settings.selectedStrategy === strategy.fullName) {
-        Core.setStrategy(strategy.fullName)
+    if (settings.selectedStrategy === strategy.ino) {
+        Core.setStrategy(strategy.ino)
     }
 })
 StrategyManager.events.on('cache_unlink', () => {

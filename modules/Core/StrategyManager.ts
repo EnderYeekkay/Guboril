@@ -92,19 +92,37 @@ export default abstract class StrategyManager {
         if (res === null) console.warn('No strategy in cache with name:', name)
         return res
     }
+    public static withIno(ino: number): Strategy | null {
+        let res: Strategy = null
+        res = this.cachedStrategies.find(strategy => strategy.ino === ino)
+        if (res === null) console.warn('No strategy in cache with ino:', ino)
+        return res
+    }
 }
 StrategyManager.init()
 
 function logStrategiesList(): void {
     if (debug) {
-        const length1 = Math.max(9, ...StrategyManager.All.map(strategy => strategy.fullName.length)) + 1
+        const length1 = Math.max(9, ...StrategyManager.All.map(s => s.fullName.length + 1))
         const length2 = 7
-        const length3 = Math.max(5, ...StrategyManager.All.map(strategy => strategy.code.length.toString().length)) + 1
-        console.log(ansi.bold.open + 'FullName'.padEnd(length1), 'legacy'.padEnd(length2), 'size'.padEnd(length3) + ansi.bold.close)
+        const length3 = Math.max(5, ...StrategyManager.All.map(s => s.code.length.toString().length + 1))
+        const length4 = Math.max(4, ...StrategyManager.All.map(s => s.ino.toString().length + 1))
+        const length5 = Math.max(5, ...StrategyManager.All.map(s => s.path.length + 3))
+        console.log(
+            ansi.bold.open +
+            'FullName'.padEnd(length1),
+            'Legacy'.padEnd(length2),
+            'Size'.padEnd(length3),
+            'Ino'.padEnd(length4),
+            'Path'.padEnd(length5) +
+            ansi.bold.close
+        )
         StrategyManager.All.map(strategy => console.log(
             strategy.fullName.padEnd(length1), 
-            String(strategy.isLegacy).padEnd(length2), 
-            strategy.code.length.toString().padEnd(length3)
+            String(strategy.isLegacy ? ansi.color.blueBright.open + 'true   ' + ansi.color.blueBright.close : 'false').padEnd(length2), 
+            strategy.code.length.toString().padEnd(length3),
+            strategy.ino.toString().padEnd(length4),
+            `<${strategy.path}>`.padEnd(length5)
         ))
     }
 }

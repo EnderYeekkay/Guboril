@@ -13,6 +13,8 @@ import OpenFolder from './open_folder.svg.tsx'
 import Plus from './plus.svg.tsx'
 import NotifyContext from '../../../../../../Contexts/Notify/NotifyContext.ts'
 import { NotifyStyle, type NotifyOptions } from '../../../../../../Contexts/Notify/notify/notify.tsx'
+import Legacy from './legacy/legacy.tsx'
+import Restore from './restore.svg.tsx'
 
 export default function Strategies() {
     const { sendNotify } = useContext(NotifyContext)
@@ -45,7 +47,7 @@ export default function Strategies() {
         <div className={`container ${styles.strategy_controller}`}>
             <div className={styles.controller_text}>Управление стратегиями</div>
             <div className={`container ${styles.list}`}>
-                {strategies.map(strategy => <Strategy name={strategy.fullName} key={strategy.fullName}/>)}
+                {strategies.map(strategy => <Strategy strategy={strategy} key={strategy.ino + '_strategies'}/>)}
             </div>
             <div className={styles.controller_btns}>
                 <Button
@@ -67,6 +69,13 @@ export default function Strategies() {
                     tooltip='Добавить новую стратегию.'
                     addictionClasses={[styles.controller_btn]}
                     style={ButtonStyle.Success}
+                    action={() => {}}
+                    />
+                <Button
+                    label={<Restore/>}
+                    tooltip='Восстановить стратегии по умолчанию.'
+                    addictionClasses={[styles.controller_btn]}
+                    style={ButtonStyle.Danger}
                     action={() => {}}
                     />
             </div>
@@ -93,7 +102,7 @@ export default function Strategies() {
                 />
         </SettingBlock>
         <SettingBlock
-            text='GameFilter (legacy)'
+            text={(<>GameFilter<Legacy/></>)}
             description='Фильтрация всего трафика на портах от 1024 до 65536. Данный параметр влияет только на устаревшие стратегии.'
             >            
             <Checkbox

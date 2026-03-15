@@ -4,6 +4,7 @@ import { app, BrowserWindow } from 'electron'
 import SCController from './SCController.ts'
 import { checkTask } from '../actions/scheduler.ts'
 import type { StrategyFullName } from './Strategy.ts'
+import { coreDir } from './paths.ts'
 const settingsPath = path.join(app.getPath('userData'), 'settings.json')
 export const SettingsLength = 7
 
@@ -17,7 +18,7 @@ export type Settings = {
     autoUpdate:          boolean
     autoLoad:            boolean
     status:              boolean
-    selectedStrategy:    StrategyFullName | null
+    selectedStrategy:    number | null
     notifications:       boolean
     GH_TOKEN:            string
 };
@@ -44,7 +45,7 @@ export class SettingsAccessor {
                 autoLoad: true,
                 autoUpdate: false,
                 status: false,
-                selectedStrategy: 'general (SIMPLE FAKE).bat',
+                selectedStrategy: fs.statSync(path.resolve(coreDir, 'general (SIMPLE FAKE).bat')).ino,
                 notifications: true,
                 GH_TOKEN: null
             }

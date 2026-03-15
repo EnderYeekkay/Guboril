@@ -8,7 +8,9 @@ export type ChoicesSelectProps = {
 }
 export default function ChoicesSelect(props: ChoicesSelectProps) {
     const choicesRef = useRef<Choices.default>(null)
-    const { strategies, installStrategy, settings } = useContext(ZapretProvider)
+    const { strategies, strategy, installStrategy, settings } = useContext(ZapretProvider)
+
+    const lastStrategyInoRef = useRef<number>(strategy?.ino)
     const selectRef = useRef<HTMLSelectElement>(null)
 
     useEffect(() => {
@@ -25,15 +27,16 @@ export default function ChoicesSelect(props: ChoicesSelectProps) {
             choicesRef.current.destroy()
             choicesRef.current = null
         }
-    }, [settings, strategies])
+    }, [strategies])
 
     useEffect(() => {
-        if (strategies.find(s => s.fullName === settings.selectedStrategy)) {
-            choicesRef.current.setChoiceByValue(settings.selectedStrategy)
+        const newStrategy = strategy
+        if (newStrategy?.ino === lastStrategyInoRef.current) {
+            choicesRef.current.setChoiceByValue(newStrategy?.ino?.toString())
         } else {
-            choicesRef.current.setChoiceByValue(undefined)
+            lastStrategyInoRef.current = newStrategy?.ino
         }
-    }, [settings, strategies])
+    }, [strategy])
 
     
     return <select
@@ -41,12 +44,12 @@ export default function ChoicesSelect(props: ChoicesSelectProps) {
         ref={selectRef}
         name="strategy"
         id="strategy"
-        onChange={(event) => installStrategy(event.target.value)}
+        onChange={(event) => installStrategy(parseInt(event.target.value))}
     >
         {strategies.map((elem, i) => {
             return  <option
                 key={i}
-                value={elem.fullName}
+                value={elem.ino}
             >
             {elem.shortName}
             </option>

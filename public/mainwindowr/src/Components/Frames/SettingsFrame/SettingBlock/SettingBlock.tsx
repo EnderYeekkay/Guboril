@@ -3,7 +3,7 @@ import styles from './SettingBlock.module.scss'
 
 type SettingBlockProps = {
     children: React.ReactNode
-    text: string
+    text: string | React.ReactNode
     description?: string | React.ReactNode
 }
 export default function SettingBlock({ children, text, description }:SettingBlockProps) {
@@ -13,7 +13,7 @@ export default function SettingBlock({ children, text, description }:SettingBloc
     }, [])
 
     return <div ref={containerRef} className={`container ${styles.setting_block}`}>
-        <div className="base_setting_text">{text}</div>
+        <div className={styles.base_setting_text}>{text}</div>
         <div/>
         {children}
         {description && 

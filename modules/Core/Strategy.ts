@@ -6,6 +6,7 @@ import type { SpecialString } from './Core.ts'
 export type StrategyFullName = `general${string}.bat`
 import fs from 'fs'
 export interface IStrategy {
+    ino: number
     path: string
     code: string
     fullName: StrategyFullName
@@ -15,6 +16,7 @@ export interface IStrategy {
 
 export default class Strategy implements IStrategy {
     //#region Properties
+    public readonly ino: number
     public readonly path: Readonly<string>
     public readonly code: Readonly<string>
     public readonly stats: fs.Stats
@@ -46,12 +48,14 @@ export default class Strategy implements IStrategy {
         this.code = code
         this._legacy = code.includes('%GameFilter%') ? true : false
         this.path = pr(coreDir, name)
+        this.ino = fs.statSync(pr(coreDir, name)).ino
     }
     //#endregion
 
     //#region Methods
     toJSON(): IStrategy {
         return {
+            ino: this.ino,
             path: this.path,
             code: this.code,
             fullName: this.fullName,

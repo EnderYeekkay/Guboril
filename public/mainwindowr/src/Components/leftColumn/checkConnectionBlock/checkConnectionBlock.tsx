@@ -7,7 +7,7 @@ import Button, { ButtonIconSize } from '../../button/button.tsx'
 import ConnectionCheckerImage from './connectionCheckerImage/connectionCheckerImage.tsx'
 
 export default function CheckConnectionBlock() {
-    const { status, installStrategy, settings } = useContext(ZapretContext)
+    const { status, strategy } = useContext(ZapretContext)
     const [ connection, setConnection ] = useState<ConnectionCheckerResult>(null)
     const [ stringConnectionStatus, setStringConnectionStatus] = useState<StringConnectionStatus>('Нет интернета')
     const [ checking, setChecking ] = useState<boolean>(false)
@@ -37,7 +37,7 @@ export default function CheckConnectionBlock() {
         }
     }
 
-    useEffect(checkConnection, [status, settings?.selectedStrategy])
+    useEffect(checkConnection, [status, strategy])
 
     return <div className={`container ${styles.block}`}>
         <ConnectionCheckerImage
