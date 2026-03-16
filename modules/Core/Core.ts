@@ -121,9 +121,9 @@ export default abstract class Core {
         console.log()
         return(res)
     }
-    static setStrategy(strategy: number | null) {
-        this.mainWindow.webContents.send('core:strategyChanged', StrategyManager.withIno(strategy))
-        return this.#setStrategy(strategy, settings.gameFilter)
+    static setStrategy(ino: number | null) {
+        this.mainWindow.webContents.send('core:strategyChanged', StrategyManager.withIno(ino || settings.selectedStrategy))
+        return this.#setStrategy(ino, settings.gameFilter)
     }
     static setGameFilter(value: GameFilterOptions) {
         if (typeof value !== 'object') throw new CoreError(`Wrong gameFilter value: ${value}`)

@@ -30,7 +30,7 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
         }
     }, [])
 
-    const installStrategy = async (strategy: number | null): Promise<boolean> => {
+    const installStrategy = (strategy: number | null): boolean => {
         try {
             const res = core.setStrategy(strategy)
             if (typeof strategy === 'string') {
@@ -57,7 +57,7 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
             })
         }
     }
-    const setGameFilter = async (value: Partial<GameFilterOptions>): Promise<boolean> => {
+    const setGameFilter = (value: Partial<GameFilterOptions>): boolean => {
         if (value != settings.gameFilter) {
             try {
                 const res = core.setGameFilter({
