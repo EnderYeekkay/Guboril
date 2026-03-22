@@ -3,7 +3,7 @@ import path from 'path'
 import fs, { rmdirSync, rmSync } from 'fs'
 import axios from "axios"
 import {createExtractorFromData, createExtractorFromFile} from 'node-unrar-js'
-import { checkUrl, type HTTPSString } from "./ConnectionChecker.ts"
+import { checkUrl, type HTTPSString } from "./сonnectionChecker.ts"
 import { settings } from "./Settings.ts"
 import ansiStyles from "ansi-styles"
 import Core, { headerPAT } from "./Core.ts"

@@ -21,7 +21,7 @@ SetupIconFile="D:\JavaScript\zapret-gui\public\icon.ico"
 
 PrivilegesRequired=admin
 
-%compression:prod%
+%compression:dev%
 
 OutputBaseFilename=GuborilInstaller
 

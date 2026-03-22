@@ -1,5 +1,5 @@
-import { type SpecialString } from './Core.ts'
-import * as paths from'./paths.ts'
+import { type SpecialString } from '../Core.ts'
+import * as paths from'../paths.ts'
 import { sep } from 'path'
 const debug = false
 function get_gf(v: boolean): string {

@@ -2,7 +2,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { contextBridge, ipcRenderer } from 'electron';
 import pkg from '../../package.json' with { type: 'json' };
-import type { GameFilterOptions } from '../../modules/Core/strategyParser.ts';
+import type { GameFilterOptions } from '../../modules/Core/Strategies/strategyParser.ts';
 
 // Эмуляция __dirname в ES-модулях
 const __filename = fileURLToPath(import.meta.url);
@@ -58,7 +58,9 @@ contextBridge.exposeInMainWorld('core', {
   setNotifications: (notifications: boolean) => ipcRenderer.send('core:setNotifications', notifications),
   setAutoLoad: (autoLoad: boolean) => ipcRenderer.send('core:setAutoLoad', autoLoad),
   connectionChecker: () => ipcRenderer.invoke('core:connectionChecker'),
-  coreUpdater: () => ipcRenderer.invoke('core:coreUpdater')
+  coreUpdater: () => ipcRenderer.invoke('core:coreUpdater'),
+  restoreStrategies: () => ipcRenderer.invoke('core:restoreStrategies'),
+  editStrategy: (strategy) => ipcRenderer.send('core:editStrategy', strategy),
 })
 
 contextBridge.exposeInMainWorld('logger', {

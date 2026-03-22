@@ -16,7 +16,6 @@ import { debug, run_only_tray } from './modules/cli/argsParser.ts';
 import { initializeTray } from './modules/tasks/tray.ts';
 import { warpFix } from './modules/fixes/warpFix.ts';
 import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
-import ConnectionChecker from './modules/Core/ConnectionChecker.ts'
 import ansi from 'ansi-styles';
 import semver from 'semver';
 import Core from './modules/Core/Core.ts'
@@ -24,7 +23,6 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 warpFix()
-import updateStrategies from './modules/Core/CoreUpdater.ts'
 
 if (!app.requestSingleInstanceLock()) {
   app.once('ready', () => {
@@ -131,31 +129,6 @@ app.whenReady().then(async () => {
 
   if (run_only_tray) loadingWin.hide()
 
-  //////////////
-  // Core API //
-  //////////////
-  ipcMain.on('core:getStrategies', (event) => {
-    event.returnValue = Core.strategies;
-  })
-  ipcMain.on('core:getSettings', (event) => {
-    event.returnValue = Core.settings;
-  })
-  ipcMain.on('core:checkService', (event) => {
-    event.returnValue = Core.checkService();
-  })
-  ipcMain.handle('core:setStrategy', (_, strategy) => {
-    const res = Core.setStrategy(strategy)
-    if (!win.isVisible()) sendServiceOnNotify()
-    return res
-  })
-  ipcMain.handle('core:setGameFilter', (_, value) => Core.setGameFilter(value))
-  ipcMain.on('core:openCoreFolder', () => Core.openCoreFolder())
-
-  ipcMain.on('core:setAutoUpdate', (_, autoUpdate) => Core.setAutoUpdate(autoUpdate))
-  ipcMain.on('core:setNotifications', (_, notifications) => Core.setNotifications(notifications))
-  ipcMain.on('core:setAutoLoad', (_, autoLoad) => Core.setAutoLoad(autoLoad))
-  ipcMain.handle('core:connectionChecker', () => ConnectionChecker())
-  ipcMain.handle('core:coreUpdater', () => updateStrategies())
   ipcMain.handle('scheduler:createTask', () => createTask())
   ipcMain.handle('scheduler:deleteTask', () => deleteTask())
   ipcMain.handle('scheduler:checkTask', () => checkTask())

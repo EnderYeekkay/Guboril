@@ -9,11 +9,13 @@ const { color } = ansi
 import * as paths from './paths.ts'
 import hexResolve, { type HEX } from '../decor/hexToRGB.ts'
 import SCController from './SCController.ts'
-import strategyParser, {type GameFilterOptions} from './strategyParser.ts'
+import strategyParser, {type GameFilterOptions} from './Strategies/strategyParser.ts'
 import { SettingsAccessor, settings, type Settings } from './Settings.ts'
-import StrategyManager from './StrategyManager.ts'
-import type { IStrategy, StrategyFullName } from './Strategy.ts'
-import type Strategy from './Strategy.ts'
+import StrategyManager from './Strategies/StrategyManager.ts'
+import type { IStrategy, StrategyFullName } from './Strategies/Strategy.ts'
+import type Strategy from './Strategies/Strategy.ts'
+import restoreStrategies from './Strategies/restoreStrategies.ts'
+import initCoreHandlers from './CoreHandlers.ts'
 
 const ansiHex = (hex: HEX) => color.ansi16m(...hexResolve(hex))
 /** Absoulte path of some file.*/ type path = string
@@ -43,9 +45,7 @@ type CoreEmitter = EventEmitter & {
 
 export default abstract class Core {
     private static _mainWindow: BrowserWindow
-    private static _status: boolean
     public static readonly events = new EventEmitter() as CoreEmitter
-
     static get mainWindow() {
         return this._mainWindow
     }
@@ -54,7 +54,7 @@ export default abstract class Core {
         this._mainWindow = win
         SettingsAccessor.mainWindow = win
     }
-
+    
     static get settings(): Readonly<Settings> {
         return {...settings}
     }
@@ -69,26 +69,8 @@ export default abstract class Core {
             UDP: false,
             legacy: false
         }
-        const initSetStrategyString = 
-        ansiHex('#8400FF')+
-        'Core' +
-        color.close +
+        const initSetStrategyString = `${ansiHex('#8400FF')}Core${color.close}.${ansiHex('#67CCFF')}setStrategy${color.close}("${ansiHex('#ECB664')}${strategyIno}${color.close}", ${ansiHex('#ECB664')}${gameFilter}${color.close})`;
 
-        '.' +
-
-        ansiHex('#67CCFF') +
-        'setStrategy' +
-        color.close + 
-
-        '(\"' +
-        ansiHex('#ECB664') +
-        strategyIno +
-        color.close +
-        '\", ' +
-        ansiHex('#ECB664') +
-        gameFilter +
-        color.close +
-        ')';
         console.log(initSetStrategyString)
         
         if (strategyIno === null) {
@@ -121,27 +103,29 @@ export default abstract class Core {
         console.log()
         return(res)
     }
-    static setStrategy(ino: number | null) {
+    static setStrategy(ino: number | null): boolean {
         this.mainWindow.webContents.send('core:strategyChanged', StrategyManager.withIno(ino || settings.selectedStrategy))
         return this.#setStrategy(ino, settings.gameFilter)
     }
-    static setGameFilter(value: GameFilterOptions) {
+    static setGameFilter(value: GameFilterOptions): boolean {
         if (typeof value !== 'object') throw new CoreError(`Wrong gameFilter value: ${value}`)
         return this.#setStrategy(settings.selectedStrategy, value)
     }
 
-    static openCoreFolder() {
+    static openCoreFolder(): void {
         shell.showItemInFolder(paths.coreDir);
     }
-
-    static setAutoUpdate(autoUpdate: boolean) {
+    static async restoreStrategies(): Promise<0 | 1 | 2> {
+        return restoreStrategies()
+    }
+    static setAutoUpdate(autoUpdate: boolean): void {
         settings.autoUpdate = autoUpdate
     }
 
-    static setNotifications(notifications: boolean) {
+    static setNotifications(notifications: boolean): void {
         settings.notifications = notifications
     }
-    static setAutoLoad(autoLoad: boolean) {
+    static setAutoLoad(autoLoad: boolean): void {
         settings.autoLoad = autoLoad
     }
 }
@@ -171,3 +155,5 @@ StrategyManager.events.on('cache_change', (strategy: Strategy) => {
 StrategyManager.events.on('cache_unlink', () => {
     Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
 })
+
+initCoreHandlers()

@@ -21,6 +21,7 @@ export default function Strategies() {
     const { settings, setGameFilter } = useContext(ZapretContext)
     const { sendModal } = useContext(ModalContext)
     const { strategies } = useContext(ZapretContext)
+
     const update = async () => {
         const modalRes = await sendModal({
             title: 'Обновить стратегии из удалённого репозитория?',
@@ -76,7 +77,43 @@ export default function Strategies() {
                     tooltip='Восстановить стратегии по умолчанию.'
                     addictionClasses={[styles.controller_btn]}
                     style={ButtonStyle.Danger}
-                    action={() => {}}
+                    action={ async () => {
+                        const res = await sendModal({
+                            title: 'Восстановить стратегии по умолчанию?',
+                            description: <div className={styles.modal_description}>
+                                <div><b>ВНИМАНИЕ!</b> Если вы сделаете это, то безвозвратно потеряете все изменения, внесённые вами в стандартные стратегии!</div>
+                                <div>Вы уверены, что хотите продолжить?</div>
+                            </div>,
+                            submitStyle: ButtonStyle.SilentDanger,
+                            cancelStyle: ButtonStyle.Secondary
+                        })
+                        if (!res) return
+                        const status = await core.restoreStrategies()
+                        switch (status) {
+                            case 0:
+                                sendNotify({
+                                    title: 'Стратегии успешно восстановлены!',
+                                    style: NotifyStyle.Success,
+                                    expiring: true
+                                })
+                            break
+                            case 1:
+                                sendNotify({
+                                    title: 'Часть стратегий не было восстановлено!',
+                                    description: 'Попробуйте закрыть программы, в которых стратегии открыты.',
+                                    style: NotifyStyle.Warning,
+                                    expiring: true
+                                })
+                            break
+                            case 2: 
+                                sendNotify({
+                                    title: 'Не удалось восстановить стратегии!',
+                                    description: 'Попробуйте закрыть программы, в которых стратегии открыты.',
+                                    style: NotifyStyle.Error,
+                                    expiring: true
+                                })
+                        }
+                    }}
                     />
             </div>
         </div>

@@ -3,7 +3,7 @@ import { type SpawnSyncOptionsWithStringEncoding } from 'node:child_process'
 import * as paths from './paths.ts'
 import iconv from 'iconv-lite'
 import { error, log } from 'node:console'
-import type { GameFilterOptions, parsedStrategy } from './strategyParser.ts'
+import type { GameFilterOptions, parsedStrategy } from './Strategies/strategyParser.ts'
 import { type SpecialString } from './Core.ts'
 
 const debug = false
@@ -28,8 +28,8 @@ const options: Partial<SpawnSyncOptionsWithStringEncoding> = {
     //@ts-ignore
     encoding: 'buffer'
 }
-const SCController = { 
-    start(params: SpecialString<parsedStrategy>, strategyTitle: string, gameFilterTitle: GameFilterOptions): boolean {
+export default abstract class SCController { 
+    static start(params: SpecialString<parsedStrategy>, strategyTitle: string, gameFilterTitle: GameFilterOptions): boolean {
         SCController.delete()
         const exePath = `${paths.binPath}\\winws.exe`
         const binPathValue = `"${exePath}"  ${params}`;
@@ -59,14 +59,14 @@ const SCController = {
         if (debug) console.log('status:', startRes.status)
 
         return startRes.status === 0
-    },
+    }
 
-    checkService(): boolean {
+    static checkService(): boolean {
         const res = spawnSync('sc', ['query', 'GuborilCore'])
         sendNotify(res.status as ScCode)
         return res.status === 0
-    },
-    stop(): boolean {
+    }
+    static stop(): boolean {
         // 1. Отправляем команду на остановку
         const res = spawnSync('sc', ['stop', 'GuborilCore'], options);
         
@@ -100,8 +100,8 @@ const SCController = {
 
         console.error('Превышено время ожидания остановки службы');
         return false;
-    },
-    delete(): boolean {
+    }
+    static delete(): boolean {
         SCController.stop()
         const res = spawnSync('sc', ['delete', 'GuborilCore'])
         sendNotify(res.status as ScCode)
@@ -121,8 +121,8 @@ const SCController = {
             attempts++;
         }
         return res.status === 0
-    },
-    enableTimestampsTCP() {
+    }
+    static enableTimestampsTCP() {
         const check = spawnSync('netsh', ['interface', 'tcp', 'show', 'global'], options);
         const output = check.stdout?.toString() || '';
         
@@ -207,4 +207,3 @@ function getScErrorInfo(code: ScCode): ScResult {
 }
 
 SCController.enableTimestampsTCP()
-export default SCController

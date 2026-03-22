@@ -3,7 +3,7 @@ import path from 'path'
 import { app, BrowserWindow } from 'electron'
 import SCController from './SCController.ts'
 import { checkTask } from '../actions/scheduler.ts'
-import type { StrategyFullName } from './Strategy.ts'
+import type { StrategyFullName } from './Strategies/Strategy.ts'
 import { coreDir } from './paths.ts'
 const settingsPath = path.join(app.getPath('userData'), 'settings.json')
 export const SettingsLength = 7

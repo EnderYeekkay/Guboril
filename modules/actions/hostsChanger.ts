@@ -1,6 +1,6 @@
 import fs from 'fs'
 const url = 'https://raw.githubusercontent.com/Flowseal/zapret-discord-youtube/refs/heads/main/.service/hosts'
-import { checkInternet, checkUrl } from '../Core/ConnectionChecker.ts'
+import { checkInternet, checkUrl } from '../Core/сonnectionChecker.ts'
 import path from 'path';
 import { windowsPath } from '../Core/paths.ts'
 import { exec, execSync } from 'child_process';

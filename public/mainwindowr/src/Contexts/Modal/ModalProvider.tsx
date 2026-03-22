@@ -5,7 +5,7 @@ import Button, { ButtonStyle } from "../../Components/button/button.tsx";
 import BlackScreen from "../../Components/blackScreen/blackScreen.tsx";
 export interface ModalOptions {
     title: string
-    description?: string | React.ReactNode
+    description?: string | React.ReactNode | React.ReactNode[]
     actionRow?: React.ReactNode[]
 
     onSubmit?: () => void

@@ -2,8 +2,8 @@ import { ReactNode, useState, createContext, useEffect, useRef, useContext } fro
 import { Settings } from "../../../../../modules/Core/Settings.ts";
 import NotifyContext from "../Notify/NotifyContext.ts";
 import { NotifyStyle } from "../Notify/notify/notify.tsx";
-import type { GameFilterOptions } from "../../../../../modules/Core/strategyParser.ts";
-import type { IStrategy } from "../../../../../modules/Core/Strategy.ts";
+import type { GameFilterOptions } from "../../../../../modules/Core/Strategies/strategyParser.ts";
+import type { IStrategy } from "../../../../../modules/Core/Strategies/Strategy.ts";
 
 const ZapretContext = createContext<ZapretCondition | null>(null)
 export default ZapretContext
@@ -33,10 +33,10 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
     const installStrategy = (strategy: number | null): boolean => {
         try {
             const res = core.setStrategy(strategy)
-            if (typeof strategy === 'string') {
+            if (typeof strategy === 'number') {
                 sendNotify({
                     title: `Сервис успешно запущен!`,
-                    description: `Стратегия: ${strategy}`,
+                    description: `Стратегия: ${strategies.find(s => s.ino === strategy).fullName}`,
                     expiring: true,
                     style: NotifyStyle.Success
                 })

@@ -2,7 +2,7 @@ import fs from 'fs'
 import { resolve as pr, basename } from 'path'
 import Chokidar, { FSWatcher } from 'chokidar'
 
-import { coreDir } from './paths.ts'
+import { coreDir } from '../paths.ts'
 import Strategy, { type StrategyFullName, type IStrategy } from "./Strategy.ts"
 import { EventEmitter } from 'node:events'
 import ansi from 'ansi-styles'

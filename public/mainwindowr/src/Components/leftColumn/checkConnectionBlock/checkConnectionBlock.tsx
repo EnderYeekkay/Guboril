@@ -2,7 +2,7 @@ import styles from './CheckConnectionBlock.module.scss'
 import ConnectionChecker from './connectionChecker/connectionChecker.tsx'
 import { useContext, useEffect, useRef, useState } from 'react'
 import ZapretContext from '../../../Contexts/Zapret/ZapretProvider.tsx'
-import { type ConnectionCheckerResult } from '../../../../../../modules/Core/ConnectionChecker.ts'
+import { type ConnectionCheckerResult } from '../../../../../../modules/Core/сonnectionChecker.ts'
 import Button, { ButtonIconSize } from '../../button/button.tsx'
 import ConnectionCheckerImage from './connectionCheckerImage/connectionCheckerImage.tsx'
 

@@ -25,7 +25,7 @@
       "windows": {
         "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
       },
-      "args": [".", "--remote-debugging-port=9222", "-i"],
+      "args": [".", "--remote-debugging-port=9222", "-i", "--stack-size=1000000000"],
       "env": {
         "VITE_DEV_SERVER_URL": "http://localhost:5173"
       },

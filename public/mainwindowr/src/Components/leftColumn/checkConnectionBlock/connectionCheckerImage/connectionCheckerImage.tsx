@@ -1,5 +1,5 @@
 import styles from './connectionCheckerImage.module.scss'
-import { type ConnectionCheckerResult } from '../../../../../../../modules/Core/ConnectionChecker.ts'
+import { type ConnectionCheckerResult } from '../../../../../../../modules/Core/сonnectionChecker.ts'
 
 import good from './assets/good.svg'
 import unstable from './assets/unstable.svg'

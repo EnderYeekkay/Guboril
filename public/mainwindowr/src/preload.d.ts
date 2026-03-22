@@ -1,9 +1,9 @@
-import { ConnectionCheckerResult } from '../../../modules/Core/ConnectionChecker.ts'
+import { ConnectionCheckerResult } from '../../../modules/Core/сonnectionChecker.ts'
 import { Settings } from '../../../modules/Core/Settings.ts'
 import { IpcRendererEvent } from 'electron'
-import type { GameFilterOptions } from '../../../modules/Core/strategyParser.ts'
+import type { GameFilterOptions } from '../../../modules/Core/Strategies/strategyParser.ts'
 import type { updateStrategiesResult } from '../../../modules/Core/CoreUpdater.ts'
-import type { IStrategy } from '../../../modules/Core/Strategy.ts'
+import type { IStrategy } from '../../../modules/Core/Strategies/Strategy.ts'
 declare global {
   const mw: { 
     version: string
@@ -52,6 +52,8 @@ declare global {
     setAutoLoad: (autoLoad: boolean) => Promise<void>
     connectionChecker: () => Promise<ConnectionCheckerResult>
     coreUpdater: () => Promise<updateStrategiesResult[]>
+    restoreStrategies: () => Promise<0 | 1 | 2>
+    editStrategy: (strategy: IStrategy) => Promise<void>
   }
 
   const logger: {

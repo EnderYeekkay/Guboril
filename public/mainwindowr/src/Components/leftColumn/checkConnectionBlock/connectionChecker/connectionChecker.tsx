@@ -1,7 +1,7 @@
 import { Ref } from 'react'
 import './ConnectionChecker.scss'
 import Dcloader from '../../../button/dcloader/dcloader.tsx'
-import { type ConnectionCheckerResult } from '../../../../../../../modules/Core/ConnectionChecker.ts'
+import { type ConnectionCheckerResult } from '../../../../../../../modules/Core/сonnectionChecker.ts'
 import { StringConnectionStatus } from '../checkConnectionBlock.tsx'
 
 interface ConnectionCheckerProps {
