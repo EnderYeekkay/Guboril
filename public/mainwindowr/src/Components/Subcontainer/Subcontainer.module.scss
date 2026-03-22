@@ -1,3 +1,37 @@
+@mixin flex-column($ai: align-items) {
+    display: flex;
+    flex-direction: column;
+    align-items: $ai;
+}
 .block {
-    
+    grid-area: b;
+
+    @include flex-column(start);
+
+    gap: 10px;
+    padding: 10px !important;
+    margin: 0 !important;
+
+
+    // color: var(--color_common);
+    font-weight: 300;
+    background-color: var(--cm_bg) !important;
+    overflow-y: scroll;
+    border: 1px solid var(--cm_border) !important;
+    &::-webkit-scrollbar-track {
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        background: var(--cm_bg);
+    }
+    &::-webkit-scrollbar {
+        background: transparent;        
+    }
+    &::-webkit-scrollbar-thumb {
+        border: 2px solid transparent;
+        background-clip: padding-box;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        border: 2px solid transparent;
+        background-clip: padding-box;
+    }
 }

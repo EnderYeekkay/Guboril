@@ -15,6 +15,7 @@ import NotifyContext from '../../../../../../Contexts/Notify/NotifyContext.ts'
 import { NotifyStyle, type NotifyOptions } from '../../../../../../Contexts/Notify/notify/notify.tsx'
 import Legacy from './legacy/legacy.tsx'
 import Restore from './restore.svg.tsx'
+import Subcontainer from '../../../../../Subcontainer/Subcontainer.tsx'
 
 export default function Strategies() {
     const { sendNotify } = useContext(NotifyContext)
@@ -47,9 +48,9 @@ export default function Strategies() {
     return <div className={styles.block}>
         <div className={`container ${styles.strategy_controller}`}>
             <div className={styles.controller_text}>Управление стратегиями</div>
-            <div className={`container ${styles.list}`}>
+            <Subcontainer>
                 {strategies.map(strategy => <Strategy strategy={strategy} key={strategy.ino + '_strategies'}/>)}
-            </div>
+            </Subcontainer>
             <div className={styles.controller_btns}>
                 <Button
                     label={<Download/>}
