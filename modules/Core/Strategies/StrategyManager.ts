@@ -21,7 +21,9 @@ type StrategyManagerEmitter = EventEmitter & {
     once<K extends keyof StrategyManagerEvents>(event: K, listener: (...args: EventArg<StrategyManagerEvents[K]>) => void): void
 }
 
-export default abstract class StrategyManager {
+export default class StrategyManager {
+    private constructor() {}
+
     public static readonly events = new EventEmitter() as StrategyManagerEmitter
     public static readonly watcher: FSWatcher = Chokidar.watch(coreDir, {
         ignoreInitial: true,

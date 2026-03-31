@@ -44,13 +44,17 @@ export default function(str: string, game_filter: GameFilterOptions): SpecialStr
         arr[i] = val
             .replace(/\^$/, '')
             .replaceAll('=', ' ')
-            .replaceAll('%GameFilter%', get_gf(game_filter.legacy))
-            .replaceAll('%GameFilterTCP%', get_gf(game_filter.TCP))
-            .replaceAll('%GameFilterUDP%', get_gf(game_filter.UDP))
-            .replaceAll('%LISTS%', paths.listsPath + sep)
-            .replaceAll('%BIN%', paths.binPath + sep)
+
     })
     lines = lines.map(val => val.trim())
-    let res = lines.join(' ')
+    
+    let res = lines
+    .join(' ')
+    .replaceAll('%GameFilter%', get_gf(game_filter.legacy))
+    .replaceAll('%GameFilterTCP%', get_gf(game_filter.TCP))
+    .replaceAll('%GameFilterUDP%', get_gf(game_filter.UDP))
+    .replaceAll('%LISTS%', paths.listsPath + sep)
+    .replaceAll('%BIN%', paths.binPath + sep)
+
     return res as SpecialString<parsedStrategy>
 }

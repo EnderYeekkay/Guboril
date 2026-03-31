@@ -16,6 +16,8 @@ import IconInstruments from "./Tab/TabsContent/instruments/icon.svg.tsx";
 import IconIpset from "./Tab/TabsContent/ipset/icon.svg.tsx";
 import IconDebug from "./Tab/TabsContent/debug/icon.svg.tsx";
 import Strategies from "./Tab/TabsContent/strategies/strategies.tsx";
+import Ipset from "./Tab/TabsContent/ipset/ipset.tsx";
+import Debug from "./Tab/TabsContent/debug/debug.tsx";
 
 export default function SettingsFrame() {
     type AllowedTabs = 'general' | 'ipset' | 'strategies'| 'instruments' | 'debug';
@@ -36,8 +38,8 @@ export default function SettingsFrame() {
                             }}
                         />
                         <Separator/>
-                        <Tab<AllowedTabs> description="Основные" tabName="general" icon={<IconGeneral/>} autoFocus={true}/>
-                        <Tab<AllowedTabs> description="Ipset" tabName="ipset" icon={<IconIpset/>}/>
+                        <Tab<AllowedTabs> description="Фильтр Host" tabName="general" icon={<IconGeneral/>} autoFocus={true}/>
+                        <Tab<AllowedTabs> description="Фильтр IP" tabName="ipset" icon={<IconIpset/>}/>
                         <Tab<AllowedTabs> description="Стратегии" tabName="strategies" icon={<IconStrategies/>}/>
                         <Tab<AllowedTabs> description="Инструменты" tabName="instruments" icon={<IconInstruments/>}/>
                         <Tab<AllowedTabs> description="Отладка" tabName="debug" icon={<IconDebug/>}/>
@@ -48,7 +50,7 @@ export default function SettingsFrame() {
                             <General/>
                         </TabPanel>
                         <TabPanel<AllowedTabs> tabName="ipset">
-                            <p>IPSET</p>
+                            <Ipset/>
                         </TabPanel>
                         <TabPanel<AllowedTabs> tabName="strategies">
                             <Strategies/>
@@ -57,7 +59,7 @@ export default function SettingsFrame() {
                             <p>Инструменты</p>
                         </TabPanel>
                         <TabPanel<AllowedTabs> tabName="debug">
-                            <p>Отладка</p>
+                            <Debug/>
                         </TabPanel>
                     </div>
                 </div>

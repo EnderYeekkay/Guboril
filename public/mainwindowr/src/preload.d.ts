@@ -47,6 +47,7 @@ declare global {
     setStrategy: (strategy: number) => boolean
     setGameFilter: (value: GameFilterOptions) => boolean
     openCoreFolder: () => Promise<true>
+    openAppData: () => Promise<void>
     setAutoUpdate: (autoUpdate: boolean) => Promise<void>
     setNotifications: (notifications: boolean) => Promise<void>
     setAutoLoad: (autoLoad: boolean) => Promise<void>

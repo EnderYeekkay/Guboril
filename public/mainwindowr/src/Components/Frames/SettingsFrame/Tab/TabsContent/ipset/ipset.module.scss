@@ -1,0 +1,37 @@
+$p: 20px;
+$p2: $p * 2;
+@mixin flex-column($ai: align-items) {
+    display: flex;
+    flex-direction: column;
+    align-items: $ai;
+}
+
+.block {
+    width: calc(100% - $p2);
+    height: calc(100% - $p2);
+    gap: 10px;
+    display: grid;
+    grid-template-areas: 
+    "a a"
+    "b c"
+    ;
+    grid-template-rows: max-content;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    padding: $p;
+    // overflow-y: scroll;
+}
+
+.mode_switch_block {
+    grid-area: a;
+}
+
+.list_block {
+    margin: 0 !important;
+}
+.hostlists {
+    grid-area: b;
+}
+.ipset {
+    grid-area: c;
+}

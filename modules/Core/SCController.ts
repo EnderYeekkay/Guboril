@@ -28,7 +28,8 @@ const options: Partial<SpawnSyncOptionsWithStringEncoding> = {
     //@ts-ignore
     encoding: 'buffer'
 }
-export default abstract class SCController { 
+export default class SCController { 
+    private constructor() {}
     static start(params: SpecialString<parsedStrategy>, strategyTitle: string, gameFilterTitle: GameFilterOptions): boolean {
         SCController.delete()
         const exePath = `${paths.binPath}\\winws.exe`

@@ -4,9 +4,14 @@ import Choices, { type ClassNames } from 'choices.js'
 
 type UUID = `${string}-${string}-${string}-${string}-${string}`
 
-export interface ChoicesBaseProps {
+interface StrictChangeEvent<T extends string = string> extends ChangeEvent<HTMLSelectElement> {
+  target: HTMLSelectElement & {
+    value: T;
+  };
+}
+export interface ChoicesBaseProps<T extends string = string> {
     disabled?: boolean
-    onChange: (event: ChangeEvent<HTMLSelectElement>) => any
+    onChange: (event: StrictChangeEvent<T>) => any
     choicesOptions?: Partial<Omit<Choices.Options, 'classNames'>>
     choicesClasses?: Partial<Choices.ClassNames>
     children: React.ReactElement<HTMLOptionElement>[]
@@ -15,7 +20,7 @@ export interface ChoicesBaseProps {
     choicesRef?: RefObject<Choices.default>
 }
 
-export default function ChoicesBase({ disabled, onChange, choicesOptions, choicesClasses , children }: ChoicesBaseProps) {
+export default function ChoicesBase<T extends string = string>({ disabled, onChange, choicesOptions, choicesClasses , children }: ChoicesBaseProps<T>) {
     const selectRef = useRef<HTMLSelectElement>(null)
     const choicesRef = useRef<Choices.default>(null)
     const UUIDRef = useRef<UUID>(crypto.randomUUID())

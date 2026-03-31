@@ -53,6 +53,7 @@ contextBridge.exposeInMainWorld('core', {
   setStrategy: (strategy: string) => ipcRenderer.invoke('core:setStrategy', strategy),
   setGameFilter: (value: GameFilterOptions) => ipcRenderer.invoke('core:setGameFilter', value),
   openCoreFolder: () => ipcRenderer.send('core:openCoreFolder'),
+  openAppData: () => ipcRenderer.send('core:openAppData'),  
   checkService: () => ipcRenderer.sendSync('core:checkService'),
   setAutoUpdate: (autoUpdate: boolean) => ipcRenderer.send('core:setAutoUpdate', autoUpdate),
   setNotifications: (notifications: boolean) => ipcRenderer.send('core:setNotifications', notifications),

@@ -64,7 +64,7 @@ export default function Strategies() {
                     tooltip='Открыть папку со стратегиями.'
                     addictionClasses={[styles.controller_btn]}
                     style={ButtonStyle.Link}
-                    action={() => core.openCoreFolder()}
+                    action={core.openCoreFolder}
                     />
                 <Button
                     label={<Plus/>}
