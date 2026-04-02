@@ -3,7 +3,7 @@ import Core from '../Core/Core.ts';
 function isNotificationsAllowed() {
     return Core.settings.notifications
 }
-export function sendServiceOnNotify(strategy: string) {
+export function sendServiceOnNotify(strategy?: string) {
     if (!isNotificationsAllowed()) return
     new Notification({ title: `Сервис (${strategy}) включён!`, silent: true}).show()
 }

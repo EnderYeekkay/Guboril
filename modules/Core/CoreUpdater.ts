@@ -22,7 +22,7 @@ export async function updateStrategy(repo: HTTPSString, filesFilter: RegExp): Pr
     try {
         if (fs.existsSync(tempRarPath)) fs.rmSync(tempRarPath, {force: true})
         if (fs.existsSync(tempDir)) fs.rmdirSync(tempDir, {recursive: true})
-    } catch (e) {
+    } catch (e: any) {
         console.error(e.stack)
         clearTemp()
         return {ok: false, text: 'Произошла ошибка при очистке старого кэша загрузок, попробуйте закрыть папку temp или перезагрузить ПК.'}
@@ -32,7 +32,7 @@ export async function updateStrategy(repo: HTTPSString, filesFilter: RegExp): Pr
     const latestRelease = await axios.get(repo + '/releases/latest', {
         headers: headerPAT
     })
-    const rarAsset = latestRelease.data.assets.find(asset => asset.name.endsWith('.rar'))
+    const rarAsset = latestRelease.data.assets.find((asset: any) => asset.name.endsWith('.rar'))
     if (!rarAsset) return {ok: false, text: 'Не найдено .rar архива в последнем релизе. Попробуйте позднее или обновите Guboril.'}
 
     // Writing files to local temp archive
@@ -56,7 +56,7 @@ export async function updateStrategy(repo: HTTPSString, filesFilter: RegExp): Pr
             resolve()
         })
         await promise
-    } catch (e) {
+    } catch (e: any) {
         console.error(e.stack)
         clearTemp()
         return {ok: false, text: 'Произошла ошибка при скачивании архива, проверьте ваше интернет соединение или попробуйте ещё раз.'}
@@ -68,10 +68,10 @@ export async function updateStrategy(repo: HTTPSString, filesFilter: RegExp): Pr
         const extracted = extractor.extract()
         for (const file of extracted.files) {
             if (filesFilter.test(file.fileHeader.name)) {
-                fs.writeFileSync(path.resolve(tempDir, file.fileHeader.name), file.extraction)
+                fs.writeFileSync(path.resolve(tempDir, file.fileHeader.name), file.extraction as unknown as string)
             }
         }
-    } catch (e) {
+    } catch (e: any) {
         console.error(e.stack)
         clearTemp()
         return {ok: false, text: 'Произошла ошибка при разархивировании файла, попробуйте закрыть папку temp или перезагрузить ПК.'}
@@ -89,7 +89,7 @@ export async function updateStrategy(repo: HTTPSString, filesFilter: RegExp): Pr
                 { recursive: true, force: true }
             )
         }
-    } catch (e) {
+    } catch (e: any) {
         console.error(e.stack)
         clearTemp()
         return {ok: false, text: 'Произошла ошибка при замене файлов файлов в ядре, попробуйте отключить сервис вручную или закрыть папку Guboril'}

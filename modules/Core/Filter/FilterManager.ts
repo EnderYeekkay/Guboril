@@ -1,6 +1,10 @@
-import { Filter, SwitchableFilter } from "./Filter.ts"
+import fs from 'fs'
+
+import { Filter } from "./Filter.ts"
+import { SwitchableFilter } from './SwitchableFilter.ts'
 
 export type IpsetAllType = 'none' | 'all' | 'loaded'
+
 export default class FilterManager {
     private constructor() { }
     public static IpsetAll: SwitchableFilter<IpsetAllType>
@@ -10,16 +14,16 @@ export default class FilterManager {
     public static ListExclude: Filter
 
     static init() {
-        FilterManager.IpsetAll = new SwitchableFilter<IpsetAllType>('ipset', 'all', (newMode) => {
+        FilterManager.IpsetAll = new SwitchableFilter<IpsetAllType>('ipset', 'all', (newMode, _, filter) => {
             switch (newMode) {
                 case 'all':
-                    
+                    fs.writeFileSync(filter.pathTxt, '')
                     break;
                 case 'loaded':
-                
+                    fs.writeFileSync(filter.pathTxt, filter.config.list.join('\n'))
                     break;
                 case 'none': 
-
+                    fs.writeFileSync(filter.pathTxt, '203.0.113.113/32')
                     break;
                 default:
                     throw new FilterManagerError(`Wrong new mode given: ${newMode}`)
@@ -28,7 +32,7 @@ export default class FilterManager {
         FilterManager.IpsetExclude = new Filter('ipset', 'exclude')
 
         FilterManager.ListGeneral = new Filter('list', 'general')
-        FilterManager.IpsetExclude = new Filter('list', 'exclude')
+        FilterManager.ListExclude = new Filter('list', 'exclude')
     }
 }
 FilterManager.init()

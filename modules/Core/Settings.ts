@@ -20,7 +20,7 @@ export type Settings = {
     status:              boolean
     selectedStrategy:    number | null
     notifications:       boolean
-    GH_TOKEN:            string
+    GH_TOKEN:            string | null
 };
 let cachedSettings: Settings
 let writingQueue = Promise.resolve();
@@ -72,17 +72,17 @@ export class SettingsAccessor {
 }
 const settingsAccessor = new SettingsAccessor()
 const settings = new Proxy({}, {
-    get(_, key) {
+    get(_, key: keyof Settings) {
         return (settingsAccessor.settings)[key];
     },
-    set(_, key, value) {
+    set(_, key: keyof Settings, value) {
         settingsAccessor.settings = { [key]: value };
         return true;
     },
     ownKeys() {
         return Reflect.ownKeys(cachedSettings)
     },
-    getOwnPropertyDescriptor(_, prop) {
+    getOwnPropertyDescriptor(_, prop: keyof Settings) {
         return {
             enumerable: true,
             configurable: true

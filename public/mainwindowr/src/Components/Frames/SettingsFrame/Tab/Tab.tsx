@@ -25,7 +25,7 @@ export function Tab<T extends string>({ icon, description, tabName, autoFocus }:
             action={() => {
                 document.querySelectorAll('.btn_tab_selector.is-active')
                     .forEach(elem => elem.classList.remove('is-active'))
-                btnRef.current.classList.add('is-active')
+                btnRef.current!.classList.add('is-active')
                 setTab(tabName)
             }}
         />

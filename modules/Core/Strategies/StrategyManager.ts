@@ -41,7 +41,7 @@ export default class StrategyManager {
         return this.cachedStrategies.map(s => s.toJSON())
     }
     public static init() {
-        this.cachedStrategies = fs.readdirSync(coreDir)
+        this.cachedStrategies = (fs.readdirSync(coreDir) as StrategyFullName[])
         .filter(val => val.match(Strategy.regex))
         .map((val: StrategyFullName) => Strategy.from(val, fs.readFileSync(pr(coreDir, val)).toString()))
 
@@ -88,14 +88,14 @@ export default class StrategyManager {
             logStrategiesList()
         })
     }
-    public static withName(name: StrategyFullName): Strategy | null {
-        let res: Strategy = null
+    public static withName(name: StrategyFullName): Strategy | undefined {
+        let res: Strategy | undefined
         res = this.cachedStrategies.find(strategy => strategy.fullName === name)
         if (res === null) console.warn('No strategy in cache with name:', name)
         return res
     }
-    public static withIno(ino: number): Strategy | null {
-        let res: Strategy = null
+    public static withIno(ino: number | null | undefined): Strategy | undefined {
+        let res: Strategy | undefined
         res = this.cachedStrategies.find(strategy => strategy.ino === ino)
         if (res === null) console.warn('No strategy in cache with ino:', ino)
         return res

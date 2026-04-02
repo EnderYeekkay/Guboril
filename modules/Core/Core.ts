@@ -63,7 +63,7 @@ export default abstract class Core {
         return StrategyManager.All.map(val => val.toJSON())
     }
     static checkService = () => SCController.checkService()
-    static #setStrategy(strategyIno: number | null, gameFilter: GameFilterOptions = null) {
+    static #setStrategy(strategyIno: number | null, gameFilter: GameFilterOptions | null = null) {
         if (gameFilter === null) gameFilter = {
             TCP: false,
             UDP: false,

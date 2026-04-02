@@ -19,7 +19,6 @@ export default class Strategy implements IStrategy {
     public readonly ino: number
     public readonly path: Readonly<string>
     public readonly code: Readonly<string>
-    public readonly stats: fs.Stats
     public static readonly regex: RegExp = /^general(.*)\.bat$/
 
     private readonly _name: StrategyFullName
@@ -34,7 +33,7 @@ export default class Strategy implements IStrategy {
      */
     get shortName(): string {
         if (this._name === 'general.bat') return 'general'
-        return this._name.match(Strategy.regex)[1].replace('(', '').replace(')', '')
+        return this._name.match(Strategy.regex)![1].replace('(', '').replace(')', '')
     }
 
     private readonly _legacy: boolean

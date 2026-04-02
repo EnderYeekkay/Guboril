@@ -9,7 +9,7 @@ export enum IpsetValue {
     None = 'None'
 }
 export default function Ipset() {
-    const [IpsetState, setIpsetState] = useState<keyof typeof IpsetValue>(null)
+    const [IpsetState, setIpsetState] = useState<keyof typeof IpsetValue>(IpsetValue.None)
     return <div className={`${styles.block}`}>
 		<SettingBlock addictionClasses={[styles.mode_switch_block]} text='Режим фильтрации по IP'>
             <ChoicesBase<IpsetValue> onChange={(event) => {

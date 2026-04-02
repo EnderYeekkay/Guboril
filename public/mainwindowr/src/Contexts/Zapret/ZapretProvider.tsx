@@ -5,7 +5,7 @@ import { NotifyStyle } from "../Notify/notify/notify.tsx";
 import type { GameFilterOptions } from "../../../../../modules/Core/Strategies/strategyParser.ts";
 import type { IStrategy } from "../../../../../modules/Core/Strategies/Strategy.ts";
 
-const ZapretContext = createContext<ZapretCondition | null>(null)
+const ZapretContext = createContext<ZapretCondition | null>(null) as React.Context<ZapretCondition>
 export default ZapretContext
 let debug = false
 
@@ -15,7 +15,7 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
     const [status, setStatus] = useState<boolean>(core.checkService());
     const [strategies, setStrategies] = useState<IStrategy[]>(core.getStrategies())
     const [settings, setSettings] = useState<Settings>(core.getSettings())
-    const [strategy, setStrategy] = useState<IStrategy>(core.getStrategies().find(s => s.ino === settings.selectedStrategy))
+    const [strategy, setStrategy] = useState<IStrategy>(core.getStrategies().find(s => s.ino === settings.selectedStrategy) as IStrategy)
     useEffect(() => {
         core.settingsChanged((settings) => {
             setSettings(settings)
@@ -36,7 +36,7 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
             if (typeof strategy === 'number') {
                 sendNotify({
                     title: `Сервис успешно запущен!`,
-                    description: `Стратегия: ${strategies.find(s => s.ino === strategy).fullName}`,
+                    description: `Стратегия: ${(strategies.find(s => s.ino === strategy) as IStrategy).fullName}`,
                     expiring: true,
                     style: NotifyStyle.Success
                 })
@@ -55,6 +55,7 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
                 description: 'Возникла проблема при попытке запустить ядро. Попробуйте ещё раз или перезапустите Guboril.',
                 style: NotifyStyle.Error
             })
+            return false
         }
     }
     const setGameFilter = (value: Partial<GameFilterOptions>): boolean => {
@@ -71,11 +72,13 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
                     title: 'Не удалось изменить GameFilter',
                     description: 'Попробуйте перезапустить ядро или Guboril.'
                 })
+                return false
             }
         }
         else {
             console.warn("Changing game filter request was rejected!")
             console.trace()
+            return false
         }
     }
 

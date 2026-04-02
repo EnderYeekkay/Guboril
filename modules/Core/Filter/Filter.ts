@@ -4,61 +4,86 @@ import { resolve as pr } from 'path'
 import { coreDir } from '../paths.ts'
 const userDataPath = app.getPath('userData')
 
-type FilterType = 'list' | 'ipset'
-interface FilterConfig {
+export type FilterType = 'list' | 'ipset'
+
+/**
+ * Represents data format in `.gfilter` file.
+ */
+export interface IFilterConfig {
     list: string[]
 }
 
-export interface IFilter {
-    name: string
-    type: FilterType
-    path: string
-    config: FilterConfig
+/**
+ * Represents JSON-like data of Filter.
+ */
+export interface IFilterData {
+    name:       string
+    type:       FilterType
+    pathConfig: string
+    pathTxt:    string
+    config:     IFilterConfig
 }
 
+/**
+ * Represents `Filter` class with all its methods. 
+ */
+export interface IFilter extends IFilterData {
+    /** Get formatted data to send through IPC */ toJSON: () => IFilterData
+    /** Restore config from `backup/lists` */     restoreConfig: () => boolean
+}
+
+/**
+ * Represent basic `Filter` entity. It's able to:
+ * * Read data from `.gfilter` and write it in `config` property
+ * * Convert its data to `IFilterData` format 
+ * * Restore config from `backup/lists`
+ */
 export class Filter implements IFilter {
-    public readonly type: FilterType
-    public readonly name: string
-    public readonly path: string
-    public readonly regex: RegExp
-    public readonly config: FilterConfig
-    public static readonly РСЋРЅРРСЊ = void (NaN**-NaN)
+    readonly type: FilterType
+    readonly name: string
+    // readonly regex: RegExp
+
+    readonly fileName:`${string}-${string}.txt`
+    readonly pathConfig: string
+    readonly pathTxt: string
+    config!: IFilterConfig
+    static readonly РРёРРРёСРµСЂРёРЅРіСРѕРЅ = void (NaN**-NaN)
 
     constructor (type: FilterType, name: string) {
         this.type = type
         this.name = name
-        this.path = pr(userDataPath, `${type}-${name}.gfilter`)
+        this.pathConfig = pr(userDataPath, `${type}-${name}.gfilter`)
+        this.pathTxt = pr(coreDir, 'lists', `${type}-${name}.txt`)
+        this.fileName = `${type}-${name}.txt`
         
-        if (!fs.existsSync(this.path)) {
-            const backup = fs.readFileSync(pr(coreDir, `backup/lists/${type}-${name}.txt`)).toString().split('\n')
-            fs.writeFileSync(this.path, JSON.stringify({
+        this.initStatic()
+    }
+
+    protected initStatic(): void {
+        if (!fs.existsSync(this.pathConfig)) {
+            this.restoreConfig()
+        }
+        this.config = JSON.parse(fs.readFileSync(this.pathConfig).toString())
+    }
+    public restoreConfig(): boolean {
+        try {
+            const backup = fs.readFileSync(pr(coreDir, `backup/lists/${this.type}-${this.name}.txt`)).toString().split('\n')
+            fs.writeFileSync(this.pathConfig, JSON.stringify({
                 list: backup
             }))
+            return true
+        } catch(e: any) {
+            console.error(e.stack)
+            return false
         }
-        this.config = JSON.parse(fs.readFileSync(this.path).toString())
     }
-    toJSON(): Readonly<IFilter> {
+    toJSON(): Readonly<IFilterData> {
         return {
             name: this.name,
             type: this.type,
-            path: this.path,
+            pathConfig: this.pathConfig,
+            pathTxt: this.pathTxt,
             config: this.config,
         }
-    }
-}
-
-export class SwitchableFilter<T extends string> extends Filter {
-    public readonly onModeChange: (newMode: T, oldMode: T) => void
-    #mode: T
-    get mode() {
-        return this.#mode
-    }
-    set mode(newMode: T) {
-        this.onModeChange(this.#mode, newMode)
-        this.#mode = newMode
-    }
-    constructor(type: FilterType, name: string, onModeChange: (newMode: T, oldMode: T) => void) {
-        super(type, name)
-        this.onModeChange = onModeChange
     }
 }

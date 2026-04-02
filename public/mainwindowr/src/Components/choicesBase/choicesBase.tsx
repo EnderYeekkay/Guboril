@@ -43,7 +43,7 @@ export default function ChoicesBase<T extends string = string>({ disabled, onCha
         //@ts-ignore
         choicesRef.current = new Choices(selectRef.current, updatedChoicesOptions) as Choices.default
         return () => {
-            choicesRef.current.destroy()
+            choicesRef.current!.destroy()
             choicesRef.current = null
         }
     }, [choicesOptions, children])

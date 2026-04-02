@@ -20,7 +20,7 @@ export default function initCoreHandlers() {
     })
     ipcMain.handle('core:setStrategy', (_, strategy) => {
         const res = Core.setStrategy(strategy)
-        if (!Core.mainWindow.isVisible()) sendServiceOnNotify(StrategyManager.withIno(strategy).shortName)
+        if (!Core.mainWindow.isVisible()) sendServiceOnNotify(StrategyManager.withIno(strategy)?.shortName)
         return res
     })
     ipcMain.handle('core:setGameFilter', (_, value) => Core.setGameFilter(value))

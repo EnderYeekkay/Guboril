@@ -7,7 +7,7 @@ type TabsContextType<T extends string> = {
 }
 
 // CONTEXT
-const TabsContext = createContext<TabsContextType<string> | null>(null);
+const TabsContext = createContext<TabsContextType<any> | null>(null);
 
 export function useTabs<T extends string>(): TabsContextType<T> {
     const context = useContext(TabsContext as unknown as Context<TabsContextType<T>>);
