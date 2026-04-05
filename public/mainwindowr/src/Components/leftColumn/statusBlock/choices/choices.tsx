@@ -24,7 +24,7 @@ export default function ChoicesSelect(props: ChoicesSelectProps) {
         //@ts-ignore
         choicesRef.current = new Choices(selectRef.current, choicesOptions) as Choices.default
         return () => {
-            choicesRef.current.destroy()
+            choicesRef.current!.destroy()
             choicesRef.current = null
         }
     }, [strategies])
@@ -32,7 +32,7 @@ export default function ChoicesSelect(props: ChoicesSelectProps) {
     useEffect(() => {
         const newStrategy = strategy
         if (newStrategy?.ino === lastStrategyInoRef.current) {
-            choicesRef.current.setChoiceByValue(newStrategy?.ino?.toString())
+            choicesRef.current?.setChoiceByValue(newStrategy?.ino?.toString())
         } else {
             lastStrategyInoRef.current = newStrategy?.ino
         }

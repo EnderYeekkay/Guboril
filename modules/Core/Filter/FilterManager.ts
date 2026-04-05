@@ -14,7 +14,7 @@ export default class FilterManager {
     public static ListExclude: Filter
 
     static init() {
-        FilterManager.IpsetAll = new SwitchableFilter<IpsetAllType>('ipset', 'all', (newMode, _, filter) => {
+        FilterManager.IpsetAll = SwitchableFilter.CreateSwitchable<IpsetAllType>('ipset', 'all', 'loaded', (newMode, _, filter) => {
             switch (newMode) {
                 case 'all':
                     fs.writeFileSync(filter.pathTxt, '')
@@ -29,10 +29,10 @@ export default class FilterManager {
                     throw new FilterManagerError(`Wrong new mode given: ${newMode}`)
             }
         })
-        FilterManager.IpsetExclude = new Filter('ipset', 'exclude')
+        FilterManager.IpsetExclude = Filter.Create('ipset', 'exclude')
 
-        FilterManager.ListGeneral = new Filter('list', 'general')
-        FilterManager.ListExclude = new Filter('list', 'exclude')
+        FilterManager.ListGeneral = Filter.Create('list', 'general')
+        FilterManager.ListExclude = Filter.Create('list', 'exclude')
     }
 }
 FilterManager.init()

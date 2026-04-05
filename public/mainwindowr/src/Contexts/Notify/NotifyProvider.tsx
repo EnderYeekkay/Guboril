@@ -13,10 +13,10 @@ export interface NotifyContextType {
 }
 import NotifyContext from "./NotifyContext.ts";
 export function NotifyProvider({ children }: ContextProps) {
-    const [notifyProps, setNotifyProps] = useState<NotifyProps>(null)
+    const [notifyProps, setNotifyProps] = useState<NotifyProps | null>(null)
     const [archivedNotifies, setArchivedNotifies] = useState<NotifyOptions[]>([])
     const [visibilityOfList, setVisibilityOfList] = useState<boolean>(false)
-    const visibilityOfListBtn = useRef<HTMLDivElement>(null)
+    const visibilityOfListBtn = useRef<HTMLDivElement>(null) as RefObject<HTMLDivElement>
     const notifiesListRef = useRef<HTMLDivElement>(null)
 
     const sendNotify = (props: NotifyOptions, silent = false) => {
@@ -77,7 +77,7 @@ export function NotifyProvider({ children }: ContextProps) {
             <Notify {...{...notifyProps, clearNotify}} key={notifyProps.id}/>
         }
         {visibilityOfList && 
-            <NotifiesList listRef={notifiesListRef}/>
+            <NotifiesList listRef={notifiesListRef as RefObject<HTMLDivElement>}/>
         }
     </NotifyContext.Provider>
 }

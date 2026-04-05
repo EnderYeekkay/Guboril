@@ -10,5 +10,5 @@ export interface NotifyContextType {
     visibilityOfListBtn: RefObject<HTMLDivElement>
 }
 
-const NotifyContext = createContext<NotifyContextType>(null)
-export default NotifyContext
+const NotifyContext = createContext<NotifyContextType | null>(null)
+export default NotifyContext as React.Context<NotifyContextType>

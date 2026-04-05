@@ -1,6 +1,8 @@
+import { contextBridge, ipcRenderer } from 'electron';
+import { exposeElectronTRPC } from 'electron-trpc/main';
+
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { contextBridge, ipcRenderer } from 'electron';
 import pkg from '../../package.json' with { type: 'json' };
 import type { GameFilterOptions } from '../../modules/Core/Strategies/strategyParser.ts';
 
@@ -9,6 +11,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const { version } = pkg;
+
+exposeElectronTRPC()
+
 contextBridge.exposeInMainWorld('mw', {
   version: version,
   closeWindow: () => ipcRenderer.send('close-window'),

@@ -28,13 +28,16 @@ export interface IFilterData {
  * Represents `Filter` class with all its methods. 
  */
 export interface IFilter extends IFilterData {
-    /** Get formatted data to send through IPC */ toJSON: () => IFilterData
-    /** Restore config from `backup/lists` */     restoreConfig: () => boolean
+    /** Get formatted data to send through IPC */   toJSON: () => IFilterData
+    /** Edit config in `.gfilter` file */           editConfig: (value: IFilterConfig) => boolean
+    /** Restore config from `backup/lists` */       restoreConfig: () => boolean
+    /** Write data from `config` to `lists/` dir*/  write: () => boolean
 }
 
 /**
  * Represent basic `Filter` entity. It's able to:
  * * Read data from `.gfilter` and write it in `config` property
+ * * Write data from `config` to `lists/` dir
  * * Convert its data to `IFilterData` format 
  * * Restore config from `backup/lists`
  */
@@ -46,24 +49,45 @@ export class Filter implements IFilter {
     readonly fileName:`${string}-${string}.txt`
     readonly pathConfig: string
     readonly pathTxt: string
-    config!: IFilterConfig
+    protected _config!: IFilterConfig
+    public get config(): IFilterConfig {
+        return this._config
+    }
+    protected set config(value: IFilterConfig) {
+        this._config = value
+    }
     static readonly РРёРРРёСРµСЂРёРЅРіСРѕРЅ = void (NaN**-NaN)
 
-    constructor (type: FilterType, name: string) {
+    protected constructor (type: FilterType, name: string) {
         this.type = type
         this.name = name
         this.pathConfig = pr(userDataPath, `${type}-${name}.gfilter`)
         this.pathTxt = pr(coreDir, 'lists', `${type}-${name}.txt`)
         this.fileName = `${type}-${name}.txt`
-        
-        this.initStatic()
     }
-
+    public static Create(type: FilterType, name: string): Filter {
+        let res = new Filter(type, name)
+        res.initStatic()
+        res._config = JSON.parse(fs.readFileSync(res.pathConfig).toString())
+        return res
+    }
     protected initStatic(): void {
         if (!fs.existsSync(this.pathConfig)) {
             this.restoreConfig()
         }
-        this.config = JSON.parse(fs.readFileSync(this.pathConfig).toString())
+    }
+    public editConfig(value: Partial<IFilterConfig>): boolean {
+        try {
+            this.config = {
+                ...this.config,
+                ...value
+            }
+            fs.writeFileSync(this.pathConfig, JSON.stringify(this.config))
+            return true
+        } catch (e: any) {
+            console.error(e)
+            return false
+        }
     }
     public restoreConfig(): boolean {
         try {
@@ -84,6 +108,14 @@ export class Filter implements IFilter {
             pathConfig: this.pathConfig,
             pathTxt: this.pathTxt,
             config: this.config,
+        }
+    }
+    public write() {
+        try {
+            fs.writeFileSync(this.pathTxt, this.config.list.join('\n'))
+            return true
+        } catch (error) {
+            return false
         }
     }
 }

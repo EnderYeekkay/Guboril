@@ -7,7 +7,7 @@ export interface FrameContextType{
     setFrame: (frame: Frame) => void;
 }
 
-export const FrameContext = createContext<FrameContextType|null>(null);
+export const FrameContext = createContext<FrameContextType|null>(null) as React.Context<FrameContextType>;
 
 
 export function FrameProvider({children}: {children: React.ReactNode}) {

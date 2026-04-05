@@ -14,7 +14,6 @@ declare global {
     externalUrl: (url: string) => void,
     save_logs: () => void
     clear_discord_cache: () => Promise<boolean>
-    
   }
 
 //   const zapret: {

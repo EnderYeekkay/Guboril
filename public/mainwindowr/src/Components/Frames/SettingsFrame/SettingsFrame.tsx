@@ -38,8 +38,8 @@ export default function SettingsFrame() {
                             }}
                         />
                         <Separator/>
-                        <Tab<AllowedTabs> description="Фильтр Host" tabName="general" icon={<IconGeneral/>} autoFocus={true}/>
-                        <Tab<AllowedTabs> description="Фильтр IP" tabName="ipset" icon={<IconIpset/>}/>
+                        <Tab<AllowedTabs> description="Hostlist" tabName="general" icon={<IconGeneral/>} autoFocus={true}/>
+                        <Tab<AllowedTabs> description="IPSET" tabName="ipset" icon={<IconIpset/>}/>
                         <Tab<AllowedTabs> description="Стратегии" tabName="strategies" icon={<IconStrategies/>}/>
                         <Tab<AllowedTabs> description="Инструменты" tabName="instruments" icon={<IconInstruments/>}/>
                         <Tab<AllowedTabs> description="Отладка" tabName="debug" icon={<IconDebug/>}/>

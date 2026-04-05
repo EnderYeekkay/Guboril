@@ -12,12 +12,15 @@
     "component": "node scripts\\createComponent.ts"
   },
   "dependencies": {
+    "@trpc/client": "^11.16.0",
+    "@trpc/server": "^11.16.0",
     "ansi-styles": "^6.2.3",
     "archiver": "^7.0.1",
     "axios": "^1.13.2",
     "choices.js": "^11.1.0",
     "chokidar": "^5.0.0",
     "electron-devtools-installer": "^4.0.0",
+    "electron-trpc": "^0.7.1",
     "iconv-lite": "^0.7.2",
     "jquery": "^3.7.1",
     "jquery-ui-dist": "^1.13.3",

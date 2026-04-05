@@ -16,6 +16,9 @@ import type { IStrategy, StrategyFullName } from './Strategies/Strategy.ts'
 import type Strategy from './Strategies/Strategy.ts'
 import restoreStrategies from './Strategies/restoreStrategies.ts'
 import initCoreHandlers from './CoreHandlers.ts'
+// import FilterManager from './Filter/FilterManager.ts'
+import type { Filter } from './Filter/Filter.ts'
+import FilterManager from './Filter/FilterManager.ts'
 
 const ansiHex = (hex: HEX) => color.ansi16m(...hexResolve(hex))
 /** Absoulte path of some file.*/ type path = string
@@ -43,7 +46,8 @@ type CoreEmitter = EventEmitter & {
     once<K extends keyof CoreEvents>(event: K, listener: (...args: EventArg<CoreEvents[K]>) => void): void
 }
 
-export default abstract class Core {
+export default class Core {
+    private constructor() {}
     private static _mainWindow: BrowserWindow
     public static readonly events = new EventEmitter() as CoreEmitter
     static get mainWindow() {
@@ -118,16 +122,21 @@ export default abstract class Core {
     static async restoreStrategies(): Promise<0 | 1 | 2> {
         return restoreStrategies()
     }
+
     static setAutoUpdate(autoUpdate: boolean): void {
         settings.autoUpdate = autoUpdate
     }
-
     static setNotifications(notifications: boolean): void {
         settings.notifications = notifications
     }
     static setAutoLoad(autoLoad: boolean): void {
         settings.autoLoad = autoLoad
     }
+
+    //#region Filter
+        // [K in keyof typeof FilterManager as (typeof FilterManager)[K] extends Filter ? K : never]: any
+    static FilterManager = FilterManager
+    //#endregion
 }
 
 class CoreError extends Error {
@@ -155,5 +164,4 @@ StrategyManager.events.on('cache_change', (strategy: Strategy) => {
 StrategyManager.events.on('cache_unlink', () => {
     Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
 })
-
 initCoreHandlers()

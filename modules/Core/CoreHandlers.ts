@@ -34,4 +34,5 @@ export default function initCoreHandlers() {
     ipcMain.handle('core:coreUpdater', () => updateStrategies())
     ipcMain.handle('core:restoreStrategies', () => restoreStrategies())
     ipcMain.on('core:editStrategy', (_, strategy) => editStrategy(strategy))
+
 }

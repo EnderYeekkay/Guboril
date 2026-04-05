@@ -16,8 +16,9 @@
     // color: var(--color_common);
     font-weight: 300;
     background-color: var(--cm_bg) !important;
-    overflow-y: scroll; 
     border: 1px solid var(--cm_border) !important;
+
+    overflow-y: scroll; 
     &::-webkit-scrollbar-track {
         border-top-right-radius: 20px;
         border-bottom-right-radius: 20px;
