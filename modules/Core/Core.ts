@@ -107,10 +107,19 @@ export default class Core {
         console.log()
         return(res)
     }
+    /**
+     * Change current strategy.
+     * @param ino Unique identifier of strategy file in `core/` dir
+     * @returns 
+     */
     static setStrategy(ino: number | null): boolean {
         this.mainWindow.webContents.send('core:strategyChanged', StrategyManager.withIno(ino || settings.selectedStrategy))
         return this.#setStrategy(ino, settings.gameFilter)
     }
+    /**
+     * Change `gameFilter` value and **restart the core** immidiately.
+     * @returns 
+     */
     static setGameFilter(value: GameFilterOptions): boolean {
         if (typeof value !== 'object') throw new CoreError(`Wrong gameFilter value: ${value}`)
         return this.#setStrategy(settings.selectedStrategy, value)

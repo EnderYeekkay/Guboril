@@ -1,0 +1,36 @@
+.block {
+    grid-area: b;
+    background-color: var(--cm_bg) !important;
+    border: 1px solid var(--cm_border) !important;
+    padding: 0 !important; // Для виртуализации лучше убрать паддинг у родителя
+    margin: 0 !important;
+    height: calc(100% - 30px);
+    .virtualList {
+        &::-webkit-scrollbar-track {
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            background: var(--cm_bg);
+        }
+        &::-webkit-scrollbar {
+            background: transparent;        
+        }
+        &::-webkit-scrollbar-thumb {
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+        &::-webkit-scrollbar-thumb:hover {
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+    }
+
+    .ipRow {
+        display: flex;
+        align-items: center;
+        font-family: monospace; // Для IP лучше моноширинный шрифт
+        font-size: 13px;
+        color: var(--color_common);
+        border-bottom: 1px solid rgba(255,255,255,0.05); // Разделитель, если нужен
+        padding-left: 10px;
+    }
+}

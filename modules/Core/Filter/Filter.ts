@@ -14,7 +14,7 @@ export interface IFilterConfig {
 }
 
 /**
- * Represents JSON-like data of Filter.
+ * Represents JSON-like data of `Filter`.
  */
 export interface IFilterData {
     name:       string
@@ -25,14 +25,19 @@ export interface IFilterData {
 }
 
 /**
- * Represents `Filter` class with all its methods. 
+ * Represents all public methods of `Filter`.
  */
-export interface IFilter extends IFilterData {
+export interface IFilterMethods {
     /** Get formatted data to send through IPC */   toJSON: () => IFilterData
     /** Edit config in `.gfilter` file */           editConfig: (value: IFilterConfig) => boolean
     /** Restore config from `backup/lists` */       restoreConfig: () => boolean
     /** Write data from `config` to `lists/` dir*/  write: () => boolean
 }
+
+/**
+ * Represents `Filter` class with all its methods and properties. 
+ */
+export interface IFilter extends IFilterData, IFilterMethods {}
 
 /**
  * Represent basic `Filter` entity. It's able to:
@@ -83,6 +88,7 @@ export class Filter implements IFilter {
                 ...value
             }
             fs.writeFileSync(this.pathConfig, JSON.stringify(this.config))
+            this.write()
             return true
         } catch (e: any) {
             console.error(e)
@@ -95,6 +101,7 @@ export class Filter implements IFilter {
             fs.writeFileSync(this.pathConfig, JSON.stringify({
                 list: backup
             }))
+            this.write()
             return true
         } catch(e: any) {
             console.error(e.stack)
@@ -115,6 +122,7 @@ export class Filter implements IFilter {
             fs.writeFileSync(this.pathTxt, this.config.list.join('\n'))
             return true
         } catch (error) {
+            console.error(error)
             return false
         }
     }

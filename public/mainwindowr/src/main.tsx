@@ -13,26 +13,26 @@ import Modal from './Contexts/Modal/modal/modal.tsx'
 import Button, { ButtonStyle } from './Components/button/button.tsx';
 import ModalProvider from './Contexts/Modal/ModalProvider.tsx';
 const log = console.log
-const root = ReactDOM.createRoot(document.getElementById('root'))
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 log('Yamete Kudasai');
 (async () => {
     try {
         root.render(
             <React.StrictMode>
-                <HighestError>
-                    <ModalProvider>
-                        <NotifyProvider>
-                            <ZapretProvider>
-                                <Header/>
-                                <App />
-                            </ZapretProvider>
-                        </NotifyProvider>
-                    </ModalProvider>
-                </HighestError>
+                {/* <HighestError> */}
+                        <ModalProvider>
+                            <NotifyProvider>
+                                <ZapretProvider>
+                                    <Header/>
+                                    <App />
+                                </ZapretProvider>
+                            </NotifyProvider>
+                        </ModalProvider>
+                {/* </HighestError> */}
             </React.StrictMode>
         )
-    } catch (e) {
+    } catch (e: any) {
         log(e.stack)
     } finally {
         mw.uwu()

@@ -5,16 +5,19 @@ import { coreDir } from '../paths.ts'
 
 
 import { Filter } from "./Filter.ts";
-import type {  IFilterConfig, FilterType, IFilterData, IFilter } from "./Filter.ts";
+import type { IFilterConfig, FilterType, IFilterData, IFilter, IFilterMethods } from "./Filter.ts";
 import ansiStyles from 'ansi-styles';
 
-interface ISwitchableFilterConfig<T extends string> extends IFilterConfig {
+export interface ISwitchableFilterConfig<T extends string> extends IFilterConfig {
     mode: T
 }
-interface ISwitchableFilterData<T extends string> extends IFilterData {
+export interface ISwitchableFilterData<T extends string> extends IFilterData {
     config: ISwitchableFilterConfig<T>
 }
-export class SwitchableFilter<T extends string> extends Filter implements IFilter {
+export interface ISwitchableFilterMethods<T extends string> extends IFilterMethods {
+    setMode: (newMode: T) => void
+}
+export class SwitchableFilter<T extends string> extends Filter implements IFilter, ISwitchableFilterMethods<T> {
     public readonly onFilterChange: (newMode: T, oldMode: T, filter: SwitchableFilter<T>) => void
     declare protected _config: ISwitchableFilterConfig<T>
     public get config(): ISwitchableFilterConfig<T> {
@@ -36,13 +39,12 @@ export class SwitchableFilter<T extends string> extends Filter implements IFilte
         this.onFilterChange = onFilterChange
         this.defaultMode = defaultMode
     }
-    protected Create(...args: never[]): never {
+    public static Create(...args: never[]): never {
         throw new Error('Don\'t use this method on class SwitchableFilter, use CreateSwitchable instead.')
     }
     public static CreateSwitchable<T extends string>(type: FilterType, name: string, defaultMode: T, onFilterChange: (newMode: T, oldMode: T, filter: SwitchableFilter<T>) => void): SwitchableFilter<T> {
         let res = new SwitchableFilter(type, name, defaultMode, onFilterChange)
         res.initStatic()
-        res._config = JSON.parse(fs.readFileSync(res.pathConfig).toString())
         return res
     }
     protected initStatic(): void {
@@ -82,6 +84,7 @@ export class SwitchableFilter<T extends string> extends Filter implements IFilte
             this.onFilterChange(this.mode, this.mode, this)
             return true
         } catch (error) {
+            console.error(error)
             return false
         }
     }

@@ -4,6 +4,10 @@ import { IpcRendererEvent } from 'electron'
 import type { GameFilterOptions } from '../../../modules/Core/Strategies/strategyParser.ts'
 import type { updateStrategiesResult } from '../../../modules/Core/CoreUpdater.ts'
 import type { IStrategy } from '../../../modules/Core/Strategies/Strategy.ts'
+import type { ISwitchableFilterData, ISwitchableFilterMethods } from '../../../modules/Core/Filter/SwitchableFilter.ts'
+import type { IpsetAllType } from '../../../modules/Core/Filter/FilterManager.ts'
+import type { IFilterData, IFilterMethods } from '../../../modules/Core/Filter/Filter.ts'
+import type { FilterManagerRenderer } from '../../../preloads/mainWindow/preload.ts'
 declare global {
   const mw: { 
     version: string
@@ -54,6 +58,7 @@ declare global {
     coreUpdater: () => Promise<updateStrategiesResult[]>
     restoreStrategies: () => Promise<0 | 1 | 2>
     editStrategy: (strategy: IStrategy) => Promise<void>
+    FilterManagerRenderer: typeof FilterManagerRenderer
   }
 
   const logger: {

@@ -2,7 +2,7 @@ import fs from 'fs'
 
 import { Filter } from "./Filter.ts"
 import { SwitchableFilter } from './SwitchableFilter.ts'
-
+import initFilterHandlers from './FilterHandlers.ts'
 export type IpsetAllType = 'none' | 'all' | 'loaded'
 
 export default class FilterManager {
@@ -14,7 +14,7 @@ export default class FilterManager {
     public static ListExclude: Filter
 
     static init() {
-        FilterManager.IpsetAll = SwitchableFilter.CreateSwitchable<IpsetAllType>('ipset', 'all', 'loaded', (newMode, _, filter) => {
+        FilterManager.IpsetAll = SwitchableFilter.CreateSwitchable<IpsetAllType>('ipset', 'all', 'loaded', (_, newMode, filter) => {
             switch (newMode) {
                 case 'all':
                     fs.writeFileSync(filter.pathTxt, '')
@@ -33,6 +33,7 @@ export default class FilterManager {
 
         FilterManager.ListGeneral = Filter.Create('list', 'general')
         FilterManager.ListExclude = Filter.Create('list', 'exclude')
+        initFilterHandlers()
     }
 }
 FilterManager.init()

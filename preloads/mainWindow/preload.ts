@@ -1,18 +1,19 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { exposeElectronTRPC } from 'electron-trpc/main';
 
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import pkg from '../../package.json' with { type: 'json' };
 import type { GameFilterOptions } from '../../modules/Core/Strategies/strategyParser.ts';
+import type { IFilter, IFilterConfig, IFilterData, IFilterMethods } from '../../modules/Core/Filter/Filter.ts';
+import type { IpsetAllType } from '../../modules/Core/Filter/FilterManager.ts';
+import type FilterManager from '../../modules/Core/Filter/FilterManager.ts';
+import type { ISwitchableFilterConfig, ISwitchableFilterData, ISwitchableFilterMethods } from '../../modules/Core/Filter/SwitchableFilter.ts';
 
 // Эмуляция __dirname в ES-модулях
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const { version } = pkg;
-
-exposeElectronTRPC()
 
 contextBridge.exposeInMainWorld('mw', {
   version: version,
@@ -44,6 +45,34 @@ contextBridge.exposeInMainWorld('mw', {
 //   openCoreFolder: () => ipcRenderer.send('zapret:openCoreFolder'),
 // })
 
+export class FilterAPI implements IFilterMethods {
+  toJSON: () => IFilterData;
+  editConfig: (value: IFilterConfig) => boolean;
+  restoreConfig: () => boolean;
+  write: () => boolean;
+  public constructor(filterName: keyof typeof FilterManager) {
+    this.toJSON = () => ipcRenderer.sendSync('filter:interaction', filterName, 'toJSON')
+    this.editConfig = (value) => ipcRenderer.sendSync('filter:interaction', filterName, 'editConfig', value)
+    this.restoreConfig = () => ipcRenderer.sendSync('filter:interaction', filterName, 'restoreConfig')
+    this.write = () => ipcRenderer.sendSync('filter:interaction', filterName, 'write')
+  }
+}
+export class SwitchableFilterAPI<T extends string> extends FilterAPI implements ISwitchableFilterMethods<T> {
+  setMode: (newMode: T) => void
+  toJSONSwitchable: () => ISwitchableFilterData<T>
+  public constructor(filterName: keyof typeof FilterManager) {
+    super(filterName)
+    this.toJSONSwitchable = this.toJSON as () => ISwitchableFilterData<T>
+    this.setMode = (newMode) => ipcRenderer.sendSync('filter:interaction', filterName, 'setMode', newMode)
+  }
+}
+export const FilterManagerRenderer = {
+  IpsetAll: new SwitchableFilterAPI<IpsetAllType>('IpsetAll'),
+  IpsetExclude: new FilterAPI('IpsetExclude'),
+  ListGeneral: new FilterAPI('ListGeneral'),
+  ListExclude: new FilterAPI('ListExclude')
+}
+export type FilterManagerRendererType = typeof FilterManagerRenderer
 contextBridge.exposeInMainWorld('core', {
   getSettings: () => ipcRenderer.sendSync('core:getSettings'),
   settingsChanged: (cb) => ipcRenderer.on('core:settingsChanged', (_, settings) => cb(settings)),
@@ -67,6 +96,7 @@ contextBridge.exposeInMainWorld('core', {
   coreUpdater: () => ipcRenderer.invoke('core:coreUpdater'),
   restoreStrategies: () => ipcRenderer.invoke('core:restoreStrategies'),
   editStrategy: (strategy) => ipcRenderer.send('core:editStrategy', strategy),
+  FilterManagerRenderer: FilterManagerRenderer
 })
 
 contextBridge.exposeInMainWorld('logger', {
