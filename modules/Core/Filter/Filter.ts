@@ -98,9 +98,10 @@ export class Filter implements IFilter {
     public restoreConfig(): boolean {
         try {
             const backup = fs.readFileSync(pr(coreDir, `backup/lists/${this.type}-${this.name}.txt`)).toString().split('\n')
-            fs.writeFileSync(this.pathConfig, JSON.stringify({
+            this._config = {
                 list: backup
-            }))
+            }
+            fs.writeFileSync(this.pathConfig, JSON.stringify(this.config))
             this.write()
             return true
         } catch(e: any) {

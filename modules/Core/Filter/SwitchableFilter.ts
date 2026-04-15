@@ -60,10 +60,11 @@ export class SwitchableFilter<T extends string> extends Filter implements IFilte
         try {
             console.log(`${ansiStyles.color.cyanBright.open}Restore config for ${this.fileName}${ansiStyles.color.cyanBright.close}`)
             const backup = fs.readFileSync(pr(coreDir, `backup/lists/${this.type}-${this.name}.txt`)).toString().split('\n')
-            fs.writeFileSync(this.pathConfig, JSON.stringify({
+            this.config = {
                 list: backup,
                 mode: this.defaultMode
-            } as ISwitchableFilterConfig<T>))
+            }
+            fs.writeFileSync(this.pathConfig, JSON.stringify(this.config))
             return true
         } catch(e: any) {
             console.error(e.stack)
