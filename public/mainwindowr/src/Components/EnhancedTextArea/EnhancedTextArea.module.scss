@@ -1,0 +1,29 @@
+.block {
+    background-color: var(--cm_bg);
+    border: 1px solid var(--cm_border);
+    border-radius: 10px;
+    color: var(--whitesmoke);
+    max-width: 300px;
+    min-width: 300px;
+    min-height: 150px;
+    max-height: 150px;
+    padding: 10px;
+    resize: none;
+    &::-webkit-scrollbar-track {
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        background: var(--cm_bg);
+    }
+    &::-webkit-scrollbar {
+        background: transparent;        
+    }
+    &::-webkit-scrollbar-thumb {
+        cursor: pointer;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        border: 2px solid transparent;
+        background-clip: padding-box;
+    }
+}

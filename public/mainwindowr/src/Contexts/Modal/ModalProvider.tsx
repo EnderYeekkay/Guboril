@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import ModalContext from "./ModalContext.ts";
 import Modal from "./modal/modal.tsx";
 import Button, { ButtonStyle } from "../../Components/button/button.tsx";
@@ -7,14 +7,17 @@ export interface ModalOptions {
     title: string
     description?: string | React.ReactNode | React.ReactNode[]
     actionRow?: React.ReactNode[]
+    onReady?: () => void
 
     onSubmit?: () => void
     submitText?: string
     submitStyle?: ButtonStyle
+    submitRef?: RefObject<HTMLButtonElement>
 
     onCancel?: () => void
     cancelText?: string
     cancelStyle?: ButtonStyle
+    cancelRef?: RefObject<HTMLButtonElement>
 }
 export default function ModalProvider({ children }:ContextProps) {
     const [modalOptions, setModalOptions] = useState<ModalOptions>(null)
@@ -46,6 +49,11 @@ export default function ModalProvider({ children }:ContextProps) {
         } else {
             document.getElementById('app').inert = false
         }
+    }, [modalOptions])
+
+    useEffect(() => {
+        if (!modalOptions) return
+        modalOptions.onReady && modalOptions.onReady()
     }, [modalOptions])
 
     /**
@@ -114,10 +122,10 @@ export default function ModalProvider({ children }:ContextProps) {
         //@ts-ignore
         && void ([] ?? ((): any => {})()?.())
         && [].length === 0 
-            ? undefined 
+            ? undefined as unknown as void[][][]
             //@ts-ignore
             : [[[['Modal Cleared']]]]
-        && isNaN(-NaN) as undefined
+        && isNaN(-NaN) as unknown as void[][][]
     }
     return <ModalContext.Provider value={{
         sendModal,
@@ -131,6 +139,7 @@ export default function ModalProvider({ children }:ContextProps) {
                     <Button
                         label={modalOptions.submitText}
                         style={modalOptions.submitStyle}
+                        btnRef={modalOptions.submitRef}
                         action={() => {
                             resolveRef.current(true)
                             resolveRef.current = null
@@ -142,6 +151,7 @@ export default function ModalProvider({ children }:ContextProps) {
                     <Button
                         label={modalOptions.cancelText}
                         style={modalOptions.cancelStyle}
+                        btnRef={modalOptions.cancelRef}
                         action={clearModal}
                     />
             }}
