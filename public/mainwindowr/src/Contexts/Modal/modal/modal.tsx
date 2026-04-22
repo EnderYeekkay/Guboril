@@ -14,12 +14,6 @@ export default function Modal(props: ModalProps) {
     const descriptionRef = useRef<HTMLDivElement>(null)
     const imgRef = useRef<HTMLImageElement>(null)
 
-    useEffect(() => {
-        if (descriptionRef.current?.scrollHeight > 150) {
-            descriptionRef.current.style.overflowY='scroll'
-        }
-    }, [])
-
     return <div className={`container ${styles.block}`} ref={modalRef}>
         <div className={styles.header}>
             <div className={styles.title}>

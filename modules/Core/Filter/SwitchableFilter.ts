@@ -7,6 +7,7 @@ import { coreDir } from '../paths.ts'
 import { Filter } from "./Filter.ts";
 import type { IFilterConfig, FilterType, IFilterData, IFilter, IFilterMethods } from "./Filter.ts";
 import ansiStyles from 'ansi-styles';
+import z from 'zod';
 
 export interface ISwitchableFilterConfig<T extends string> extends IFilterConfig {
     mode: T
@@ -36,22 +37,20 @@ export class SwitchableFilter<T extends string> extends Filter implements IFilte
     }
     protected constructor(type: FilterType, name: string, defaultMode: T, onFilterChange: (newMode: T, oldMode: T, filter: SwitchableFilter<T>) => void) {
         super(type, name)
+        this.pathSchema = z.object({
+            list: z.array(z.string()),
+            mode: z.string()
+        })
         this.onFilterChange = onFilterChange
         this.defaultMode = defaultMode
     }
     public static Create(...args: never[]): never {
         throw new Error('Don\'t use this method on class SwitchableFilter, use CreateSwitchable instead.')
     }
-    public static CreateSwitchable<T extends string>(type: FilterType, name: string, defaultMode: T, onFilterChange: (newMode: T, oldMode: T, filter: SwitchableFilter<T>) => void): SwitchableFilter<T> {
+    public static CreateSwitchable<T extends string>(type: FilterType, name: string, defaultMode: T, onFilterChange: (oldMode: T, newMode: T, filter: SwitchableFilter<T>) => void): SwitchableFilter<T> {
         let res = new SwitchableFilter(type, name, defaultMode, onFilterChange)
         res.initStatic()
         return res
-    }
-    protected initStatic(): void {
-        if (!fs.existsSync(this.pathConfig)) {
-            this.restoreConfig()
-        }
-        this.config = JSON.parse(fs.readFileSync(this.pathConfig).toString())
     }
     public editConfig(value: Partial<ISwitchableFilterConfig<T>>): boolean {
         return super.editConfig(value)

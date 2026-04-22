@@ -95,8 +95,8 @@ export default function ModalProvider({ children }:ContextProps) {
             submitText: 'Подтвердить',
             submitStyle: ButtonStyle.Primary,
 
-            cancelText: 'Закрыть',
-            cancelStyle: ButtonStyle.Danger,
+            cancelText: 'Отменить',
+            cancelStyle: ButtonStyle.Link,
 
             ...props
         });

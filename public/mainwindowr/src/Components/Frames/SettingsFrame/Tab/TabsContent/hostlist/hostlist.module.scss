@@ -12,16 +12,11 @@ $p2: $p * 2;
     gap: 10px;
     display: grid;
     grid-template-areas: 
-    "a a"
-    "b c"
+    "a b"
     ;
-    grid-template-rows: max-content;
+    grid-template-rows: 1fr; 
     grid-template-columns: 1fr 1fr;
     position: relative;
     padding: $p;
     overflow-y: scroll;
-}
-
-.mode_switch_block {
-    grid-area: a;
 }

@@ -28,7 +28,8 @@
         }
     }
     .description {
-        max-height: 150px;
+        max-height: 300px;
+        overflow-y: auto;
     }
     .actionRow {
         gap: 5px;

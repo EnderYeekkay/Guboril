@@ -75,7 +75,6 @@ graph.instagram.com
 z-p3.www.instagram.com
 z-p4.www.instagram.com
 facebook.com
-cdninstagram.com
 fbcdn.net
 cdn-telegram.org
 comments.app

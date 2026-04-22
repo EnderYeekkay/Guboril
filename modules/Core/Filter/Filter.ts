@@ -1,7 +1,10 @@
 import { app } from 'electron'
 import fs from 'fs'
+import z from 'zod'
+
 import { resolve as pr } from 'path'
 import { coreDir } from '../paths.ts'
+import ansiStyles from 'ansi-styles'
 const userDataPath = app.getPath('userData')
 
 export type FilterType = 'list' | 'ipset'
@@ -55,10 +58,12 @@ export class Filter implements IFilter {
     readonly pathConfig: string
     readonly pathTxt: string
     protected _config!: IFilterConfig
+    protected pathSchema
     public get config(): IFilterConfig {
         return this._config
     }
     protected set config(value: IFilterConfig) {
+        value.list = [...new Set(value.list)]
         this._config = value
     }
     static readonly РРёРРРёСРµСЂРёРЅРіСРѕРЅ = void (NaN**-NaN)
@@ -69,24 +74,38 @@ export class Filter implements IFilter {
         this.pathConfig = pr(userDataPath, `${type}-${name}.gfilter`)
         this.pathTxt = pr(coreDir, 'lists', `${type}-${name}.txt`)
         this.fileName = `${type}-${name}.txt`
+        console.log(`Creating new Filter "${this.fileName}"`)
+        this.pathSchema = z.object({
+            list: z.array(z.string())
+        })
     }
     public static Create(type: FilterType, name: string): Filter {
         let res = new Filter(type, name)
         res.initStatic()
-        res._config = JSON.parse(fs.readFileSync(res.pathConfig).toString())
         return res
     }
     protected initStatic(): void {
         if (!fs.existsSync(this.pathConfig)) {
             this.restoreConfig()
         }
+        let rawConfig = JSON.parse(fs.readFileSync(this.pathConfig).toString())
+        try {
+            this._config = this.pathSchema.parse(rawConfig)
+        } catch (e) {
+            console.error(e)
+            this.restoreConfig()
+        }
     }
     public editConfig(value: Partial<IFilterConfig>): boolean {
         try {
+            if (value.list) {
+                value.list = clearEmpty(value.list)
+            }
             this.config = {
                 ...this.config,
                 ...value
             }
+            this.pathSchema.parse(this.config)
             fs.writeFileSync(this.pathConfig, JSON.stringify(this.config))
             this.write()
             return true
@@ -97,9 +116,10 @@ export class Filter implements IFilter {
     }
     public restoreConfig(): boolean {
         try {
+            console.log(`${ansiStyles.color.cyanBright.open}Restore config for ${this.fileName}${ansiStyles.color.cyanBright.close}`)
             const backup = fs.readFileSync(pr(coreDir, `backup/lists/${this.type}-${this.name}.txt`)).toString().split('\n')
             this._config = {
-                list: backup
+                list: clearEmpty(backup)
             }
             fs.writeFileSync(this.pathConfig, JSON.stringify(this.config))
             this.write()
@@ -118,7 +138,7 @@ export class Filter implements IFilter {
             config: this.config,
         }
     }
-    public write() {
+    public write(): boolean {
         try {
             fs.writeFileSync(this.pathTxt, this.config.list.join('\n'))
             return true
@@ -128,3 +148,5 @@ export class Filter implements IFilter {
         }
     }
 }
+
+const clearEmpty = (arr: string[]) => arr.filter(ip => !!ip.trim())

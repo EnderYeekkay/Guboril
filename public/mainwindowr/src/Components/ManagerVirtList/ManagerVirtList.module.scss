@@ -1,0 +1,68 @@
+
+
+.list_block {
+    margin: 0 !important;
+    padding: 10px 20px !important;
+    position: relative;
+    &.disabled::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: inherit;
+        background-color: rgba(0, 0, 0, 0.4); /* Тёмный прозрачный фон */
+        z-index: 10; /* Чтобы быть поверх текста и кнопок */
+        pointer-events: all; /* Чтобы слой «перехватывал» клики на себя */
+    }
+    &.hostlists {
+        grid-area: b;
+    }
+    &.ipset {
+        grid-area: c;
+    }
+}
+.list_header {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+.list_header_text {
+
+}
+.list_header_btns{
+    position: relative;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    height: 5px;
+    gap: 3px;
+}
+.list_header_btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 7px;
+    height: 24px;
+    width: 24px;
+    & * {
+        margin: 0;
+    }
+    & :global(.btn_text) {
+        width: 16px;
+        height: 16px;
+    }
+    & :global(.btn_text_container) {
+        width: min-content;
+        height: min-content;
+    }
+}
+.modal_description {
+    color: var(--color_common);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

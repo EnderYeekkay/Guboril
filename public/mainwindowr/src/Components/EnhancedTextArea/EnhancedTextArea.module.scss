@@ -1,6 +1,6 @@
 .block {
     background-color: var(--cm_bg);
-    border: 1px solid var(--cm_border);
+    border: 2px solid var(--cm_border);
     border-radius: 10px;
     color: var(--whitesmoke);
     max-width: 300px;
@@ -9,6 +9,7 @@
     max-height: 150px;
     padding: 10px;
     resize: none;
+
     &::-webkit-scrollbar-track {
         border-top-right-radius: 20px;
         border-bottom-right-radius: 20px;
@@ -25,5 +26,9 @@
     &::-webkit-scrollbar-thumb:hover {
         border: 2px solid transparent;
         background-clip: padding-box;
+    }
+    &.invalid {
+        box-sizing: content-box;
+        border: 2px solid red
     }
 }
