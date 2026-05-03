@@ -60,13 +60,11 @@ export class SettingsAccessor {
     set settings(data: Partial<Settings>) {
         const keys = Object.keys(data) as Array<keyof Settings>;
         const hasChange = keys.some(key => cachedSettings[key] !== data[key]);
-
-        if (!hasChange) return; // ОСТАНОВИТЬ ЦИКЛ ЗДЕСЬ
+        if (!hasChange) return
 
         cachedSettings = {...cachedSettings, ...data}
         SettingsAccessor.mainWindow?.webContents.send('core:settingsChanged', cachedSettings)
         writingQueue = writingQueue.then(() => fs.promises.writeFile(settingsPath, JSON.stringify(cachedSettings, null, 2)))
-        // fs.writeFile(settingsPath, JSON.stringify(new_settings, null, 2), () => {})
     }
 
 }

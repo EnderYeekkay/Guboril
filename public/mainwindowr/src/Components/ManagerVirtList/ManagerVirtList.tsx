@@ -46,7 +46,7 @@ export default function ManagerVirtList({
     return <div 
             style={{gridArea}}
             className={`container ${styles.list_block} ${styles.hostlists} ${disabled ? styles.disabled : undefined}`}
-            inert={disabled === true}   
+            inert={disabled ? true : undefined}   
         >
             <div className={styles.list_header}>
                 <div className={styles.list_header_text}>{containerLabel}</div>

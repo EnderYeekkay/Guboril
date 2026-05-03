@@ -49,21 +49,21 @@ app.whenReady().then(async () => {
       ansi.bold.close +
     ansi.bgGreen.close
   )
-  if (debug) {
-    try {
-      await session.defaultSession.clearStorageData({
-        storages: ['serviceworkers', 'cachestorage']
-      });
-      await installExtension(REACT_DEVELOPER_TOOLS, { 
-        forceDownload: true, 
-        loadExtensionOptions: { allowFileAccess: true } 
-      });
+  // if (debug) {
+  //   try {
+  //     await session.defaultSession.clearStorageData({
+  //       storages: ['serviceworkers', 'cachestorage']
+  //     });
+  //     await installExtension(REACT_DEVELOPER_TOOLS, { 
+  //       forceDownload: true, 
+  //       loadExtensionOptions: { allowFileAccess: true } 
+  //     });
       
-      console.log('React DevTools: Reloaded successfully');
-    } catch (e) {
-      console.error('React DevTools: Install failed', e);
-    }
-  }
+  //     console.log('React DevTools: Reloaded successfully');
+  //   } catch (e) {
+  //     console.error('React DevTools: Install failed', e);
+  //   }
+  // }
   process.on('uncaughtException', (err) => {
     err.cause
     l(err.stack)

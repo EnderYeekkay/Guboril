@@ -21,9 +21,7 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
             setSettings(settings)
             setStatus(settings.status)
         })
-        core.strategyChanged((strategy) => {
-            setStrategy(strategy)
-        })
+        core.strategyChanged((strategy => setStrategy(strategy)))
         core.strategiesCacheChanged(newStrategies => setStrategies(newStrategies))
         return () => {
             core.cleanCoreEventsHandlers()

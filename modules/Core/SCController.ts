@@ -21,13 +21,17 @@ const debug = false
  * 1639 - Ошибка параметров (пробел после '=')
  */
 type ScCode = 0 | 5 | 123 | 1053 | 1059 | 1060 | 1072 | 1073 | 1075 | 1639;
+export function sleepSync(time: number) {
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, time);
+}
 
-const options: Partial<SpawnSyncOptionsWithStringEncoding> = {
+export const options: Partial<SpawnSyncOptionsWithStringEncoding> = {
     shell: false,
     windowsHide: true,
     //@ts-ignore
     encoding: 'buffer'
 }
+
 export default class SCController { 
     private constructor() {}
     static start(params: SpecialString<parsedStrategy>, strategyTitle: string, gameFilterTitle: GameFilterOptions): boolean {
@@ -74,7 +78,7 @@ export default class SCController {
         // Код 1062 означает, что служба и так не была запущена (успех для нас)
         if (res.status === 1062) return true;
         
-        // Если ошибка отличная от 0 (и не 1062), значит что-то пошло не так (например, ошибка 5 - нет прав)
+        // Если ошибка отличная от 0 (и не 1062), значит что-то пошло не так
         if (res.status !== 0) {
             sendNotify(res.status as ScCode);
             return false;
@@ -83,7 +87,7 @@ export default class SCController {
         // 2. Ждем реальной остановки (Polling)
         // sc stop возвращает управление мгновенно, но процесс может завершаться долго
         let attempts = 0;
-        while (attempts < 15) { // Ждем максимум 3 секунды (15 * 200мс)
+        while (attempts < 30) { // Ждем максимум 3 секунды (15 * 200мс)
             const query = spawnSync('sc', ['query', 'GuborilCore'], options);
             const output = query.stdout?.toString() || '';
             // Если служба перешла в статус STOPPED
@@ -95,7 +99,7 @@ export default class SCController {
             if (query.status === 1060) return true;
 
             // Небольшая пауза перед следующей проверкой
-            spawnSync('powershell', ['-Command', 'Start-Sleep -Milliseconds 200']);
+            sleepSync(100)
             attempts++;
         }
 
@@ -113,12 +117,12 @@ export default class SCController {
 
         // 3. Цикл ожидания физического удаления (polling)
         let attempts = 0;
-        while (attempts < 10) {
+        while (attempts < 20) {
             const check = spawnSync('sc', ['query', 'GuborilCore'], options);
             if (check.status === 1060) return true; // Служба окончательно исчезла
             
             // Маленькая пауза между проверками (синхронно для spawnSync)
-            spawnSync('powershell', ['-Command', 'Start-Sleep -Milliseconds 200']);
+            sleepSync(100)
             attempts++;
         }
         return res.status === 0

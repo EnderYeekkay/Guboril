@@ -23,7 +23,6 @@ import FilterManager from './Filter/FilterManager.ts'
 const ansiHex = (hex: HEX) => color.ansi16m(...hexResolve(hex))
 /** Absoulte path of some file.*/ type path = string
 
-SCController.enableTimestampsTCP()
 export let headerPAT = {}
 if (settings.GH_TOKEN) {
     headerPAT = {
@@ -68,6 +67,7 @@ export default class Core {
     }
     static checkService = () => SCController.checkService()
     static #setStrategy(strategyIno: number | null, gameFilter: GameFilterOptions | null = null) {
+        let begin = Date.now()
         if (gameFilter === null) gameFilter = {
             TCP: false,
             UDP: false,
@@ -81,16 +81,16 @@ export default class Core {
             SCController.delete()
             settings.status = false
             this.events.emit('strategyChanged', null)
-            console.log()
+            console.log((Date.now() - begin) / 1000, 's')
             return false
         }
         const strategy = StrategyManager.withIno(strategyIno)
         if (!strategy) {
             console.warn('No strategy with ino in cache:', strategyIno)
+            console.log((Date.now() - begin) / 1000, 's')
             return false
         }
         
-        let begin = Date.now()
 
         const parsedStrategy = StrategyManager.withIno(strategyIno)?.parse(gameFilter)
         if (!parsedStrategy) throw new CoreError(`No strategy with name ${strategy} in cache!`)
@@ -102,9 +102,7 @@ export default class Core {
             settings.status = true
             this.events.emit('strategyChanged', strategy)
         }
-        let end = Date.now()
-        console.log((end - begin) / 1000, 's')
-        console.log()
+        console.log((Date.now() - begin) / 1000, 's')
         return(res)
     }
     /**
