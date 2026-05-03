@@ -41,8 +41,8 @@ export default function SettingsFrame() {
                         <Tab<AllowedTabs> description="Стратегии" tabName="strategies" icon={<IconStrategies/>} autoFocus={true}/>
                         <Tab<AllowedTabs> description="Hostlist" tabName="hostlist" icon={<IconHostlist/>}/>
                         <Tab<AllowedTabs> description="IPSET" tabName="ipset" icon={<IconIpset/>}/>
-                        <Tab<AllowedTabs> description="Инструменты" tabName="instruments" icon={<IconInstruments/>}/>
-                        <Tab<AllowedTabs> description="Отладка" tabName="debug" icon={<IconDebug/>}/>
+                        {/* <Tab<AllowedTabs> description="Инструменты" tabName="instruments" icon={<IconInstruments/>}/>
+                        <Tab<AllowedTabs> description="Отладка" tabName="debug" icon={<IconDebug/>}/> */}
                     </div>
 
                     <div className={`${styles.column} ${styles.content}`}>
