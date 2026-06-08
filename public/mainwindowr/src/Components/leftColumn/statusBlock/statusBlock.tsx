@@ -14,7 +14,7 @@ export default function StatusBlock() {
             <Button
                 label={status ? 'Отключить' : 'Запустить'}
                 style={status ? ButtonStyle.SilentDanger : ButtonStyle.Success}
-                Icon={!status ? {iconPath: '../power.png', iconSize: ButtonIconSize.i18} : null}
+                Icon={!status ? {iconPath: '../power.png', iconSize: ButtonIconSize.i18} : undefined}
                 action={() => installStrategy(status ? null : settings.selectedStrategy)}
             />
             <label htmlFor="strategy" id="strategy_label">Выбор стратегии</label>

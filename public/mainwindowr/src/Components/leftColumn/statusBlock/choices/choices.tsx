@@ -44,10 +44,11 @@ export default function ChoicesSelect(props: ChoicesSelectProps) {
         ref={selectRef}
         name="strategy"
         id="strategy"
+        value={settings.selectedStrategy!}
         onChange={(event) => installStrategy(parseInt(event.target.value))}
     >
         {strategies.map((elem, i) => {
-            return  <option
+            return <option
                 key={i}
                 value={elem.ino}
             >

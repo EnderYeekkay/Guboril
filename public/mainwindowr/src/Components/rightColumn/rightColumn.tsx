@@ -64,24 +64,5 @@ export default function RightColumn() {
         <Container text='Кэш Discord'>
             <DiscordCacheCleaner/>
         </Container>
-        
-        <Button
-            label='test'
-            action={async () => {
-                let res = await sendModal({
-                    title: 'Example',
-                    description: 'Lorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit aLorem ipsum dolor sit a',
-
-                    submitText: 'it\'s ok bro, calm down!',
-                    cancelText: 'PLEASN NOOO!'
-                })
-                sendNotify({
-                    title: res ? 'Completed!' : 'Cancelled!',
-                    description: res ? 'Modal has been submitted' : 'Modal has been cancelled!',
-                    expiring: true,
-                    style: res ? NotifyStyle.Important : NotifyStyle.Error
-                })
-            }}
-        />
     </div>
 }

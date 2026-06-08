@@ -5,23 +5,25 @@ import SCController from './SCController.ts'
 import { checkTask } from '../actions/scheduler.ts'
 import type { StrategyFullName } from './Strategies/Strategy.ts'
 import { coreDir } from './paths.ts'
+import z from 'zod'
 const settingsPath = path.join(app.getPath('userData'), 'settings.json')
 export const SettingsLength = 7
 
+const SettingsScheme = z.object({
+    gameFilter: z.object({
+        legacy:    z.boolean().readonly(),
+        TCP:       z.boolean().readonly(),
+        UDP:       z.boolean().readonly()
+    }),
+    autoUpdate:          z.boolean(),
+    autoLoad:            z.boolean(),
+    status:              z.boolean(),
+    selectedStrategy:    z.number().nullable(),
+    notifications:       z.boolean(),
+    GH_TOKEN:            z.string().nullable()
+})
+export type Settings = z.infer<typeof SettingsScheme>
 
-export type Settings = {
-    gameFilter: {
-        legacy:    Readonly<boolean>
-        TCP:       Readonly<boolean>
-        UDP:       Readonly<boolean>
-    }
-    autoUpdate:          boolean
-    autoLoad:            boolean
-    status:              boolean
-    selectedStrategy:    number | null
-    notifications:       boolean
-    GH_TOKEN:            string | null
-};
 let cachedSettings: Settings
 let writingQueue = Promise.resolve();
 export class SettingsAccessor {
