@@ -3,8 +3,8 @@ import fs from 'fs'
 import { Filter } from "./Filter.ts"
 import { SwitchableFilter } from './SwitchableFilter.ts'
 import initFilterHandlers from './FilterHandlers.ts'
+import Core from '../Core.ts'
 export type IpsetAllType = 'none' | 'all' | 'loaded'
-
 export default class FilterManager {
     private constructor() { }
     public static IpsetAll: SwitchableFilter<IpsetAllType>
@@ -13,22 +13,32 @@ export default class FilterManager {
     public static ListGeneral: Filter
     public static ListExclude: Filter
 
+    static IpsetAllApply(mode: IpsetAllType) {
+        switch (mode) {
+            case 'all':
+                fs.writeFileSync(this.IpsetAll.pathTxt, '')
+                break;
+            case 'loaded':
+                fs.writeFileSync(this.IpsetAll.pathTxt, this.IpsetAll.config.list.join('\n'))
+                break;
+            case 'none': 
+                fs.writeFileSync(this.IpsetAll.pathTxt, '203.0.113.113/32')
+                break;
+            default:
+                throw new FilterManagerError(`Wrong new mode given: ${mode}`)
+        }
+    }
     static init() {
-        FilterManager.IpsetAll = SwitchableFilter.CreateSwitchable<IpsetAllType>('ipset', 'all', 'loaded', (_, newMode, filter) => {
-            switch (newMode) {
-                case 'all':
-                    fs.writeFileSync(filter.pathTxt, '')
-                    break;
-                case 'loaded':
-                    fs.writeFileSync(filter.pathTxt, filter.config.list.join('\n'))
-                    break;
-                case 'none': 
-                    fs.writeFileSync(filter.pathTxt, '203.0.113.113/32')
-                    break;
-                default:
-                    throw new FilterManagerError(`Wrong new mode given: ${newMode}`)
+        FilterManager.IpsetAll = SwitchableFilter.CreateSwitchable<IpsetAllType>('ipset', 'all', 'loaded', 
+            (_, newMode, filter) => {
+                this.IpsetAllApply(newMode)
+                filter.editConfig({ mode: newMode })
+            },
+            (mode, _) => {
+                this.IpsetAllApply(mode)
+                Core.restart()
             }
-        })
+        )
         FilterManager.IpsetExclude = Filter.Create('ipset', 'exclude')
 
         FilterManager.ListGeneral = Filter.Create('list', 'general')

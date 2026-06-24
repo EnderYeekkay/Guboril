@@ -44,7 +44,6 @@ type CoreEmitter = EventEmitter & {
     on<K extends keyof CoreEvents>(event: K, listener: (...args: EventArg<CoreEvents[K]>) => void): void
     once<K extends keyof CoreEvents>(event: K, listener: (...args: EventArg<CoreEvents[K]>) => void): void
 }
-
 export default class Core {
     private constructor() {}
     private static _mainWindow: BrowserWindow
@@ -113,6 +112,15 @@ export default class Core {
     static setStrategy(ino: number | null): boolean {
         this.mainWindow.webContents.send('core:strategyChanged', StrategyManager.withIno(ino || settings.selectedStrategy))
         return this.#setStrategy(ino, settings.gameFilter)
+    }
+    static restart() {
+        try {
+            this.setStrategy(settings.selectedStrategy)
+        } catch (err: any) {
+            console.error(err?.stack)
+            return false
+        }
+        return true
     }
     /**
      * Change `gameFilter` value and **restart the core** immidiately.

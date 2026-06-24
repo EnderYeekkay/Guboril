@@ -1,13 +1,13 @@
 {
   "name": "guboril",
-  "version": "2.0.0",
+  "version": "2.0.1-beta",
   "main": "main.js",
   "description": "GUI for Zapret Flowseal",
   "type": "module",
   "scripts": {
     "start": "npx electron main.js",
     "build": "node ./build.ts",
-    "mi": "npm run build && node scripts\\issTemplateParser.ts && cmd /c \"\"A:\\Programs\\Inno Setup 6\\ISCC.exe\" \"modules\\MakeInstaller.iss\"\"",
+    "mi": "npm run build && node scripts\\issTemplateParser.ts && cmd /c \"\"A:\\Programs\\Inno Setup 7\\ISCC.exe\" \"modules\\MakeInstaller.iss\"\"",
     "save_md": "git add readme.md roadmap.md && git commit -m \"md fix\" && git push origin main",
     "component": "node scripts\\createComponent.ts"
   },
@@ -22,9 +22,11 @@
     "electron-devtools-installer": "^4.0.0",
     "electron-trpc": "^0.7.1",
     "iconv-lite": "^0.7.2",
+    "is-reachable": "^6.1.0",
     "jquery": "^3.7.1",
     "jquery-ui-dist": "^1.13.3",
     "node-unrar-js": "^2.0.2",
+    "node-windows": "^1.0.0-beta.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-tooltip": "^5.30.0",
@@ -37,6 +39,7 @@
   "devDependencies": {
     "@types/archiver": "^7.0.0",
     "@types/jquery": "^3.5.33",
+    "@types/node-windows": "^0.1.6",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@types/semver": "^7.7.1",

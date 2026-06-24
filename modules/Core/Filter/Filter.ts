@@ -1,7 +1,10 @@
+const debug = true
+
 import { app } from 'electron'
 import fs from 'fs'
 import z from 'zod'
 
+import Core from '../Core.ts'
 import { resolve as pr } from 'path'
 import { coreDir } from '../paths.ts'
 import ansiStyles from 'ansi-styles'
@@ -74,7 +77,7 @@ export class Filter implements IFilter {
         this.pathConfig = pr(userDataPath, `${type}-${name}.gfilter`)
         this.pathTxt = pr(coreDir, 'lists', `${type}-${name}.txt`)
         this.fileName = `${type}-${name}.txt`
-        console.log(`Creating new Filter "${this.fileName}"`)
+        console.log(`>  Creating new Filter "${this.fileName}"`)
         this.pathSchema = z.object({
             list: z.array(z.string())
         })
@@ -85,11 +88,14 @@ export class Filter implements IFilter {
         return res
     }
     protected initStatic(): void {
+        debug && console.log(`Initialize static for filter ${this.fileName}`)
         if (!fs.existsSync(this.pathConfig)) {
+            debug && console.log('restoring config')
             this.restoreConfig()
         }
         let rawConfig = JSON.parse(fs.readFileSync(this.pathConfig).toString())
         try {
+            debug && console.log('Parse with schema')
             this._config = this.pathSchema.parse(rawConfig)
         } catch (e) {
             console.error(e)
@@ -108,6 +114,7 @@ export class Filter implements IFilter {
             this.pathSchema.parse(this.config)
             fs.writeFileSync(this.pathConfig, JSON.stringify(this.config))
             this.write()
+        
             return true
         } catch (e: any) {
             console.error(e)
@@ -141,6 +148,7 @@ export class Filter implements IFilter {
     public write(): boolean {
         try {
             fs.writeFileSync(this.pathTxt, this.config.list.join('\n'))
+            Core.restart()
             return true
         } catch (error) {
             console.error(error)

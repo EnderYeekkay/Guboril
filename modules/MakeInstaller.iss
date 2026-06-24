@@ -1,5 +1,5 @@
 #define MyAppName "Guboril"
-#define MyAppVersion "2.0.0"
+#define MyAppVersion "2.0.1-beta"
 #define MyAppPublisher "EnderYeekkay"
 #define MyAppURL "https://github.com/EnderYeekkay/Guboril"
 #define MyAppExeName "Guboril.exe"
@@ -21,14 +21,23 @@ SetupIconFile="D:\JavaScript\zapret-gui\public\icon.ico"
 
 PrivilegesRequired=admin
 
+SetupArchitecture=x64
+
+ArchitecturesAllowed=x64compatible
 Compression=lzma2/ultra64
 SolidCompression=yes
-LZMAUseSeparateProcess=yes
-LZMANumBlockThreads=32
+
+LZMANumBlockThreads=16
+CompressionThreads=auto
+
+LZMABlockSize=65536
+LZMADictionarySize=262144
+LZMANumFastBytes=273
+
 
 OutputBaseFilename=GuborilInstaller
 
-WizardStyle=classic
+WizardStyle=dark
 WizardImageFile="D:\JavaScript\zapret-gui\dist\Output\guboril_finish.bmp"
 WizardSmallImageFile="D:\JavaScript\zapret-gui\public\icon.bmp"
 

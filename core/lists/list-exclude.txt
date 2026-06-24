@@ -3,7 +3,6 @@ live-video.net
 ttvnw.net
 twitch.tv
 mail.ru
-citilink.ru
 yandex.com
 nvidia.com
 donationalerts.com
@@ -40,4 +39,4 @@ riotgames.com
 riotcdn.net
 leagueoflegends.com
 playvalorant.com
-marketplace.visualstudio.com
+marketplace.visualstudio.com

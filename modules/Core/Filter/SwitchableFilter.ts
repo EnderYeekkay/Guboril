@@ -8,6 +8,7 @@ import { Filter } from "./Filter.ts";
 import type { IFilterConfig, FilterType, IFilterData, IFilter, IFilterMethods } from "./Filter.ts";
 import ansiStyles from 'ansi-styles';
 import z from 'zod';
+import Core from '../Core.ts';
 
 export interface ISwitchableFilterConfig<T extends string> extends IFilterConfig {
     mode: T
@@ -20,6 +21,7 @@ export interface ISwitchableFilterMethods<T extends string> extends IFilterMetho
 }
 export class SwitchableFilter<T extends string> extends Filter implements IFilter, ISwitchableFilterMethods<T> {
     public readonly onFilterChange: (newMode: T, oldMode: T, filter: SwitchableFilter<T>) => void
+    public readonly onFilterWrite: (mode: T, filter: SwitchableFilter<T>) => void
     declare protected _config: ISwitchableFilterConfig<T>
     public get config(): ISwitchableFilterConfig<T> {
         return this._config as ISwitchableFilterConfig<T>
@@ -35,20 +37,31 @@ export class SwitchableFilter<T extends string> extends Filter implements IFilte
         this.onFilterChange(this.config.mode, newMode, this)
         this.config.mode = newMode
     }
-    protected constructor(type: FilterType, name: string, defaultMode: T, onFilterChange: (newMode: T, oldMode: T, filter: SwitchableFilter<T>) => void) {
+    protected constructor(type: FilterType,
+        name: string,
+        defaultMode: T,
+        onFilterChange: (newMode: T, oldMode: T, filter: SwitchableFilter<T>) => void,
+        onFilterWrite: (mode: T, filter: SwitchableFilter<T>) => void,
+    ) {
         super(type, name)
         this.pathSchema = z.object({
             list: z.array(z.string()),
             mode: z.string()
         })
         this.onFilterChange = onFilterChange
+        this.onFilterWrite = onFilterWrite
         this.defaultMode = defaultMode
     }
     public static Create(...args: never[]): never {
         throw new Error('Don\'t use this method on class SwitchableFilter, use CreateSwitchable instead.')
     }
-    public static CreateSwitchable<T extends string>(type: FilterType, name: string, defaultMode: T, onFilterChange: (oldMode: T, newMode: T, filter: SwitchableFilter<T>) => void): SwitchableFilter<T> {
-        let res = new SwitchableFilter(type, name, defaultMode, onFilterChange)
+    public static CreateSwitchable<T extends string>(
+        type: FilterType,
+        name: string, defaultMode: T,
+        onFilterChange: (oldMode: T, newMode: T, filter: SwitchableFilter<T>) => void,
+        onFilterWrite: (mode: T, filter: SwitchableFilter<T>) => void
+    ): SwitchableFilter<T> {
+        let res = new SwitchableFilter(type, name, defaultMode, onFilterChange, onFilterWrite)
         res.initStatic()
         return res
     }
@@ -81,7 +94,7 @@ export class SwitchableFilter<T extends string> extends Filter implements IFilte
     }
     public write(): boolean {
         try {
-            this.onFilterChange(this.mode, this.mode, this)
+            this.onFilterWrite(this.mode, this)
             return true
         } catch (error) {
             console.error(error)

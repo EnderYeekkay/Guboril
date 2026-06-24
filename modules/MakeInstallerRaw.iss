@@ -21,11 +21,14 @@ SetupIconFile="D:\JavaScript\zapret-gui\public\icon.ico"
 
 PrivilegesRequired=admin
 
+SetupArchitecture=x64
+
+ArchitecturesAllowed=x64compatible
 %compression:prod%
 
 OutputBaseFilename=GuborilInstaller
 
-WizardStyle=classic
+WizardStyle=dark
 WizardImageFile="D:\JavaScript\zapret-gui\dist\Output\guboril_finish.bmp"
 WizardSmallImageFile="D:\JavaScript\zapret-gui\public\icon.bmp"
 

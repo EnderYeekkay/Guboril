@@ -5,6 +5,7 @@ import iconv from 'iconv-lite'
 import { error, log } from 'node:console'
 import type { GameFilterOptions, parsedStrategy } from './Strategies/strategyParser.ts'
 import { type SpecialString } from './Core.ts'
+import { Service } from 'node-windows'
 
 const debug = false
 /**
@@ -31,9 +32,30 @@ export const options: Partial<SpawnSyncOptionsWithStringEncoding> = {
     //@ts-ignore
     encoding: 'buffer'
 }
-
 export default class SCController { 
     private constructor() {}
+    private static GuborilCore = new Service({
+      name: 'GuborilCore',
+      script: `${paths.binPath}\\winws.exe`
+    })
+    public static killall(): boolean {
+		const resGC = spawnSync('sc', ['delete', 'GuborilCore'], options)
+		const resWD = spawnSync('sc', ['delete', 'WinDivert'], options)
+		const resZ = spawnSync('sc', ['delete', 'Zapret'], options)
+
+		let attempts = 0
+		while (attempts < 30) {
+			const queryGC = spawnSync('sc', ['query', 'GuborilCore'], options)
+			const queryWD = spawnSync('sc', ['query', 'WinDivert'], options)
+			const queryZ = spawnSync('sc', ['query', 'Zapret'], options)
+
+			if (queryGC.status === 1060 && queryWD.status === 1060 && queryZ.status === 1060) return true
+			
+			sleepSync(100)
+			attempts++
+      	}
+		return false
+    }
     static start(params: SpecialString<parsedStrategy>, strategyTitle: string, gameFilterTitle: GameFilterOptions): boolean {
         SCController.delete()
         const exePath = `${paths.binPath}\\winws.exe`
@@ -48,11 +70,11 @@ export default class SCController {
             'description', 
             'GuborilCore', 
             'Служба фильтрации трафика Winws.exe\r\n' +
-              'Параметры:\r\n' +
-              `strategyTitle:${strategyTitle}:\r\n` +
-              `gameFilterLegacy:${gameFilterTitle.legacy}:\r\n` +
-              `gameFilterTCP:${gameFilterTitle.TCP}:\r\n` +
-              `gameFilterUDP:${gameFilterTitle.UDP}:\r\n`,
+				'Параметры:\r\n' +
+				`strategyTitle:${strategyTitle}:\r\n` +
+				`gameFilterLegacy:${gameFilterTitle.legacy}:\r\n` +
+				`gameFilterTCP:${gameFilterTitle.TCP}:\r\n` +
+				`gameFilterUDP:${gameFilterTitle.UDP}:\r\n`,
         ], options)
 
         const startRes = spawnSync('sc', ['start', 'GuborilCore'], options)
@@ -120,6 +142,7 @@ export default class SCController {
         const output = check.stdout?.toString() || ''
         
         if (output.toLowerCase().includes('timestamps') && output.toLowerCase().includes('enabled')) {
+			console.log('TCP Timestamps already enabled!')
             return null
         }
         const result = spawnSync('netsh', [
@@ -129,7 +152,7 @@ export default class SCController {
             'global', 
             'timestamps=enabled'
         ], options)
-
+		console.log('TCP Timestamps turned on.')
         return result.status === 0
     }
 }
