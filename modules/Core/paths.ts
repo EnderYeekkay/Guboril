@@ -3,8 +3,8 @@ import { resolve as pr } from 'path'
 import path from "path";
 import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+export const __filename = fileURLToPath(import.meta.url);
+export const __dirname = path.dirname(__filename);
 
 export const isProd = app.isPackaged
 export const coreDir = isProd ? pr(process.resourcesPath, 'core') : pr(__dirname, '../../core')

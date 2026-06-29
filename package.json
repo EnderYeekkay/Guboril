@@ -9,7 +9,8 @@
     "build": "node ./build.ts",
     "mi": "npm run build && node scripts\\issTemplateParser.ts && cmd /c \"\"A:\\Programs\\Inno Setup 7\\ISCC.exe\" \"modules\\MakeInstaller.iss\"\"",
     "save_md": "git add readme.md roadmap.md && git commit -m \"md fix\" && git push origin main",
-    "component": "node scripts\\createComponent.ts"
+    "component": "node scripts\\createComponent.ts",
+    "postinstall": "electron-rebuild"
   },
   "dependencies": {
     "@trpc/client": "^11.16.0",
@@ -17,8 +18,10 @@
     "ansi-styles": "^6.2.3",
     "archiver": "^7.0.1",
     "axios": "^1.13.2",
+    "better-sqlite3": "^12.11.1",
     "choices.js": "^11.1.0",
     "chokidar": "^5.0.0",
+    "drizzle-orm": "^0.45.2",
     "electron-devtools-installer": "^4.0.0",
     "electron-trpc": "^0.7.1",
     "iconv-lite": "^0.7.2",
@@ -37,13 +40,16 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@electron/rebuild": "^4.0.4",
     "@types/archiver": "^7.0.0",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/jquery": "^3.5.33",
     "@types/node-windows": "^0.1.6",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@types/semver": "^7.7.1",
     "@vitejs/plugin-react": "^4.7.0",
+    "drizzle-kit": "^0.31.10",
     "electron": "^41.0.2",
     "electron-packager": "^17.1.2",
     "rcedit": "^5.0.2",

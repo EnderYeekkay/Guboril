@@ -1,11 +1,13 @@
 import fs from 'fs'
 import path from 'path'
 import { app, BrowserWindow } from 'electron'
+import z from 'zod'
+
 import SCController from './SCController.ts'
 import { checkTask } from '../actions/scheduler.ts'
 import type { StrategyFullName } from './Strategies/Strategy.ts'
 import { coreDir } from './paths.ts'
-import z from 'zod'
+
 const settingsPath = path.join(app.getPath('userData'), 'settings.json')
 export const SettingsLength = 7
 

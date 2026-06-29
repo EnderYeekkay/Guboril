@@ -20,6 +20,8 @@ import ansi from 'ansi-styles';
 import semver from 'semver';
 import Core from './modules/Core/Core.ts'
 import { fileURLToPath } from 'url';
+import * as a from './modules/Core/db/db.ts'
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 warpFix()

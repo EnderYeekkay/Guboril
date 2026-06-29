@@ -1,11 +1,10 @@
-import { spawn, spawnSync } from 'node:child_process'
+import { spawn, spawnSync, SpawnSyncOptions, SpawnSyncReturns } from 'node:child_process'
 import { type SpawnSyncOptionsWithStringEncoding } from 'node:child_process'
 import * as paths from './paths.ts'
 import iconv from 'iconv-lite'
 import { error, log } from 'node:console'
 import type { GameFilterOptions, parsedStrategy } from './Strategies/strategyParser.ts'
 import { type SpecialString } from './Core.ts'
-import { Service } from 'node-windows'
 
 const debug = false
 /**
@@ -34,10 +33,6 @@ export const options: Partial<SpawnSyncOptionsWithStringEncoding> = {
 }
 export default class SCController { 
     private constructor() {}
-    private static GuborilCore = new Service({
-      name: 'GuborilCore',
-      script: `${paths.binPath}\\winws.exe`
-    })
     public static killall(): boolean {
 		const resGC = spawnSync('sc', ['delete', 'GuborilCore'], options)
 		const resWD = spawnSync('sc', ['delete', 'WinDivert'], options)
@@ -155,6 +150,23 @@ export default class SCController {
 		console.log('TCP Timestamps turned on.')
         return result.status === 0
     }
+}
+
+interface PwdCommandObject {
+    command: string
+    args: string[]
+    options?: SpawnSyncOptions
+}
+
+function AwaitPwdSuccess(action: PwdCommandObject, check: PwdCommandObject, successCodes: ScCode[], timeLimit: number): boolean {
+    const resAction = spawnSync(action.command, action.args, action.options)
+    
+    let resCheck: SpawnSyncReturns<string | NonSharedBuffer>
+    for (let i = 0; i < timeLimit; i += 100) {
+        resCheck = spawnSync(check.command, check.args, check.options)
+        if (successCodes.find(code => code === resCheck.status)) return true
+    }
+    return false
 }
 
 export interface ScResult {

@@ -19,7 +19,7 @@ import initCoreHandlers from './CoreHandlers.ts'
 // import FilterManager from './Filter/FilterManager.ts'
 import type { Filter } from './Filter/Filter.ts'
 import FilterManager from './Filter/FilterManager.ts'
-
+import { db } from './db/db.ts'
 const ansiHex = (hex: HEX) => color.ansi16m(...hexResolve(hex))
 /** Absoulte path of some file.*/ type path = string
 
@@ -30,7 +30,6 @@ if (settings.GH_TOKEN) {
         'User-Agent': 'Guboril'
     }
 }
-
 export type Brand<T, K> = K & {readonly __brand: T}
 export type SpecialString<T> = Brand<T, string>
 
@@ -148,10 +147,7 @@ export default class Core {
         settings.autoLoad = autoLoad
     }
 
-    //#region Filter
-        // [K in keyof typeof FilterManager as (typeof FilterManager)[K] extends Filter ? K : never]: any
     static FilterManager = FilterManager
-    //#endregion
 }
 
 class CoreError extends Error {
