@@ -1,26 +1,16 @@
-import { spawn, spawnSync, SpawnSyncOptions, SpawnSyncReturns } from 'node:child_process'
-import { type SpawnSyncOptionsWithStringEncoding } from 'node:child_process'
-import * as paths from './paths.ts'
 import iconv from 'iconv-lite'
+import { spawn, spawnSync, type SpawnSyncOptions, type SpawnSyncReturns } from 'node:child_process'
+import { type SpawnSyncOptionsWithStringEncoding } from 'node:child_process'
 import { error, log } from 'node:console'
+
+import * as paths from './paths.ts'
+
 import type { GameFilterOptions, parsedStrategy } from './Strategies/strategyParser.ts'
 import { type SpecialString } from './Core.ts'
+import { ScCode } from './winServiceCodes.ts'
 
 const debug = false
-/**
- * Коды возврата sc create (System Error Codes)
- * 0 - Успех
- * 5 - Доступ запрещен
- * 123 - Неверное имя
- * 1053 - Таймаут
- * 1059 - Циклическая зависимость
- * 1060 - Служба не найдена
- * 1072 - Помечена на удаление
- * 1073 - Уже существует
- * 1075 - Зависимость не существует
- * 1639 - Ошибка параметров (пробел после '=')
- */
-type ScCode = 0 | 5 | 123 | 1053 | 1059 | 1060 | 1072 | 1073 | 1075 | 1639
+
 export function sleepSync(time: number) {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, time)
 }
@@ -85,52 +75,32 @@ export default class SCController {
 
     static checkService(): boolean {
         const res = spawnSync('sc', ['query', 'GuborilCore'])
-        sendNotify(res.status as ScCode)
         return res.status === 0
     }
     static stop(): boolean {
-        const res = spawnSync('sc', ['stop', 'GuborilCore'], options)
-
-        if (res.status === 1062) return true
-        if (res.status !== 0) {
-            sendNotify(res.status as ScCode)
-            return false
-        }
-        let attempts = 0
-        while (attempts < 30) {
-            const query = spawnSync('sc', ['query', 'GuborilCore'], options)
-            const output = query.stdout?.toString() || ''
-
-            if (output.includes('STOPPED')) {
-                return true
-            }
-            if (query.status === 1060) return true
-
-            sleepSync(100)
-            attempts++
-        }
-
-        console.error('Превышено время ожидания остановки службы')
-        return false
+        return spawnAndCheck({
+                command: 'sc',
+                args: ['stop', 'GuborilCore']
+            }, 
+            [ScCode.Success, ScCode.MarkedForDeletion, ScCode.NotFound, ScCode.NotActive], {
+                command: 'sc',
+                args: ['query', 'GuborilCore']
+            },
+            [ScCode.NotFound, ScCode.InvalidName, ScCode.Success]
+        )
     }
     static delete(): boolean {
         SCController.stop()
-        const res = spawnSync('sc', ['delete', 'GuborilCore'])
-        sendNotify(res.status as ScCode)
-          if (res.status !== 0 && res.status !== 1060) { // Если не успех и служба не отсутствовала изначально
-            sendNotify(res.status as ScCode)
-            return false
-        }
-
-        let attempts = 0
-        while (attempts < 20) {
-            const check = spawnSync('sc', ['query', 'GuborilCore'], options)
-            if (check.status === 1060) return true
-            
-            sleepSync(100)
-            attempts++
-        }
-        return res.status === 0
+        return spawnAndCheck({
+                command: 'sc',
+                args: ['delete', 'GuborilCore']
+            }, 
+            [ScCode.Success, ScCode.MarkedForDeletion, ScCode.NotFound], {
+                command: 'sc',
+                args: ['query', 'GuborilCore']
+            },
+            [ScCode.NotFound, ScCode.InvalidName]
+        )
     }
     static enableTimestampsTCP() {
         const check = spawnSync('netsh', ['interface', 'tcp', 'show', 'global'], options)
@@ -158,14 +128,41 @@ interface PwdCommandObject {
     options?: SpawnSyncOptions
 }
 
-function AwaitPwdSuccess(action: PwdCommandObject, check: PwdCommandObject, successCodes: ScCode[], timeLimit: number): boolean {
-    const resAction = spawnSync(action.command, action.args, action.options)
-    
-    let resCheck: SpawnSyncReturns<string | NonSharedBuffer>
-    for (let i = 0; i < timeLimit; i += 100) {
-        resCheck = spawnSync(check.command, check.args, check.options)
-        if (successCodes.find(code => code === resCheck.status)) return true
+function spawnAndCheck(
+    action: PwdCommandObject,
+    actionCodes: ScCode[],
+    check: PwdCommandObject, 
+    checkCodes: ScCode[],
+    timeLimit: number = 3000
+): boolean {
+    action.options = {
+        ...options,
+        ...action.options
     }
+    check.options = {
+        ...options,
+        ...check.options
+    }
+
+    const resAction = spawnSync(action.command, action.args, action.options)
+    if (!actionCodes.includes(resAction.status as any)) {
+        console.log(`${resAction.status} not found in ${actionCodes}`)
+        sendNotify(resAction.status as any)
+        throw new Error(`Action ${action.command} with args ${action.args} failed!\nError: ${resAction.stderr}`)
+    }
+
+    let resCheck: SpawnSyncReturns<string | NonSharedBuffer>
+    let i = 0
+    do {
+        i += 100
+        resCheck = spawnSync(check.command, check.args, check.options)
+        if (checkCodes.includes(resCheck.status as any)) {
+            console.log(resCheck.status, ' ', checkCodes, checkCodes.includes(resCheck.status as any))
+            return true
+        }
+        sleepSync(100)
+    } while (i >= timeLimit)
+    sendNotify(resCheck.status as any)
     return false
 }
 
@@ -231,6 +228,8 @@ function getScErrorInfo(code: ScCode): ScResult {
         error: "Invalid Parameter",
         solution: "Добавьте пробел ПЕРЕД значением. Правильно: binPath= \"путь\", а не binPath=\"путь\"."
       }
+    default:
+        throw new Error(`Неизвестный код ошибки службы: ${code}`)
   }
 }
 
