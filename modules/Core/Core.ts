@@ -56,8 +56,9 @@ export default class Core {
         SettingsAccessor.mainWindow = win
     }
     
-    static get settings(): Readonly<Settings> {
-        return {...settings}
+    static settings = {
+        ...settings,
+        toJSON: () => { return {...settings} }
     }
 
     static get strategies(): IStrategy[] {
@@ -72,7 +73,6 @@ export default class Core {
             legacy: false
         }
         const initSetStrategyString = `${ansiHex('#8400FF')}Core${color.close}.${ansiHex('#67CCFF')}setStrategy${color.close}("${ansiHex('#ECB664')}${strategyIno}${color.close}", ${ansiHex('#ECB664')}${gameFilter}${color.close})`;
-
         console.log(initSetStrategyString)
         
         if (strategyIno === null) {

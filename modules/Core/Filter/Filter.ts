@@ -82,11 +82,13 @@ export class Filter implements IFilter {
             list: z.array(z.string())
         })
     }
+
     public static Create(type: FilterType, name: string): Filter {
         let res = new Filter(type, name)
         res.initStatic()
         return res
     }
+
     protected initStatic(): void {
         debug && console.log(`Initialize static for filter ${this.fileName}`)
         if (!fs.existsSync(this.pathConfig)) {
@@ -102,6 +104,7 @@ export class Filter implements IFilter {
             this.restoreConfig()
         }
     }
+
     public editConfig(value: Partial<IFilterConfig>): boolean {
         try {
             if (value.list) {
@@ -121,6 +124,7 @@ export class Filter implements IFilter {
             return false
         }
     }
+
     public restoreConfig(): boolean {
         try {
             console.log(`${ansiStyles.color.cyanBright.open}Restore config for ${this.fileName}${ansiStyles.color.cyanBright.close}`)
@@ -136,6 +140,7 @@ export class Filter implements IFilter {
             return false
         }
     }
+
     toJSON(): Readonly<IFilterData> {
         return {
             name: this.name,
@@ -145,6 +150,7 @@ export class Filter implements IFilter {
             config: this.config,
         }
     }
+    
     public write(): boolean {
         try {
             fs.writeFileSync(this.pathTxt, this.config.list.join('\n'))

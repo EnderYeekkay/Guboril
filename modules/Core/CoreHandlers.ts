@@ -13,7 +13,7 @@ export default function initCoreHandlers() {
         event.returnValue = Core.strategies;
     })
     ipcMain.on('core:getSettings', (event) => {
-        event.returnValue = Core.settings;
+        event.returnValue = Core.settings.toJSON();
     })
     ipcMain.on('core:checkService', (event) => {
         event.returnValue = Core.checkService();

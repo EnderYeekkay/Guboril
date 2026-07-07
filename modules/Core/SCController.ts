@@ -161,7 +161,7 @@ function spawnAndCheck(
             return true
         }
         sleepSync(100)
-    } while (i >= timeLimit)
+    } while (i <= timeLimit)
     sendNotify(resCheck.status as any)
     return false
 }

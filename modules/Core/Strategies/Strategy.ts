@@ -1,10 +1,12 @@
+import fs from 'fs'
+
 import { coreDir } from '../paths.ts'
 import { resolve as pr } from 'path'
 import strategyParser from './strategyParser.ts'
 import { type GameFilterOptions, type parsedStrategy } from './strategyParser.ts'
 import type { SpecialString } from '../Core.ts'
 export type StrategyFullName = `general${string}.bat`
-import fs from 'fs'
+
 export interface IStrategy {
     ino: number
     path: string
