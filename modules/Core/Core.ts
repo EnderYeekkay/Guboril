@@ -56,9 +56,8 @@ export default class Core {
         SettingsAccessor.mainWindow = win
     }
     
-    static settings = {
-        ...settings,
-        toJSON: () => { return {...settings} }
+    static get settings(): Readonly<Settings> {
+        return {...settings}
     }
 
     static get strategies(): IStrategy[] {

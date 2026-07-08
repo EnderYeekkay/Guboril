@@ -13,7 +13,7 @@ import { createTask, deleteTask, checkTask } from './modules/actions/scheduler.t
 import { saveLogsArchive } from './modules/actions/saveLogs.ts';
 import { sendUENotify, sendURNotify, sendServiceOnNotify, sendServiceOffNotify } from './modules/tasks/myNotifcations.ts';
 import { debug, run_only_tray } from './modules/cli/argsParser.ts';
-import { initializeTray } from './modules/tasks/tray.ts';
+import TrayController from './modules/tasks/TrayController.ts';
 import { warpFix } from './modules/fixes/warpFix.ts';
 import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
 import ansi from 'ansi-styles';
@@ -144,13 +144,18 @@ app.whenReady().then(async () => {
   // Mainwindow //
   ////////////////
   const win = new BrowserWindow({
+    title: 'Губорыл',
     width: 800,
     height: 600,
+
+    minWidth: 800,
+    minHeight: 600,
+    useContentSize: true,
+
     frame: false,
     darkTheme: true,
     movable: true,
-    resizable: false,
-    title: 'Губорыл',
+    resizable: true,
     
     icon: join(__dirname, 'public', 'icon.ico'),
     webPreferences: {
@@ -166,7 +171,7 @@ app.whenReady().then(async () => {
 
   ipcMain.once('uwu', async () => {
     l('Uwu!')
-    initializeTray(win, resolve(__dirname, 'public'))
+    TrayController.init(win, resolve(__dirname, 'public'))
     if (!run_only_tray) {
       // setTimeout(() => win.show(), 5000) // Start at any cost!!!!1
       loadingWin.close()

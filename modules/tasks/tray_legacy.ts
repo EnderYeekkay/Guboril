@@ -25,7 +25,7 @@ export async function initializeTray(win: BrowserWindow, publicPath: string) {
         console.log('double-click on tray')
         win.show()
     })
-    function generate_power_btn_menuItem ():MenuItemConstructorOptions {
+    function generate_power_btn_menuItem (): MenuItemConstructorOptions {
         return {
             label: Core.settings.status ? power_off_text : power_on_text,
             icon: launch_img,
