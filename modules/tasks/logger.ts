@@ -33,21 +33,26 @@ export function initMainLogger({ keep = 5 } = {}) {
       })
     }
   } catch {}
-
-  // Перехватываем console
   ;['log', 'warn', 'error'].forEach((methodName: MethodType) => {
-    const orig = console[methodName].bind(console)
-    console[methodName] = (...args) => {
-      try {
-        const line = args.map(a => {
-          if (typeof a === 'string') return a
-          try { return JSON.stringify(a, null, 2) } catch { return String(a) }
-        }).join(' ')
-        fs.appendFileSync(mainLogFile, `[${new Date().toISOString()}] [${methodName}] ${line}\n`)
-      } catch {}
-      orig(getPrefix(methodName), ...args) // обычный вывод в консоль
-    }
-  })
+      const orig = console[methodName].bind(console)
+      console[methodName] = (...args) => {
+        try {
+          const line = args.map(a => {
+            if (typeof a === 'string') return a
+            try { return JSON.stringify(a, null, 2) } catch { return String(a) }
+          }).join(' ')
+          fs.appendFileSync(mainLogFile, `[${new Date().toISOString()}] [${methodName}] ${line}\n`)
+        } catch {}
+
+        // ИСПРАВЛЕНИЕ: Проверяем, есть ли префикс
+        const prefix = getPrefix(methodName)
+        if (prefix) {
+          orig(prefix, ...args) // Если это WARN или ERROR — выводим с префиксом
+        } else {
+          orig(...args)         // Если это обычный log — выводим "чистые" аргументы без пробела в начале
+        }
+      }
+    })
 }
 export function initRendererLogger({ keep = 5 } = {}) {
   const logDir = path.join(app.getPath('userData'), 'logs', 'renderer')

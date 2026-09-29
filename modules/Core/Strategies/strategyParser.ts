@@ -2,6 +2,7 @@ import { type SpecialString } from '../Core.ts'
 import * as paths from'../paths.ts'
 import { sep } from 'path'
 const debug = false
+
 function get_gf(v: boolean): string {
     const gf_value_enabled = '1024-65535'
     const gf_value_disabled = '12'
@@ -43,7 +44,14 @@ export default function(str: string, game_filter: GameFilterOptions): SpecialStr
     lines.forEach((val, i, arr) => {
         arr[i] = val
             .replace(/\^$/, '')
+            .replace(/\^\!/, '')
+            .replaceAll('host=', 'ⲁ')
+            .replaceAll('altorder=', 'ⲑ')
+            .replaceAll('sni=', 'ⲓ') // 1. Экранируем sni= перед заменой
             .replaceAll('=', ' ')
+            .replaceAll('ⲁ', 'host=')
+            .replaceAll('ⲑ', 'altorder=')
+            .replaceAll('ⲓ', 'sni=')   // 2. Возвращаем sni= на место
 
     })
     lines = lines.map(val => val.trim())
@@ -55,6 +63,6 @@ export default function(str: string, game_filter: GameFilterOptions): SpecialStr
     .replaceAll('%GameFilterUDP%', get_gf(game_filter.UDP))
     .replaceAll('%LISTS%', paths.listsPath + sep)
     .replaceAll('%BIN%', paths.binPath + sep)
-
+    console.log(res)
     return res as SpecialString<parsedStrategy>
 }

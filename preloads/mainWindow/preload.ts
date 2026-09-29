@@ -8,6 +8,9 @@ import type { IFilter, IFilterConfig, IFilterData, IFilterMethods } from '../../
 import type { IpsetAllType } from '../../modules/Core/Filter/FilterManager.ts';
 import type FilterManager from '../../modules/Core/Filter/FilterManager.ts';
 import type { ISwitchableFilterConfig, ISwitchableFilterData, ISwitchableFilterMethods } from '../../modules/Core/Filter/SwitchableFilter.ts';
+import type { ClassMethods, ReturnTypeOfMethod } from '../../modules/Core/HandlersRegistrator.ts';
+import ConnectionChecker from '../../modules/Core/ConnectionCheker/ConnectionChecker.ts';
+import Fake from '../../modules/Core/Fakes/Fake.ts';
 
 // Эмуляция __dirname в ES-модулях
 const __filename = fileURLToPath(import.meta.url);
@@ -25,25 +28,6 @@ contextBridge.exposeInMainWorld('mw', {
   save_logs: () => ipcRenderer.send('save_logs'),
   clear_discord_cache: () => ipcRenderer.invoke('clear_discord_cache')
 })
-
-// contextBridge.exposeInMainWorld('zapret', {
-//   isInstalled: () => ipcRenderer.invoke('zapret:isInstalled'),
-//   checkStatus: () => ipcRenderer.invoke('zapret:checkStatus'),
-//   remove: () => ipcRenderer.invoke('zapret:remove'),
-//   install: (strategy) => ipcRenderer.invoke('zapret:install', strategy),
-//   switchGameFilter: () => ipcRenderer.invoke('zapret:switchGameFilter'),
-//   getData: () => ipcRenderer.invoke('zapret:getData'),
-//   getAllStrategies: () => ipcRenderer.invoke('zapret:getAllStrategies'),
-
-//   fetchLatestVersion: () => ipcRenderer.invoke('zapret:fetchLatestVersion'),
-//   updateZapret: () => ipcRenderer.invoke('zapret:updateZapret'),
-//   uninstallCore: () => ipcRenderer.invoke('zapret:uninstallCore'),
-
-//   getSettings: () => ipcRenderer.invoke('zapret:getSettings'),
-//   setSettings: (settings) => ipcRenderer.send('zapret:setSettings', settings),
-//   settingsChanged: (cb) => ipcRenderer.on('zapret:settingsChanged', (_, settings) => cb(settings)),
-//   openCoreFolder: () => ipcRenderer.send('zapret:openCoreFolder'),
-// })
 
 export class FilterAPI implements IFilterMethods {
   toJSON: () => IFilterData;
@@ -73,6 +57,15 @@ export const FilterManagerRenderer = {
   ListExclude: new FilterAPI('ListExclude')
 }
 export type FilterManagerRendererType = typeof FilterManagerRenderer
+
+export const ConnectionCheckerRenderer: ClassMethods<typeof ConnectionChecker> = {
+  calcExpiringTime: () => ipcRenderer.invoke('ConnectionChecker:calcExpiringTime') as ReturnTypeOfMethod<typeof ConnectionChecker, "calcExpiringTime">,
+  check: () => ipcRenderer.invoke('ConnectionChecker:check') as ReturnTypeOfMethod<typeof ConnectionChecker, "check">,
+  checkInternet: () => ipcRenderer.invoke('ConnectionChecker:checkInternet') as ReturnTypeOfMethod<typeof ConnectionChecker, "checkInternet">,
+  checkUrl: (url, options) => ipcRenderer.invoke('ConnectionChecker:checkUrl', url, options) as ReturnTypeOfMethod<typeof ConnectionChecker, "checkUrl">
+}
+export type ConnectionCheckerRendererType = typeof ConnectionCheckerRenderer
+
 contextBridge.exposeInMainWorld('core', {
   getSettings: () => ipcRenderer.sendSync('core:getSettings'),
   settingsChanged: (cb) => ipcRenderer.on('core:settingsChanged', (_, settings) => cb(settings)),
@@ -96,7 +89,7 @@ contextBridge.exposeInMainWorld('core', {
   coreUpdater: () => ipcRenderer.invoke('core:coreUpdater'),
   restoreStrategies: () => ipcRenderer.invoke('core:restoreStrategies'),
   editStrategy: (strategy) => ipcRenderer.send('core:editStrategy', strategy),
-  FilterManagerRenderer: FilterManagerRenderer
+  FilterManagerRenderer: FilterManagerRenderer,
 })
 
 contextBridge.exposeInMainWorld('logger', {
@@ -110,3 +103,19 @@ contextBridge.exposeInMainWorld('scheduler_api', {
   deleteTask: () => ipcRenderer.invoke('scheduler:deleteTask'),
   checkTask: () => ipcRenderer.invoke('scheduler:checkTask'),
 })
+
+contextBridge.exposeInMainWorld('ConnectionChecker', ConnectionCheckerRenderer)
+
+export const FakeRenderer = {
+  All: () => ipcRenderer.sendSync('FakeManager:All') as Fake[],
+  withName: (value: string) => ipcRenderer.sendSync('FakeManager:withName', value) as Fake,
+  restoreFakeDiscordUDP: () => ipcRenderer.sendSync('FakeManager:restoreFakeDiscordUDP') as Fake,
+  changeFakeDiscordUDP: (value: string) => ipcRenderer.sendSync('FakeManager:changeFakeDiscordUDP', value) as void,
+  getFakeDiscordUDP: () => ipcRenderer.sendSync('FakeManager:getFakeDiscordUDP') as Fake,
+  restoreFakeGameFilterUDP: () => ipcRenderer.sendSync('FakeManager:restoreFakeGameFilterUDP') as Fake,
+  changeFakeGameFilterUDP: (value: string) => ipcRenderer.sendSync('FakeManager:changeFakeGameFilterUDP', value) as void,
+  getFakeGameFilterUDP: () => ipcRenderer.sendSync('FakeManager:getFakeGameFilterUDP') as Fake,
+}
+
+export type FakeRendererType = typeof FakeRenderer
+contextBridge.exposeInMainWorld('FakeRenderer', FakeRenderer)

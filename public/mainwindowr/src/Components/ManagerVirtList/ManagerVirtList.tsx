@@ -13,6 +13,7 @@ import NotifyContext from '../../Contexts/Notify/NotifyContext.ts'
 import { NotifyStyle } from '../../Contexts/Notify/notify/notify.tsx'
 import SubcontainerVirt from '../SubcontainerVirt/SubcontainerVirt.tsx'
 import type{ FilterAPI } from '../../../../../preloads/mainWindow/preload.ts'
+import { Undo2 } from 'lucide-react'
 interface IManagerVirtListProps {
     gridArea?: string
     disabled?: boolean
@@ -90,7 +91,7 @@ export default function ManagerVirtList({
                     <Button 
                         addictionClasses={[styles.list_header_btn]}
                         style={ButtonStyle.Danger}
-                        label={<Restore16/>}
+                        label={<Undo2 size={16}/>}
                         tooltip='Восстановить IP по умолчанию.'
                         action={async () => {
                             const res = await sendModal({

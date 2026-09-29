@@ -8,7 +8,6 @@ import ModalContext from '../../../../../../Contexts/Modal/ModalContext.ts'
 import Url from '../../../../../url/url.tsx'
 import SettingBlock from '../../../SettingBlock/SettingBlock.tsx'
 import Checkbox from '../../../../../checkbox/checkbox.tsx'
-import Download from './download.svg.tsx'
 import OpenFolder from './open_folder.svg.tsx'
 import Plus from './plus.svg.tsx'
 import NotifyContext from '../../../../../../Contexts/Notify/NotifyContext.ts'
@@ -16,6 +15,7 @@ import { NotifyStyle, type NotifyOptions } from '../../../../../../Contexts/Noti
 import Legacy from './legacy/legacy.tsx'
 import Restore from './restore.svg.tsx'
 import Subcontainer from '../../../../../Subcontainer/Subcontainer.tsx'
+import { ArchiveRestore, Download, FolderOpen } from 'lucide-react'
 
 export default function Strategies() {
     const { sendNotify } = useContext(NotifyContext)
@@ -53,14 +53,14 @@ export default function Strategies() {
             </Subcontainer>
             <div className={styles.controller_btns}>
                 <Button
-                    label={<Download/>}
+                    label={<Download size={24}/>}
                     tooltip='Обновить/переустановить стратегии из удалённого репозитория.'
                     addictionClasses={[styles.controller_btn]}
                     style={ButtonStyle.Primary}
                     action={update}
                     />
                 <Button
-                    label={<OpenFolder/>}
+                    label={<FolderOpen size={24}/>}
                     tooltip='Открыть папку со стратегиями.'
                     addictionClasses={[styles.controller_btn]}
                     style={ButtonStyle.Link}
@@ -74,7 +74,7 @@ export default function Strategies() {
                     action={() => {}}
                     />
                 <Button
-                    label={<Restore/>}
+                    label={<ArchiveRestore size={24}/>}
                     tooltip='Восстановить стратегии по умолчанию.'
                     addictionClasses={[styles.controller_btn]}
                     style={ButtonStyle.Danger}

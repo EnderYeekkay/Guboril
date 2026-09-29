@@ -9,8 +9,7 @@
     position: relative;
     width: 200px;
     // Убираем overflow: visible, если он мешает дропдауну
-    overflow: visible !important; 
-    z-index: 10; 
+    overflow: visible !important;
 
     &[data-type*="select-one"]::after {
         content: '';
@@ -23,7 +22,10 @@
         transform: translateY(-50%);
         pointer-events: none;
     }
-
+    &.is-open {
+        position: fixed;
+        z-index: 9999 !important;
+    }
 }
 
 .containerInner {

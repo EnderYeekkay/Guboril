@@ -1,0 +1,29 @@
+.block {
+    padding: 20px;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    
+}
+.select {
+    width: 300px;
+}
+.fake_restore_btn {
+    justify-self: center;
+    align-self: center;
+    grid-area: c;
+
+    width: 40px;
+    height: 40px;
+    & :global(.btn_text) {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        transition: .1s ease-in-out;
+    }
+
+    &:hover :global(.btn_text) {
+        color: var(--color_common);
+    }
+}

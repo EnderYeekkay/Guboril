@@ -2,10 +2,10 @@ import styles from './strategy.module.scss'
 import Edit from './edit.svg.tsx'
 import type { IStrategy } from '../../../../../../../../../../modules/Core/Strategies/Strategy.ts'
 import Legacy from '../legacy/legacy.tsx'
-import Play from './play.svg.tsx'
 import { useContext } from 'react'
 import ZapretContext from '../../../../../../../Contexts/Zapret/ZapretProvider.tsx'
 import Remove from './remove.svg.tsx'
+import { Pause, Play, Settings2 } from 'lucide-react'
 
 export interface StrategyProps {
     strategy: IStrategy
@@ -28,7 +28,7 @@ export default function Strategy(props: StrategyProps) {
                     }
                 }}
             >
-                { isCurrent ? <Remove/> : <Play/> }
+                { isCurrent ? <Pause/> : <Play/> }
             </div>
             <div
                 className={styles.btn}
@@ -37,7 +37,7 @@ export default function Strategy(props: StrategyProps) {
                     core.editStrategy(props.strategy)
                 }}
             >
-                <Edit/>
+                <Settings2 size={24}/>
             </div>
         </div>
     </div>

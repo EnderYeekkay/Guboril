@@ -26,7 +26,7 @@ export default async function execute() {
         rmSync(path.resolve(pathToCache, 'Code Cache'), rmOptions)
         rmSync(path.resolve(pathToCache, 'GPUCache'), rmOptions)
         console.log('Cache cleaned successfully!')
-    } catch (e) {
+    } catch (e: any) {
         console.log('Failed to clean cache ', e.stack)
         return false
     }

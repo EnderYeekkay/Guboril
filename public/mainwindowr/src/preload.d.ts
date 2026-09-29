@@ -1,4 +1,4 @@
-import { ConnectionCheckerResult } from '../../../modules/Core/сonnectionChecker.ts'
+import { ConnectionCheckerResult } from '../../../modules/Core/ConnectionCheker/сonnectionChecker.ts'
 import { Settings } from '../../../modules/Core/Settings.ts'
 import { IpcRendererEvent } from 'electron'
 import type { GameFilterOptions } from '../../../modules/Core/Strategies/strategyParser.ts'
@@ -7,7 +7,8 @@ import type { IStrategy } from '../../../modules/Core/Strategies/Strategy.ts'
 import type { ISwitchableFilterData, ISwitchableFilterMethods } from '../../../modules/Core/Filter/SwitchableFilter.ts'
 import type { IpsetAllType } from '../../../modules/Core/Filter/FilterManager.ts'
 import type { IFilterData, IFilterMethods } from '../../../modules/Core/Filter/Filter.ts'
-import type { FilterManagerRenderer } from '../../../preloads/mainWindow/preload.ts'
+import type { ConnectionCheckerRendererType, FakeRendererType, FilterManagerRenderer } from '../../../preloads/mainWindow/preload.ts'
+import type { FilterManagerRendererType } from '../../../preloads/mainWindow/preload.ts'
 declare global {
   const mw: { 
     version: string
@@ -20,25 +21,6 @@ declare global {
     clear_discord_cache: () => Promise<boolean>
   }
 
-//   const zapret: {
-//     isInstalled: () => Promise<boolean>
-//     checkStatus: () => Promise<[boolean]>
-//     remove: () => Promise<[boolean]>
-//     install: (strategy: string) => Promise<[boolean]>
-//     switchGameFilter: () => Promise<true>
-//     getData: () => Promise<ZapretData>
-//     getAllStrategies: () => Promise<string[]>
-
-//     fetchLatestVersion: () => Promise<{tag: string, url: string}>
-//     updateZapret: () => Promise<0 | 1>
-//     uninstallCore: () => Promise<any | boolean>
-
-//     getSettings: () => Promise<Settings>
-//     setSettings: (data: Partial<Settings>) => Promise<true>
-//     settingsChanged: (cb: (settings: Settings) => any) => Promise<Settings>
-//     openCoreFolder: () => Promise<true>
-    
-//   }
   const core: {
     getSettings: () => Readonly<Settings>
     checkService: () => boolean
@@ -72,7 +54,8 @@ declare global {
     deleteTask: () => Promise<any>
     checkTask: () => Promise<boolean>
   }
+  const ConnectionChecker: ConnectionCheckerRendererType
+  const FakeRenderer: FakeRendererType
 }
 
-// Эта строка делает файл модулем, что позволяет declare global работать
 export {}; 

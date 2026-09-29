@@ -1,6 +1,6 @@
 import { EventEmitter } from 'node:events'
 import { resolve as pr } from 'node:path'
-import { BrowserWindow, shell } from 'electron'
+import { BrowserWindow, ipcMain, shell } from 'electron'
 import fs from 'fs'
 const { log } = console
 import ansi from 'ansi-styles'
@@ -20,7 +20,12 @@ import initCoreHandlers from './CoreHandlers.ts'
 import type { Filter } from './Filter/Filter.ts'
 import FilterManager from './Filter/FilterManager.ts'
 import { db } from './db/db.ts'
-const ansiHex = (hex: HEX) => color.ansi16m(...hexResolve(hex))
+import { ansiHex } from '../decor/decorator.ts'
+import ConnectionChecker from './ConnectionCheker/ConnectionChecker.ts'
+import { RegisterHandlersFor } from './HandlersRegistrator.ts'
+import FakeManager from './Fakes/FakeManager.ts'
+import initConnectionCheckerHandlers from './ConnectionCheker/ConnectionCheckerHandlers.ts'
+import InitFakeHandlers from './Fakes/FakeHandlers.ts'
 /** Absoulte path of some file.*/ type path = string
 
 export let headerPAT = {}
@@ -43,6 +48,7 @@ type CoreEmitter = EventEmitter & {
     on<K extends keyof CoreEvents>(event: K, listener: (...args: EventArg<CoreEvents[K]>) => void): void
     once<K extends keyof CoreEvents>(event: K, listener: (...args: EventArg<CoreEvents[K]>) => void): void
 }
+
 export default class Core {
     private constructor() {}
     private static _mainWindow: BrowserWindow
@@ -108,8 +114,9 @@ export default class Core {
      * @returns 
      */
     static setStrategy(ino: number | null): boolean {
+        const res = this.#setStrategy(ino, settings.gameFilter)
         this.mainWindow.webContents.send('core:strategyChanged', StrategyManager.withIno(ino || settings.selectedStrategy))
-        return this.#setStrategy(ino, settings.gameFilter)
+        return res
     }
     static restart() {
         try {
@@ -174,4 +181,7 @@ StrategyManager.events.on('cache_change', (strategy: Strategy) => {
 StrategyManager.events.on('cache_unlink', () => {
     Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
 })
+
 initCoreHandlers()
+initConnectionCheckerHandlers()
+InitFakeHandlers()

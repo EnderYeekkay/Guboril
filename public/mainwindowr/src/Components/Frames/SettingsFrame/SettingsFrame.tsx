@@ -2,6 +2,7 @@ import { useContext } from "react";
 import Button, { ButtonIconSize, ButtonStyle } from "../../button/button.tsx";
 import { FrameContext } from "../../../Contexts/FrameContext.tsx";
 import { Tab } from "./Tab/Tab.tsx";
+import { Globe, HatGlasses, Network, SquareChevronRight } from 'lucide-react'
 
 import styles from './SettingsFrame.module.scss'
 import back from './back.svg'
@@ -18,9 +19,10 @@ import Strategies from "./Tab/TabsContent/strategies/strategies.tsx";
 import Hostlist from "./Tab/TabsContent/hostlist/hostlist.tsx";
 import Ipset from "./Tab/TabsContent/ipset/ipset.tsx";
 import Debug from "./Tab/TabsContent/debug/debug.tsx";
+import Fake from "./Tab/TabsContent/fake/fake.tsx";
 
 export default function SettingsFrame() {
-    type AllowedTabs = 'hostlist' | 'ipset' | 'strategies'| 'instruments' | 'debug';
+    type AllowedTabs = 'hostlist' | 'ipset' | 'strategies'| 'instruments' | 'debug' | 'fake';
     const frameContext = useContext(FrameContext);
     return (
         <div className={`${styles.fullWidth} ${styles.fullHeight} ${styles.column} ${styles.block}`}>
@@ -38,9 +40,10 @@ export default function SettingsFrame() {
                             }}
                         />
                         <Separator/>
-                        <Tab<AllowedTabs> description="Стратегии" tabName="strategies" icon={<IconStrategies/>} autoFocus={true}/>
-                        <Tab<AllowedTabs> description="Hostlist" tabName="hostlist" icon={<IconHostlist/>}/>
-                        <Tab<AllowedTabs> description="IPSET" tabName="ipset" icon={<IconIpset/>}/>
+                        <Tab<AllowedTabs> description="Стратегии" tabName="strategies" icon={<SquareChevronRight size={24} />} autoFocus={true}/>
+                        <Tab<AllowedTabs> description="Hostlist" tabName="hostlist" icon={<Globe size={24} />}/>
+                        <Tab<AllowedTabs> description="IPSET" tabName="ipset" icon={<Network size={24} />}/>
+                        <Tab<AllowedTabs> description="Fake" tabName="fake" icon={<HatGlasses size={24}/>}/>
                         {/* <Tab<AllowedTabs> description="Инструменты" tabName="instruments" icon={<IconInstruments/>}/>
                         <Tab<AllowedTabs> description="Отладка" tabName="debug" icon={<IconDebug/>}/> */}
                     </div>
@@ -54,6 +57,9 @@ export default function SettingsFrame() {
                         </TabPanel>
                         <TabPanel<AllowedTabs> tabName="ipset">
                             <Ipset/>
+                        </TabPanel>
+                        <TabPanel<AllowedTabs> tabName="fake">
+                            <Fake/>
                         </TabPanel>
                         <TabPanel<AllowedTabs> tabName="instruments">
                             <p>Инструменты</p>

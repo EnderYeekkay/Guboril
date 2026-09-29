@@ -9,7 +9,7 @@ import type { GameFilterOptions, parsedStrategy } from './Strategies/strategyPar
 import { type SpecialString } from './Core.ts'
 import { ScCode } from './winServiceCodes.ts'
 
-const debug = false
+const debug = true
 
 export function sleepSync(time: number) {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, time)
@@ -21,6 +21,7 @@ export const options: Partial<SpawnSyncOptionsWithStringEncoding> = {
     //@ts-ignore
     encoding: 'buffer'
 }
+
 export default class SCController { 
     private constructor() {}
     public static killall(): boolean {
@@ -128,6 +129,17 @@ interface PwdCommandObject {
     options?: SpawnSyncOptions
 }
 
+/**
+ * Execute the given action for **sc.exe**, then synchronously await and check the result against the given status.
+ * 
+ * Throws error only if action has been failed.
+ * @param action Some action to be executed 
+ * @param actionCodes Allow codes from {@link ScCode} which may be responded from `sc` after executing the **action**.
+ * @param check Check status of the service after executing the **action**
+ * @param checkCodes Allow codes from {@link ScCode}  which may be responded from `sc` after executing the **check**.
+ * @param timeLimit Timeout for the check action.
+ * @returns 
+ */
 function spawnAndCheck(
     action: PwdCommandObject,
     actionCodes: ScCode[],

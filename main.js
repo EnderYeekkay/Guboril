@@ -21,6 +21,7 @@ import semver from 'semver';
 import Core from './modules/Core/Core.ts'
 import { fileURLToPath } from 'url';
 import * as a from './modules/Core/db/db.ts'
+import ConnectionChecker from './modules/Core/ConnectionCheker/ConnectionChecker.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -51,21 +52,21 @@ app.whenReady().then(async () => {
       ansi.bold.close +
     ansi.bgGreen.close
   )
-  if (debug) {
-    try {
-      await session.defaultSession.clearStorageData({
-        storages: ['serviceworkers', 'cachestorage']
-      });
-      await installExtension(REACT_DEVELOPER_TOOLS, { 
-        forceDownload: true, 
-        loadExtensionOptions: { allowFileAccess: true } 
-      });
+  // if (debug) {
+  //   try {
+  //     await session.defaultSession.clearStorageData({
+  //       storages: ['serviceworkers', 'cachestorage']
+  //     });
+  //     await installExtension(REACT_DEVELOPER_TOOLS, { 
+  //       forceDownload: true, 
+  //       loadExtensionOptions: { allowFileAccess: true } 
+  //     });
       
-      console.log('React DevTools: Reloaded successfully');
-    } catch (e) {
-      console.error('React DevTools: Install failed', e);
-    }
-  }
+  //     console.log('React DevTools: Reloaded successfully');
+  //   } catch (e) {
+  //     console.error('React DevTools: Install failed', e);
+  //   }
+  // }
   process.on('uncaughtException', (err) => {
     err.cause
     l(err.stack)
@@ -166,6 +167,9 @@ app.whenReady().then(async () => {
     }
   })
   Core.mainWindow = win
+
+  ConnectionChecker.init(win)
+  ConnectionChecker.check()
   ipcMain.on('save_logs', () => saveLogsArchive(win))
   win.hide()
 

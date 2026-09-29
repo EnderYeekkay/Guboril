@@ -6,8 +6,9 @@ import { coreDir } from '../paths.ts'
 import Strategy, { type StrategyFullName, type IStrategy } from "./Strategy.ts"
 import { EventEmitter } from 'node:events'
 import ansi from 'ansi-styles'
+import { colorize, data } from '../../decor/decorator.ts'
 const { color } = ansi
-const debug = true
+const debug = false
 
 export default interface StrategyManagerEvents {
     cache_change: [Strategy]
@@ -126,5 +127,5 @@ function logStrategiesList(): void {
             strategy.ino.toString().padEnd(length4),
             `<${strategy.path}>`.padEnd(length5)
         ))
-    }
+    } 
 }

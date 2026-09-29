@@ -24,13 +24,17 @@ export default function ChoicesBase<T extends string = string>({ disabled, onCha
     const selectRef = useRef<HTMLSelectElement>(null)
     const choicesRef = useRef<Choices.default>(null)
     const UUIDRef = useRef<UUID>(crypto.randomUUID())
-
     // Привязка Choices к состоянию React
     useEffect(() => {
-        let updatedChoicesClasses = styles as unknown as ClassNames
-        for (let style in updatedChoicesClasses) {
-            if (choicesClasses && Object.hasOwn(choicesClasses, style)) {
-                updatedChoicesClasses[style] = updatedChoicesClasses[style] + ' ' + choicesClasses[style]
+        const updatedChoicesClasses = { ...styles } as Record<string, string | string[]>;
+
+        if (choicesClasses) {
+            for (const key in choicesClasses) {
+                if (Object.hasOwn(choicesClasses, key)) {
+                    const baseClass = styles[key]
+                    const customClass = choicesClasses[key as unknown as keyof ClassNames] as string
+                    updatedChoicesClasses[key] = [baseClass, customClass].flat().filter(Boolean)
+                }
             }
         }
         const updatedChoicesOptions = {
@@ -46,7 +50,7 @@ export default function ChoicesBase<T extends string = string>({ disabled, onCha
             choicesRef.current!.destroy()
             choicesRef.current = null
         }
-    }, [choicesOptions, children])
+    })
 
     return <select
         disabled={disabled}

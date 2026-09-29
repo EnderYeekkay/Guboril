@@ -1,7 +1,7 @@
 import { app, ipcMain, shell } from "electron";
 import { resolve as pr } from 'path'
 import Core from "./Core.ts";
-import ConnectionChecker from "./сonnectionChecker.ts";
+import ConnectionChecker from "./ConnectionCheker/сonnectionChecker.ts";
 import updateStrategies from "./CoreUpdater.ts";
 import { sendServiceOnNotify } from "../tasks/myNotifcations.ts";
 import StrategyManager from "./Strategies/StrategyManager.ts";

@@ -1,9 +1,11 @@
+import EasyTable from 'easy-table'
 import ansi from "ansi-styles"
 import isReachable from 'is-reachable'
 const color = ansi.color
 const urlRegex = /^https?:\/\/(www\.)?[\w\-\.@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([\w\-\.@:%_\+.~#?&\\\/\/\/=]*)$/m
+import urlsToCheck from "./urlsToCheck.ts"
 export type HTTPSString = `https://${string}.${string}`
-export type domainString = `${string}.${string}`
+
 
 const debug = false
 
@@ -63,55 +65,6 @@ export default async function ConnectionChecker(attempts: number = 2): Promise<C
     const begin = Date.now()
     if (!(await checkInternet())) return false
     const timeout = await calcExpiringTime()
-    const urlsToCheck = [
-        'youtube.com',
-        'discord.com',
-        'facebook.com',
-        // 'discordcdn.com',
-        // 'cloudflare.net',
-        // 'discord.media',
-        // 'discordactivities.com',
-        // 'discord.app',
-        // 'discord-attachments-uploads-prd.storage.googleapis.com',
-        // 'discord.store',
-        // 'discordmerch.com',
-        // 'discord.com',
-        // 'stable.dl2.discordapp.net',
-        // 'discord.new',
-        // 'discord.gift',
-        // "discord.gift",
-        // "discord.gg",
-        // "discord.co",
-        // "discordapp.com",
-        // "cloudflare-ech.com",
-        // "discordsays.com",
-        // "cloudflare.com",
-        // "dis.gd",
-        // "discord.gifts",
-        // "discordsez.com",
-        // "yt4.ggpht.com",
-        // "i.ytimg.com",
-        // "yt3.ggpht.com",
-        // "i9.ytimg.com",
-        // "jnn-pa.googleapis.com",
-        // "googleusercontent.com",
-        // "googleapis.com",
-        // "yt3.googleusercontent.com",
-        // "manifest.googlevideo.com",
-        // "youtubei.googleapis.com",
-        // "signaler-pa.youtube.com",
-        // "youtu.be",
-        // "youtube.com",
-        // "googleapis.com",
-        // "yt3.googleusercontent.com",
-        // "manifest.googlevideo.com",
-        // "youtubei.googleapis.com",
-        // "signaler-pa.youtube.com",
-        "youtu.be",
-        // "discord.dev",
-        // "discord.design",
-    ] as domainString[]
-
     const checkResult = await Promise.all(
         urlsToCheck.map(async (url) => {
             const [tempStatus, tempAttempts] = await checkUrl(`https://${url}`, attempts, timeout)
@@ -122,14 +75,14 @@ export default async function ConnectionChecker(attempts: number = 2): Promise<C
             }
         })
     )
-    console.table(checkResult.map((el) => {
+    console.log(EasyTable.print(checkResult.map((el) => {
         return {
             ...el,
             status: el.status ? 'OK' : 'FAILED',
             attempts: `${el.attempts} / ${attempts}`
         }
     }
-    ))
+    )))
     const res = {
         passes: urlsToCheck.length,
         successfulPasses: checkResult.filter(el => el.status).length
