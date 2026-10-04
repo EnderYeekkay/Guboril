@@ -102,7 +102,6 @@ export default class StrategyManager {
         return res
     }
 }
-StrategyManager.init()
 
 function logStrategiesList(): void {
     if (debug) {

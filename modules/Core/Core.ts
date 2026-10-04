@@ -5,9 +5,9 @@ import fs from 'fs'
 const { log } = console
 import ansi from 'ansi-styles'
 const { color } = ansi
+import util from 'node:util'
 
 import * as paths from './paths.ts'
-import hexResolve, { type HEX } from '../decor/hexToRGB.ts'
 import SCController from './SCController.ts'
 import strategyParser, {type GameFilterOptions} from './Strategies/strategyParser.ts'
 import { SettingsAccessor, settings, type Settings } from './Settings.ts'
@@ -16,16 +16,11 @@ import type { IStrategy, StrategyFullName } from './Strategies/Strategy.ts'
 import type Strategy from './Strategies/Strategy.ts'
 import restoreStrategies from './Strategies/restoreStrategies.ts'
 import initCoreHandlers from './CoreHandlers.ts'
-// import FilterManager from './Filter/FilterManager.ts'
-import type { Filter } from './Filter/Filter.ts'
 import FilterManager from './Filter/FilterManager.ts'
-import { db } from './db/db.ts'
-import { ansiHex } from '../decor/decorator.ts'
-import ConnectionChecker from './ConnectionCheker/ConnectionChecker.ts'
-import { RegisterHandlersFor } from './HandlersRegistrator.ts'
-import FakeManager from './Fakes/FakeManager.ts'
+import { ansiHex, methodOfObject } from '../decor/decorator.ts'
 import initConnectionCheckerHandlers from './ConnectionCheker/ConnectionCheckerHandlers.ts'
 import InitFakeHandlers from './Fakes/FakeHandlers.ts'
+import SCEventLogFacade from './SCEventLogFacade.ts'
 /** Absoulte path of some file.*/ type path = string
 
 export let headerPAT = {}
@@ -51,15 +46,59 @@ type CoreEmitter = EventEmitter & {
 
 export default class Core {
     private constructor() {}
-    private static _mainWindow: BrowserWindow
+
+    private static initialized = false
+    public static init() {
+        if (this.initialized) throw new CoreError('Core is already initialized! Maybe you should check Main.js or Core.ts?')
+        this.initialized = true
+        SCController.init()
+        StrategyManager.init()
+        SCEventLogFacade.init()
+
+        // # Handlers for ipc bridge
+        initCoreHandlers()
+        initConnectionCheckerHandlers()
+        InitFakeHandlers()
+    }
     public static readonly events = new EventEmitter() as CoreEmitter
+
+    private static _mainWindow: BrowserWindow
+    private static winInitialized = false
     static get mainWindow() {
         return this._mainWindow
     }
 
     static set mainWindow(win: BrowserWindow) {
+        if (this.winInitialized) throw new CoreError('Main window is already initilized!')
+        this.winInitialized = true
         this._mainWindow = win
+
         SettingsAccessor.mainWindow = win
+        StrategyManager.events.on('cache_add', (strategy: Strategy) => {
+            Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
+            if (settings.selectedStrategy === strategy.ino) {
+                Core.setStrategy(strategy.ino)
+            }
+        })
+        StrategyManager.events.on('cache_change', (strategy: Strategy) => {
+            Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
+            if (settings.selectedStrategy === strategy.ino) {
+                Core.setStrategy(strategy.ino)
+            }
+        })
+        StrategyManager.events.on('cache_unlink', () => {
+            Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
+        })
+
+        SCEventLogFacade.events.on('SystemEvent', (event) => {
+            if (event.level === 'Critical' || event.level === 'Error' || event.level === 'Warning') {
+                console.log(event)
+                SCController.delete()
+                settings.status = false
+                this.events.emit('strategyChanged', null)
+                Core.mainWindow.webContents.send('SCEventLogFacade:SystemEvent', event)
+            }
+        })
     }
     
     static get settings(): Readonly<Settings> {
@@ -77,8 +116,14 @@ export default class Core {
             UDP: false,
             legacy: false
         }
-        const initSetStrategyString = `${ansiHex('#8400FF')}Core${color.close}.${ansiHex('#67CCFF')}setStrategy${color.close}("${ansiHex('#ECB664')}${strategyIno}${color.close}", ${ansiHex('#ECB664')}${gameFilter}${color.close})`;
-        console.log(initSetStrategyString)
+        console.log(methodOfObject('Core', 'setStrategy', {
+            params: [
+                { name: "strategyIno", value: strategyIno },
+                { name: "gameFilter", value: gameFilter }
+            ],
+            isStatic: true,
+            privacy: '#'
+        }))
         
         if (strategyIno === null) {
             SCController.delete()
@@ -166,22 +211,3 @@ class CoreError extends Error {
     }
 }
 
-StrategyManager.events.on('cache_add', (strategy: Strategy) => {
-    Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
-    if (settings.selectedStrategy === strategy.ino) {
-        Core.setStrategy(strategy.ino)
-    }
-})
-StrategyManager.events.on('cache_change', (strategy: Strategy) => {
-    Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
-    if (settings.selectedStrategy === strategy.ino) {
-        Core.setStrategy(strategy.ino)
-    }
-})
-StrategyManager.events.on('cache_unlink', () => {
-    Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
-})
-
-initCoreHandlers()
-initConnectionCheckerHandlers()
-InitFakeHandlers()

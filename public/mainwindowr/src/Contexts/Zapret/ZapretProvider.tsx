@@ -9,6 +9,11 @@ const ZapretContext = createContext<ZapretCondition | null>(null) as React.Conte
 export default ZapretContext
 let debug = false
 
+function truncateString(str: string, maxLength: number) {
+  if (str.length <= maxLength) return str;
+  return str.slice(0, maxLength - 3) + '...';
+}
+
 export function ZapretProvider({ children }: ContextProps): ReactNode {
     const { sendNotify } = useContext(NotifyContext)
 
@@ -23,6 +28,28 @@ export function ZapretProvider({ children }: ContextProps): ReactNode {
         })
         core.strategyChanged((strategy => setStrategy(strategy)))
         core.strategiesCacheChanged(newStrategies => setStrategies(newStrategies))
+        SCEventLogFacade.SystemEvent(event => {
+            switch (event.level) {
+                case "Critical":
+                    sendNotify({
+                        title: 'Возникла критическая ошибка ядра!',
+                        description: `Возможно, выбранная стратегия содержит недействительные параметры. Попробуйте обновить Guboril или выберите другую стратегию.`,
+                        style: NotifyStyle.Error
+                    })
+                case "Error":
+                    sendNotify({
+                        title: 'Возникла ошибка ядра!',
+                        description: `Возможно, выбранная стратегия содержит недействительные параметры. Попробуйте обновить Guboril или выберите другую стратегию.`,
+                        style: NotifyStyle.Error
+                    })
+                case "Warning":
+                    sendNotify({
+                        title: 'Предупреждение от ядра',
+                        description: `Возможно, выбранная стратегия содержит недействительные параметры. Попробуйте обновить Guboril или выберите другую стратегию. ${truncateString(event.message, 200)}`,
+                        style: NotifyStyle.Error
+                    })
+            }
+        })
         return () => {
             core.cleanCoreEventsHandlers()
         }

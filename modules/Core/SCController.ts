@@ -8,6 +8,7 @@ import * as paths from './paths.ts'
 import type { GameFilterOptions, parsedStrategy } from './Strategies/strategyParser.ts'
 import { type SpecialString } from './Core.ts'
 import { ScCode } from './winServiceCodes.ts'
+import { Readline } from 'node:readline/promises'
 
 const debug = true
 
@@ -24,23 +25,26 @@ export const options: Partial<SpawnSyncOptionsWithStringEncoding> = {
 
 export default class SCController { 
     private constructor() {}
+    public static init() {
+        SCController.enableTimestampsTCP()
+    }
     public static killall(): boolean {
-		const resGC = spawnSync('sc', ['delete', 'GuborilCore'], options)
-		const resWD = spawnSync('sc', ['delete', 'WinDivert'], options)
-		const resZ = spawnSync('sc', ['delete', 'Zapret'], options)
+        const resGC = spawnSync('sc', ['delete', 'GuborilCore'], options)
+        const resWD = spawnSync('sc', ['delete', 'WinDivert'], options)
+        const resZ = spawnSync('sc', ['delete', 'Zapret'], options)
 
-		let attempts = 0
-		while (attempts < 30) {
-			const queryGC = spawnSync('sc', ['query', 'GuborilCore'], options)
-			const queryWD = spawnSync('sc', ['query', 'WinDivert'], options)
-			const queryZ = spawnSync('sc', ['query', 'Zapret'], options)
+        let attempts = 0
+        while (attempts < 30) {
+            const queryGC = spawnSync('sc', ['query', 'GuborilCore'], options)
+            const queryWD = spawnSync('sc', ['query', 'WinDivert'], options)
+            const queryZ = spawnSync('sc', ['query', 'Zapret'], options)
 
-			if (queryGC.status === 1060 && queryWD.status === 1060 && queryZ.status === 1060) return true
-			
-			sleepSync(100)
-			attempts++
-      	}
-		return false
+            if (queryGC.status === 1060 && queryWD.status === 1060 && queryZ.status === 1060) return true
+            
+            sleepSync(100)
+            attempts++
+        }
+        return false
     }
     static start(params: SpecialString<parsedStrategy>, strategyTitle: string, gameFilterTitle: GameFilterOptions): boolean {
         SCController.delete()
@@ -244,5 +248,3 @@ function getScErrorInfo(code: ScCode): ScResult {
         throw new Error(`Неизвестный код ошибки службы: ${code}`)
   }
 }
-
-SCController.enableTimestampsTCP()

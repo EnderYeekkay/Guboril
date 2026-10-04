@@ -10,4 +10,5 @@ export const isProd = app.isPackaged
 export const coreDir = isProd ? pr(process.resourcesPath, 'core') : pr(__dirname, '../../core')
 export const listsPath = pr(coreDir, 'lists')
 export const binPath = pr(coreDir, 'bin')
+export const scriptsPath = pr(coreDir, 'scripts')
 export const windowsPath = process.env.SystemRoot || process.env.windir;

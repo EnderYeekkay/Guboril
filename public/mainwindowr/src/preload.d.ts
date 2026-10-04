@@ -7,7 +7,7 @@ import type { IStrategy } from '../../../modules/Core/Strategies/Strategy.ts'
 import type { ISwitchableFilterData, ISwitchableFilterMethods } from '../../../modules/Core/Filter/SwitchableFilter.ts'
 import type { IpsetAllType } from '../../../modules/Core/Filter/FilterManager.ts'
 import type { IFilterData, IFilterMethods } from '../../../modules/Core/Filter/Filter.ts'
-import type { ConnectionCheckerRendererType, FakeRendererType, FilterManagerRenderer } from '../../../preloads/mainWindow/preload.ts'
+import type { ConnectionCheckerRendererType, FakeRendererType, FilterManagerRenderer, SCEventLogFacadeType } from '../../../preloads/mainWindow/preload.ts'
 import type { FilterManagerRendererType } from '../../../preloads/mainWindow/preload.ts'
 declare global {
   const mw: { 
@@ -42,6 +42,7 @@ declare global {
     editStrategy: (strategy: IStrategy) => Promise<void>
     FilterManagerRenderer: typeof FilterManagerRenderer
   }
+  const SCEventLogFacade: SCEventLogFacadeType
 
   const logger: {
     log: (...args: any[]) => void

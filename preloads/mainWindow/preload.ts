@@ -11,6 +11,7 @@ import type { ISwitchableFilterConfig, ISwitchableFilterData, ISwitchableFilterM
 import type { ClassMethods, ReturnTypeOfMethod } from '../../modules/Core/HandlersRegistrator.ts';
 import ConnectionChecker from '../../modules/Core/ConnectionCheker/ConnectionChecker.ts';
 import Fake from '../../modules/Core/Fakes/Fake.ts';
+import type { ISystemEvent } from '../../modules/Core/SCEventLogFacade.ts';
 
 // Эмуляция __dirname в ES-модулях
 const __filename = fileURLToPath(import.meta.url);
@@ -92,10 +93,19 @@ contextBridge.exposeInMainWorld('core', {
   FilterManagerRenderer: FilterManagerRenderer,
 })
 
+const SCEventLogFacade = {
+  SystemEvent: (cb: (event: ISystemEvent) => void) => ipcRenderer.on('SCEventLogFacade:SystemEvent', (_, event: ISystemEvent) => cb(event)),
+  clearEvets: () => {
+    ipcRenderer.removeAllListeners('SCEventLogFacade:SystemEvent')
+  }
+}
+export type SCEventLogFacadeType = typeof SCEventLogFacade
+contextBridge.exposeInMainWorld('SCEventLogFacade', SCEventLogFacade)
+
 contextBridge.exposeInMainWorld('logger', {
-  log: (...args) => ipcRenderer.send('renderer-log', 'log', ...args),
-  warn: (...args) => ipcRenderer.send('renderer-log', 'warn', ...args),
-  error: (...args) => ipcRenderer.send('renderer-log', 'error', ...args),
+  log: (...args: any[]) => ipcRenderer.send('renderer-log', 'log', ...args),
+  warn: (...args: any[]) => ipcRenderer.send('renderer-log', 'warn', ...args),
+  error: (...args: any[]) => ipcRenderer.send('renderer-log', 'error', ...args),
 })
 
 contextBridge.exposeInMainWorld('scheduler_api', {
