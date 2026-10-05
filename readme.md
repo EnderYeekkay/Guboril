@@ -51,8 +51,8 @@
 
 ###### ДОПОЛНИТЕЛЬНО:
 
-* Скачать и установить [Inno Setup](https://jrsoftware.org/download.php/is.exe?site=2)
-* Задать путь к Inno Setup в файле `package.json` в 10-й строке. Замените `\"A:\\Programs\\Inno Setup 6\\ISCC.exe\"` на путь к .exe файлу.
+* Скачать и установить [Inno Setup](https://github.com/jrsoftware/issrc/releases/download/is-7_1_0/innosetup-7.1.0-x64.exe)
+* Задать путь к Inno Setup в файле `package.json` в 10-й строке. Замените `\"A:\\Programs\\Inno Setup 7\\ISCC.exe\"` на путь к .exe файлу.
 * Собрать инсталлер командой `npm run mi`, установщик появится в папке `dist/Output`
 
 ## Чистое удаление:
