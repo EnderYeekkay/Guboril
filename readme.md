@@ -1,7 +1,15 @@
 # Губорыл - GUI для Service.bat
 
-# [&gt;&gt;&gt; **СКАЧАТЬ** &lt;&lt;&lt;](https://github.com/EnderYeekkay/Guboril/releases/download/Guboril-v1.2.1/GuborilInstaller.exe)
+<div align="center">
+
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/EnderYeekkay/Guboril/total?style=for-the-badge)
+
+[![Button](https://img.shields.io/badge/Скачать-darkgreen?style=for-the-badge)](https://github.com/EnderYeekkay/Guboril/releases/download/Guboril-v2.0.0/GuborilInstaller.exe)
+</div>
+
+
+Данное приложение является GUI менеджером для `winws.exe`, регистрирует его как службу, автоматически перезапускает при изменении любых настроек и хранит их. Также есть возможность обновлять все стратегии/бинарные файлы для `winws.exe`.
+![1212312312](image.png)
 
 > [!NOTE]
 >
@@ -13,7 +21,6 @@
 
 > [!IMPORTANT]
 >
-> * Временно убрана возможность обновления ядра! Будет возвращена в версии v2.0.0
 > * Чтобы удостовериться, что тут всё чисто, проверьте `.exe` файл через [Virustotal](https://www.virustotal.com/gui/home/upload) или ваш антивирус.
 > * Поскольку приложению требуется доступ к службам Windows, Guboril автоматически запрашивает админ права при запуске.
 > * Приложение для автозапуска использует планировщик задач Windows. Это нужно, чтобы избежать раздражающего окна UAC при каждом запуске Windows. Так что в диспетчере задач в автозагрузках оно отображаться **не будет**! Для ручного удаления из автозагрузки нажмите Win+R и введите `taskschd.msc`, там найдите "Guboril" и удалите.
@@ -23,18 +30,16 @@
 > Антивирусы Kaspersky и Windows Defender могут ругаться на файлы из `Appdata/Roaming/Guboril/core`
 
 ## Как это работает?
-
 * Данное приложение написано на **Electron** (фреймворк Node js для создания десктопных приложений)
 * GUI (графический интерфейс) написан на **React** и **Typescript.**
 * Приложение работает в режиме `contextIsolation: true` и `NodeIntegration: false`
 * Основные модули
-  * Mainwindow - renderer процесс электрона, отрисовка GUI
-  * Zapret.js - API реализующее взаимодействие с Service.bat в формате RPC (Remote Procedure Call), основанный на функции exec из модуля childProcess
-  * updateZapret - модуль, предоставляющий функцию для обновления ядра
-  * logger.js - модуль предоставляющий 2 функции для сохранения логов в файлы из main и renderer
-  * scheduler.ts - модуль для управление таской автозагрузки приложения
+  * Папка `./public/Mainwindowr` - renderer процесс электрона, отрисовка GUI
   * Main.js - основной (main) процесс электрона, здесь подключаются все модули, настраиваются окна и тп
-  * Preload.js - API мост между Mainwindow и main.js
+  * Preload - API мост между Mainwindow и main.js
+  * Core - Оркестратор управляющий всеми базовыми функциями приложения
+  * SCContoller - Модуль, управляющий службой через `sc.exe`
+  * SCEventLogFacade - Модуль, читающий логи службы через журнал `System`
 
 ## Как собрать приложение самому?
 
