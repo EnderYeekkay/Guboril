@@ -21,7 +21,6 @@ import semver from 'semver';
 import Core from './modules/Core/Core.ts'
 Core.init()
 import { fileURLToPath } from 'url';
-import * as a from './modules/Core/db/db.ts'
 import ConnectionChecker from './modules/Core/ConnectionCheker/ConnectionChecker.ts';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -169,8 +168,6 @@ app.whenReady().then(async () => {
   })
   Core.mainWindow = win
 
-  ConnectionChecker.init(win)
-  ConnectionChecker.check()
   ipcMain.on('save_logs', () => saveLogsArchive(win))
   win.hide()
 

@@ -21,6 +21,7 @@ import { ansiHex, methodOfObject } from '../decor/decorator.ts'
 import initConnectionCheckerHandlers from './ConnectionCheker/ConnectionCheckerHandlers.ts'
 import InitFakeHandlers from './Fakes/FakeHandlers.ts'
 import SCEventLogFacade from './SCEventLogFacade.ts'
+import FakeManager from './Fakes/FakeManager.ts'
 /** Absoulte path of some file.*/ type path = string
 
 export let headerPAT = {}
@@ -54,13 +55,15 @@ export default class Core {
         SCController.init()
         StrategyManager.init()
         SCEventLogFacade.init()
+        FakeManager.init()
 
         // # Handlers for ipc bridge
         initCoreHandlers()
         initConnectionCheckerHandlers()
         InitFakeHandlers()
+                InitFakeHandlers()
     }
-    public static readonly events = new EventEmitter() as CoreEmitter
+    public static readonly events = new EventEmitter<CoreEvents>() as CoreEmitter
 
     private static _mainWindow: BrowserWindow
     private static winInitialized = false

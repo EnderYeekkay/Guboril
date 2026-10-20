@@ -52,7 +52,15 @@ export default class FakeManager {
         } else {
             this.fakeGameFilterUDP = this.restoreFakeGameFilterUDP()
         }
-        
+        l(action('Initializing FakeManager...'))
+        InitFakeHandlers()
+        l(success(`FakeManager initialized with ${FakeManager.All().length} fakes.`))
+        l(data(`FakeDiscordUDP: ${FakeManager.getFakeDiscordUDP().shortName}`))
+        l(data(`FakeGameFilterUDP: ${FakeManager.getFakeGameFilterUDP().shortName}`))
+        l(data('All filters:'))
+        l(FakeManager.All().map(fake => '\t' + writingRomb(fake.shortName)).join('\n'))
+        l()
+
     }
 
     public static All(): readonly Fake[] {
@@ -126,12 +134,3 @@ export default class FakeManager {
         return this.fakeGameFilterUDP
     }
 }
-l(action('Initializing FakeManager...'))
-FakeManager.init()
-InitFakeHandlers()
-l(success(`FakeManager initialized with ${FakeManager.All().length} fakes.`))
-l(data(`FakeDiscordUDP: ${FakeManager.getFakeDiscordUDP().shortName}`))
-l(data(`FakeGameFilterUDP: ${FakeManager.getFakeGameFilterUDP().shortName}`))
-l(data('All filters:'))
-l(FakeManager.All().map(fake => '\t' + writingRomb(fake.shortName)).join('\n'))
-l()

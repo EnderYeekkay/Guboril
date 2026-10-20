@@ -1,18 +1,11 @@
-# Губорыл - GUI для Service.bat
+# Губорыл - GUI для winws
 
 <div align="center">
-
-![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/EnderYeekkay/Guboril/total?style=for-the-badge)
-
-[![Button](https://img.shields.io/badge/Скачать-darkgreen?style=for-the-badge)](https://github.com/EnderYeekkay/Guboril/releases/download/Guboril-v2.0.0/GuborilInstaller.exe)
-</div>
-
 
 Данное приложение является GUI менеджером для `winws.exe`, регистрирует его как службу, автоматически перезапускает при изменении любых настроек и хранит их. Также есть возможность обновлять все стратегии/бинарные файлы для `winws.exe`.
 ![Image](image.png)
 
 > [!NOTE]
->
 > ## БЫСТРАЯ УСТАНОВКА
 >
 > * Нажать кнопку `скачать`
@@ -20,7 +13,6 @@
 > * Запустить Guboril.exe двойным щелчком мыши (не обязательно от имени администратора, приложение само запросит себе права через UAC)
 
 > [!IMPORTANT]
->
 > * Чтобы удостовериться, что тут всё чисто, проверьте `.exe` файл через [Virustotal](https://www.virustotal.com/gui/home/upload) или ваш антивирус.
 > * Поскольку приложению требуется доступ к службам Windows, Guboril автоматически запрашивает админ права при запуске.
 > * Приложение для автозапуска использует планировщик задач Windows. Это нужно, чтобы избежать раздражающего окна UAC при каждом запуске Windows. Так что в диспетчере задач в автозагрузках оно отображаться **не будет**! Для ручного удаления из автозагрузки нажмите Win+R и введите `taskschd.msc`, там найдите "Guboril" и удалите.
@@ -30,6 +22,7 @@
 > Антивирусы Kaspersky и Windows Defender могут ругаться на файлы из `Appdata/Roaming/Guboril/core`
 
 ## Как это работает?
+
 * Данное приложение написано на **Electron** (фреймворк Node js для создания десктопных приложений)
 * GUI (графический интерфейс) написан на **React** и **Typescript.**
 * Приложение работает в режиме `contextIsolation: true` и `NodeIntegration: false`
