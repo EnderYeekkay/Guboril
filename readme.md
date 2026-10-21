@@ -1,6 +1,7 @@
 # Губорыл - GUI для winws
 
 <div align="center">
+
 ![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/EnderYeekkay/Guboril/total?style=for-the-badge)
 
 [![Button](https://img.shields.io/badge/Скачать-darkgreen?style=for-the-badge)](https://github.com/EnderYeekkay/Guboril/releases/download/Guboril-v2.0.0/GuborilInstaller.exe)
