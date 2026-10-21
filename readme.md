@@ -1,6 +1,11 @@
 # Губорыл - GUI для winws
 
 <div align="center">
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/EnderYeekkay/Guboril/total?style=for-the-badge)
+
+[![Button](https://img.shields.io/badge/Скачать-darkgreen?style=for-the-badge)](https://github.com/EnderYeekkay/Guboril/releases/download/Guboril-v2.0.0/GuborilInstaller.exe)
+</div>
+
 
 Данное приложение является GUI менеджером для `winws.exe`, регистрирует его как службу, автоматически перезапускает при изменении любых настроек и хранит их. Также есть возможность обновлять все стратегии/бинарные файлы для `winws.exe`.
 ![Image](image.png)
