@@ -119,6 +119,7 @@ app.whenReady().then(async () => {
             l('\x1b[34mUpdateGuboril: \x1b[0m', res)
             if (res == 4) {
               app.quit()
+              return
             }
           } catch (e: any) {
             sendURNotify(e)

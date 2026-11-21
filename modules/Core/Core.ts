@@ -61,7 +61,6 @@ export default class Core {
         initCoreHandlers()
         initConnectionCheckerHandlers()
         InitFakeHandlers()
-        InitFakeHandlers()
     }
     public static readonly events = new EventEmitter<CoreEvents>() as CoreEmitter
 

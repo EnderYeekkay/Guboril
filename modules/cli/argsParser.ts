@@ -30,7 +30,7 @@ export const debug = process.argv.includes('--inspect') || process.argv.includes
 if (debug) console.log('App is running in debug mod')
 
 // --tray
-export const run_only_tray = process.argv.includes('--tray') || process.argv.includes('-t')
+export const run_only_tray = process.argv.includes('--tray') || process.argv.includes('-t') || process.argv.includes('--after_installation') || process.argv.includes('--before_uninstall')
 
 // --after_installation
 if (process.argv.includes('-ai') || process.argv.includes('--after_installation')) {
