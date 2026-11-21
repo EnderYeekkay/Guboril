@@ -26,7 +26,7 @@ export default async function execute(loadingWin: BrowserWindow): Promise<Update
     const installerPath = path.resolve(app.getPath('temp'), 'TempInstaller.exe')
     try {
         var { latestVersion, installerUrl } = await fetchLatestGuborilVersion()
-    } catch (e) { sendURNotify(e); return UpdateResponse.LinkFetchFailed }
+    } catch (e: any) { sendURNotify(e); return UpdateResponse.LinkFetchFailed }
     
     if (!installerUrl) return UpdateResponse.LinkFetchFailed
 
@@ -63,7 +63,7 @@ export async function fetchLatestGuborilVersion() {
 }
 async function downloadInstaller(installerUrl: string, installerPath: string, loadingWin: BrowserWindow) {
     const writer = fs.createWriteStream(installerPath)
-    const headers = {}
+    const headers = {} as { Authorization: string }
     const token = Core.settings?.GH_TOKEN
     if (token) headers['Authorization'] = `token ${token}`
 

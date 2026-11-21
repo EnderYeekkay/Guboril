@@ -1,5 +1,5 @@
 #define MyAppName "Guboril"
-#define MyAppVersion "2.1.0"
+#define MyAppVersion "1.0.0"
 #define MyAppPublisher "EnderYeekkay"
 #define MyAppURL "https://github.com/EnderYeekkay/Guboril"
 #define MyAppExeName "Guboril.exe"
@@ -24,16 +24,8 @@ PrivilegesRequired=admin
 SetupArchitecture=x64
 
 ArchitecturesAllowed=x64compatible
-Compression=lzma2/ultra64
-SolidCompression=yes
-
-LZMANumBlockThreads=16
-CompressionThreads=auto
-
-LZMABlockSize=65536
-LZMADictionarySize=262144
-LZMANumFastBytes=273
-
+Compression=none
+SolidCompression=no
 
 OutputBaseFilename=GuborilInstaller
 

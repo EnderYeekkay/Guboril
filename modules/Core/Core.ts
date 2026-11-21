@@ -61,13 +61,13 @@ export default class Core {
         initCoreHandlers()
         initConnectionCheckerHandlers()
         InitFakeHandlers()
-                InitFakeHandlers()
+        InitFakeHandlers()
     }
     public static readonly events = new EventEmitter<CoreEvents>() as CoreEmitter
 
-    private static _mainWindow: BrowserWindow
+    private static _mainWindow: BrowserWindow | null
     private static winInitialized = false
-    static get mainWindow() {
+    static get mainWindow(): BrowserWindow | null  {
         return this._mainWindow
     }
 
@@ -78,19 +78,19 @@ export default class Core {
 
         SettingsAccessor.mainWindow = win
         StrategyManager.events.on('cache_add', (strategy: Strategy) => {
-            Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
+            Core.mainWindow?.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
             if (settings.selectedStrategy === strategy.ino) {
                 Core.setStrategy(strategy.ino)
             }
         })
         StrategyManager.events.on('cache_change', (strategy: Strategy) => {
-            Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
+            Core.mainWindow?.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
             if (settings.selectedStrategy === strategy.ino) {
                 Core.setStrategy(strategy.ino)
             }
         })
         StrategyManager.events.on('cache_unlink', () => {
-            Core.mainWindow.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
+            Core.mainWindow?.webContents.send('core:strategiesCacheChanged', StrategyManager.AllJSON)
         })
 
         SCEventLogFacade.events.on('SystemEvent', (event) => {
@@ -99,7 +99,7 @@ export default class Core {
                 SCController.delete()
                 settings.status = false
                 this.events.emit('strategyChanged', null)
-                Core.mainWindow.webContents.send('SCEventLogFacade:SystemEvent', event)
+                Core.mainWindow?.webContents.send('SCEventLogFacade:SystemEvent', event)
             }
         })
     }
@@ -163,7 +163,7 @@ export default class Core {
      */
     static setStrategy(ino: number | null): boolean {
         const res = this.#setStrategy(ino, settings.gameFilter)
-        this.mainWindow.webContents.send('core:strategyChanged', StrategyManager.withIno(ino || settings.selectedStrategy))
+        this.mainWindow?.webContents.send('core:strategyChanged', StrategyManager.withIno(ino || settings.selectedStrategy))
         return res
     }
     static restart() {

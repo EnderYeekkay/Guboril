@@ -24,7 +24,7 @@ PrivilegesRequired=admin
 SetupArchitecture=x64
 
 ArchitecturesAllowed=x64compatible
-%compression:prod%
+%compression:dev%
 
 OutputBaseFilename=GuborilInstaller
 

@@ -1,0 +1,206 @@
+import { initMainLogger, initRendererLogger } from './modules/tasks/logger.ts';
+import path from 'node:path';
+initMainLogger()
+initRendererLogger()
+import update, { fetchLatestGuborilVersion } from './modules/actions/updateGuboril.ts'
+import { ipcMain, nativeImage, shell, session } from 'electron';
+import { app, dialog, BrowserWindow } from 'electron/main';
+import { join, resolve, dirname } from 'node:path';
+import pkg from './package.json' with { type: 'json' };
+const { version } = pkg;
+import discordCacheCleaner from './modules/actions/discordCacheCleaner.ts'
+import { createTask, deleteTask, checkTask } from './modules/actions/scheduler.ts';
+import { saveLogsArchive } from './modules/actions/saveLogs.ts';
+import { sendUENotify, sendURNotify, sendServiceOnNotify, sendServiceOffNotify } from './modules/tasks/myNotifcations.ts';
+import { debug, run_only_tray } from './modules/cli/argsParser.ts';
+import TrayController from './modules/tasks/TrayController.ts';
+import { warpFix } from './modules/fixes/warpFix.ts';
+import { installExtension, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer';
+import ansi from 'ansi-styles';
+import semver from 'semver';
+import Core from './modules/Core/Core.ts'
+Core.init()
+import { fileURLToPath } from 'url';
+import ConnectionChecker from './modules/Core/ConnectionCheker/ConnectionChecker.ts';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+warpFix()
+
+if (!app.requestSingleInstanceLock()) {
+  app.once('ready', () => {
+    dialog.showErrorBox('Ошибка удвоения', 'Нельзя запустить более одного Губорыла!')
+    app.quit()
+  })
+}
+
+if (process.platform !== 'win32') {
+  throw new Error(`Это приложение работает только на Windows. Обнаружено: ${process.platform}`);
+}
+
+const l = console.log
+
+// if (debug) app.disableHardwareAcceleration() // Да ну нахуй эти VIDEO_SCHEDULER_INTERNAL_ERROR
+app.whenReady().then(async () => {
+  
+  console.log(
+    ansi.bgGreen.open +
+      ansi.bold.open +
+        ansi.blackBright.open +
+          ' <---- APP IS READY ----> ' +
+        ansi.blackBright.close +
+      ansi.bold.close +
+    ansi.bgGreen.close
+  )
+  if (debug) {
+    try {
+      await session.defaultSession.clearStorageData({
+        storages: ['serviceworkers', 'cachestorage']
+      });
+      await installExtension(REACT_DEVELOPER_TOOLS, { 
+        forceDownload: true, 
+        loadExtensionOptions: { allowFileAccess: true } 
+      });
+      
+      console.log('React DevTools: Reloaded successfully');
+    } catch (e) {
+      console.error('React DevTools: Install failed', e);
+    }
+  }
+  process.on('uncaughtException', (err: any) => {
+    err.cause
+    l(err.stack)
+    sendUENotify(err)
+    if (!err.stack.includes('#CONTINUE_WORKING')) app.exit(1)
+  })
+  process.on('unhandledRejection', (err: any) => {
+    l(err.stack)
+    sendURNotify(err)
+  })
+  
+  ////////////////
+  // LoadingWin //
+  ////////////////
+  const loadingWin = new BrowserWindow({
+    width: 300,
+    height: 350,
+    frame: false,
+    darkTheme: true,
+    movable: false,
+    resizable: false,
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    webPreferences: {
+      sandbox: false,
+      preload: join(__dirname, 'preloads/loadingWin/preload.ts')
+    }
+  })
+  loadingWin.loadFile('./public/loadingWin/loadingWin.html')
+  await new Promise<void>((resolve, _) => ipcMain.once('lwuwu', () => resolve()))
+  if (debug) {
+    loadingWin.webContents.openDevTools({ mode: 'detach' }); // отдельное окно
+  }
+  if (Core.settings.autoUpdate) {
+    try {
+      const { latestVersion, installerUrl } = await fetchLatestGuborilVersion()
+      if (semver.gt(semver.coerce(latestVersion)!, version)) {
+        const res = dialog.showMessageBoxSync(loadingWin, {
+          title: `Доступна новая версия ${latestVersion}`,
+          message: '',
+          detail: `Текущая версия: ${version}. Вы хотите обновить приложение Guboril?`,
+          buttons: ['Обновить', 'Не обновлять'],
+          icon: nativeImage.createFromPath(resolve(__dirname, 'public/icon.ico')),
+          defaultId: 0,
+          cancelId: 1
+        })
+        if (res == 0) {
+          try {
+            const res = await update(loadingWin)
+            l('\x1b[34mUpdateGuboril: \x1b[0m', res)
+            if (res == 4) {
+              app.quit()
+            }
+          } catch (e: any) {
+            sendURNotify(e)
+          }
+        }
+      }
+    } catch (e: any) {
+      sendURNotify(e)
+    }
+  }
+
+  if (run_only_tray) loadingWin.hide()
+
+  ipcMain.handle('scheduler:createTask', () => createTask())
+  ipcMain.handle('scheduler:deleteTask', () => deleteTask())
+  ipcMain.handle('scheduler:checkTask', () => checkTask())
+
+  ipcMain.on('open_github', () => shell.openExternal('https://github.com/EnderYeekkay/Guboril'))
+  ipcMain.on('externalUrl', (_, url) => shell.openExternal(url))
+  ipcMain.handle('clear_discord_cache', () => discordCacheCleaner())
+  console.log(app.getPath('userData'))
+
+  ////////////////
+  // Mainwindow //
+  ////////////////
+  const win = new BrowserWindow({
+    title: 'Губорыл',
+    width: 800,
+    height: 600,
+
+    minWidth: 800,
+    minHeight: 600,
+    useContentSize: true,
+
+    frame: false,
+    darkTheme: true,
+    movable: true,
+    resizable: true,
+    
+    icon: join(__dirname, 'public', 'icon.ico'),
+    webPreferences: {
+        sandbox: false,
+        contextIsolation: true,
+        preload: join(__dirname, 'preloads/mainWindow/preload.ts'),
+        //@ts-ignore
+        cache: false
+    }
+  })
+  Core.mainWindow = win
+
+  ipcMain.on('save_logs', () => saveLogsArchive(win))
+  win.hide()
+
+  ipcMain.once('uwu', async () => {
+    l('Uwu!')
+    TrayController.init(win, resolve(__dirname, 'public'))
+    if (!run_only_tray) {
+      // setTimeout(() => win.show(), 5000) // Start at any cost!!!!1
+      loadingWin.close()
+      win.show()
+    }
+  })
+  console.log('process.env.VITE_DEV_SERVER_URL', process.env.VITE_DEV_SERVER_URL)
+  if (process.env.VITE_DEV_SERVER_URL) {
+    win.loadURL(process.env.VITE_DEV_SERVER_URL)
+  } else {
+    win.loadFile(path.join(__dirname, 'public/mainwindowr/dist/index.html'))
+  }
+
+  if (debug) {
+    win.webContents.openDevTools({ mode: 'detach' }); // отдельное окно
+  }
+
+  app.on('activate', () => {
+    
+  })
+  ipcMain.on('close-window', () => {
+    win.hide()
+  })
+  ipcMain.on('minimize', () => {
+    win.minimize()
+  })
+
+  if (run_only_tray) loadingWin.close()
+})
