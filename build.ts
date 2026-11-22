@@ -1,4 +1,4 @@
-import packager from 'electron-packager'
+import {packager, type Options} from '@electron/packager'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url';
@@ -12,7 +12,7 @@ const escapeRegExp = (value: string) =>
 const rootCorePath = path.join(__dirname, 'core');
 const rootCoreIgnore = new RegExp(`^${escapeRegExp(rootCorePath)}([\\\\/]|$)`);
 
-const options: packager.Options = {
+const options: Options = {
     dir: '.',
     name: 'Guboril',
     platform: 'win32',
@@ -44,8 +44,8 @@ const options: packager.Options = {
         /public\/images/,
         rootCoreIgnore,
     ],
-    afterCopy: [
-        (buildPath, electronVersion, platform, arch, callback) => {
+   afterCopy: [
+        ({ buildPath }) => {
             const localesPath = path.join(buildPath, '../../locales');
             
             // Список языков, которые НУЖНО оставить (без расширения .pak)
@@ -64,7 +64,6 @@ const options: packager.Options = {
                     }
                 });
             }
-            callback(); // Обязательно вызываем callback
         }
     ]
 } ;
@@ -72,7 +71,7 @@ const options: packager.Options = {
 async function bundleApp() {
     try {
         const appPaths = await packager(options);
-        console.log(`Successfully packaged app in: ${appPaths.join(', ')}`);
+        console.log(`Successfully   app in: ${appPaths.join(', ')}`);
     } catch (err) {
         console.error(err);
         process.exit(1);
